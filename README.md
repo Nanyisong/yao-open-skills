@@ -175,26 +175,36 @@ yao-open-skills/
 
 [`yao-gametheory-skill`](docs/skills/yao-gametheory-skill.md) 是一个面向竞争、谈判、联盟、渠道、平台和竞品反击的博弈论战略报告 Skill。
 
-它不会把博弈论当成教材概念堆叠，而是把 CEO 问题转成玩家、策略、收益、时序、信号、承诺和均衡检查，重点回答“对手可能怎么反应”和“我们的承诺动作是否可信”。
+它适合所有“我们的动作会引发对手反应”的场景：价格战、渠道冲突、竞品反击、平台生态、融资谈判、并购竞价、市场进入、联盟合作和监管沟通。
+
+它不会把博弈论当成教材概念堆叠，而是把 CEO 问题转成玩家、策略、收益、时序、信号、承诺和均衡检查，重点回答：
+
+- 对手可能怎么反应
+- 我们的承诺动作是否可信
+- 哪个策略在对手反应之后仍然更稳
+
+它的设计原理是：先识别玩家、策略、收益、约束和行动时序，再路由到合适的博弈框架组合，最后把模型转成管理层能直接使用的战略报告。
 
 它的公开版本现在有这些比较突出的特点：
 
 - 内置框架目录和 AI 应用路由器，覆盖纳什均衡、囚徒困境、零和、协调、鹰鸽、猎鹿、进入威慑、Stackelberg、Bertrand/Cournot、信号、重复博弈、拍卖、联盟和机制设计
+- 按场景组合框架，而不是机械套概念；例如价格战会组合 Bertrand、囚徒困境、重复博弈和可信承诺
 - 支持从不完整战略输入开始，先建立可更新的弱模型
 - 对价格战、渠道冲突、平台生态、并购竞价、融资谈判、竞品免费版和监管沟通都有明确路由
-- 报告前置推荐动作、对手反应地图、承诺可信度、策略准备度和敏感性检查
+- 报告前置推荐动作、对手反应地图、收益矩阵、承诺可信度、策略准备度和敏感性检查
 - 支持后续对手新动作并入原案例后重跑报告
 - 默认生成 `Markdown + HTML + Word + PDF + canonical JSON`
 - Word/PDF 宽表格已做横向页面、真实表格、固定宽度和安全换行处理
 
 如果你想快速理解这个 Skill，建议按这个顺序看：
 
-1. [公开说明文档](docs/skills/yao-gametheory-skill.md)
-2. [Skill 入口](skills/yao-gametheory-skill/SKILL.md)
-3. [框架目录与 AI 路由器](skills/yao-gametheory-skill/references/framework-catalog.md)
-4. [价格战示例输入](skills/yao-gametheory-skill/input/price_war_case.json)
-5. [导出脚本](skills/yao-gametheory-skill/scripts/generate_report_bundle.py)
-6. [示例报告目录](skills/yao-gametheory-skill/reports/README.md)
+1. [目录说明](skills/yao-gametheory-skill/README.md)
+2. [公开说明文档](docs/skills/yao-gametheory-skill.md)
+3. [Skill 入口](skills/yao-gametheory-skill/SKILL.md)
+4. [框架目录与 AI 路由器](skills/yao-gametheory-skill/references/framework-catalog.md)
+5. [价格战示例输入](skills/yao-gametheory-skill/input/price_war_case.json)
+6. [导出脚本](skills/yao-gametheory-skill/scripts/generate_report_bundle.py)
+7. [示例报告目录](skills/yao-gametheory-skill/reports/README.md)
 
 ## 工作流
 
