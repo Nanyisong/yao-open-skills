@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>价格战与渠道绑定博弈报告</title>
+  <style>
+:root {
+  --ink: #17211b;
+  --muted: #5c675f;
+  --line: #d9e0d8;
+  --paper: #fbfcf8;
+  --surface: #ffffff;
+  --accent: #196f5a;
+  --accent-soft: #e6f3ef;
+  --risk: #9f3a2f;
+  --warn: #8a6718;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  line-height: 1.65;
+}
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 10px 24px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(251, 252, 248, 0.95);
+}
+.nav { display: flex; flex-wrap: wrap; gap: 10px; font-size: 13px; }
+.nav a { color: var(--muted); text-decoration: none; }
+.actions button {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 6px;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+main { max-width: 1120px; margin: 0 auto; padding: 34px 24px 72px; }
+.hero {
+  padding: 24px 0 18px;
+  border-bottom: 2px solid var(--ink);
+}
+.eyebrow { color: var(--accent); font-weight: 700; font-size: 13px; letter-spacing: 0; }
+h1 { margin: 8px 0 10px; font-size: 34px; line-height: 1.18; letter-spacing: 0; }
+h2 { margin: 34px 0 12px; font-size: 22px; letter-spacing: 0; }
+h3 { margin: 22px 0 10px; font-size: 17px; letter-spacing: 0; }
+.summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 18px 0 6px;
+}
+.metric {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 14px;
+}
+.metric .label { color: var(--muted); font-size: 12px; }
+.metric .value { font-size: 18px; font-weight: 750; margin-top: 4px; }
+.callout {
+  margin: 18px 0;
+  border-left: 4px solid var(--accent);
+  background: var(--accent-soft);
+  padding: 14px 16px;
+}
+.warn { border-left-color: var(--warn); background: #fff8e5; }
+.risk { border-left-color: var(--risk); background: #fff0ed; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { width: 100%; border-collapse: collapse; min-width: 760px; }
+th, td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+th { background: #edf3ec; font-size: 13px; }
+tr:last-child td { border-bottom: 0; }
+.pill {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 2px 8px;
+  background: #edf3ec;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+details {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 12px 14px;
+  margin-top: 12px;
+}
+summary { cursor: pointer; font-weight: 750; }
+footer { color: var(--muted); font-size: 13px; margin-top: 42px; border-top: 1px solid var(--line); padding-top: 18px; }
+@media (max-width: 760px) {
+  .topbar { position: static; align-items: flex-start; flex-direction: column; }
+  main { padding: 24px 16px 56px; }
+  h1 { font-size: 27px; }
+  .summary { grid-template-columns: 1fr; }
+}
+@media print {
+  @page { size: A4 landscape; margin: 12mm; }
+  .topbar, .actions { display: none !important; }
+  body { background: #fff; font-size: 10pt; line-height: 1.45; }
+  main { max-width: none; padding: 0; width: 100%; }
+  h1 { font-size: 22pt; }
+  h2 { font-size: 15pt; margin-top: 18px; }
+  h3 { font-size: 12pt; margin-top: 14px; }
+  .summary { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+  .metric { padding: 8px; }
+  .metric .value { font-size: 11pt; overflow-wrap: anywhere; }
+  .callout { padding: 8px 10px; margin: 10px 0; }
+  .table-wrap { overflow: visible; border-radius: 4px; break-inside: avoid; page-break-inside: avoid; }
+  table { min-width: 0; width: 100%; table-layout: fixed; font-size: 8.5pt; }
+  th, td { padding: 5px 6px; white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
+  th { font-size: 8.5pt; }
+  tr { break-inside: avoid; page-break-inside: avoid; }
+  details { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <nav class="nav">
+      <a href="#summary">结论</a>
+      <a href="#frameworks">框架</a>
+      <a href="#readiness">准备度</a>
+      <a href="#sensitivity">敏感性</a>
+      <a href="#players">玩家</a>
+      <a href="#reactions">反应</a>
+      <a href="#payoff">Payoff</a>
+      <a href="#commitment">承诺</a>
+      <a href="#equilibrium">均衡</a>
+      <a href="#updates">更新</a>
+      <a href="#risks">风险</a>
+    </nav>
+    <div class="actions">
+      <button onclick="expandAndPrint()">Print / Save as PDF</button>
+    </div>
+  </div>
+  <main>
+    <section class="hero" id="summary">
+      <div class="eyebrow">Yao Game Theory Skill</div>
+      <h1>价格战与渠道绑定博弈报告</h1>
+      <p>建议以「捆绑渠道」为主、以「高端差异化」为辅，避免「降价」；主反应风险是「攻击渠道」（约 45%）。</p>
+      <div class="summary">
+        <div class="metric"><div class="label">主动作</div><div class="value">捆绑渠道</div></div>
+        <div class="metric"><div class="label">辅助动作</div><div class="value">高端差异化</div></div>
+        <div class="metric"><div class="label">避免动作</div><div class="value">降价</div></div>
+        <div class="metric"><div class="label">承诺判断</div><div class="value">年度渠道合作包：可信（79%）</div></div>
+        <div class="metric"><div class="label">策略准备度</div><div class="value">74%</div></div>
+        <div class="metric"><div class="label">稳定性</div><div class="value">mixed</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>推荐动作</h2>
+      <div class="callout">降价最容易被头部竞品跟随，且会损害长期价格锚点；渠道绑定和高端差异化更能形成可信承诺和可持续收益。</div>
+      <p><span class="pill">决策问题</span> 面对头部竞品的降价压力，我们应当降价、捆绑渠道、做高端差异化，还是维持价格？</p>
+      <p><span class="pill">时间范围</span> 未来 1-2 个季度</p>
+      <p><span class="pill">成功标准</span> 保护毛利率、渠道控制力和高端客户留存，同时避免被拖入低质量价格战。</p>
+    </section>
+
+    <section id="frameworks">
+      <h2>框架选择与组合</h2>
+      <p><span class="pill">主框架</span> Bertrand 价格竞争 + 序贯渠道承诺博弈</p>
+      <div class="callout">先用 Bertrand 价格竞争解释降价为何容易被跟随，再用囚徒困境说明价格战低收益；随后用重复博弈、信号博弈和可信承诺检查，寻找能改变对手和渠道预期的动作。</div>
+      <h3>辅助镜头</h3>
+      <ul><li>囚徒困境：直接降价会诱发双方跟随降价的低收益均衡</li><li>重复博弈：今天的价格动作会训练渠道和客户未来的预期</li><li>信号博弈：竞品免费版本和我们的高端路线图都需要检查是否可信</li><li>可信承诺：渠道绑定必须是可观察、成本高、难撤回的动作</li><li>纳什均衡检查：判断每个动作组合下双方是否有单边偏离动机</li></ul>
+      <h3>排除或降级的框架</h3>
+      <div class="table-wrap"><table><thead><tr><th>框架</th><th>原因</th></tr></thead><tbody><tr><td>纯零和博弈</td><td>渠道绑定和高端差异化可以创造额外交易价值，不是单纯一方所得等于另一方所失。</td></tr><tr><td>单次囚徒困境</td><td>价格、渠道和客户关系会重复发生，因此必须加入重复博弈和承诺机制。</td></tr></tbody></table></div>
+    </section>
+
+    <section id="readiness">
+      <h2>策略准备度</h2>
+      <p><span class="pill">准备度</span> 74% <span class="pill">状态</span> nearly-ready</p>
+      <div class="callout">当前模型可用于方向性决策，但仍有一两个信息缺口会影响执行强度。</div>
+      <h3>剩余缺口</h3>
+      <ul><li>围绕最危险假设做一次小规模验证或敏感性复核。</li></ul>
+      <h3>战略卫生检查</h3>
+      <div class="table-wrap"><table><thead><tr><th>检查</th><th>状态</th><th>说明</th></tr></thead><tbody><tr><td>payoff hygiene</td><td>pass</td><td>payoff 已标记 observed / estimated / assumed。</td></tr><tr><td>reaction hygiene</td><td>pass</td><td>对手反应均有激励理由。</td></tr><tr><td>commitment hygiene</td><td>pass</td><td>至少一个关键承诺通过可信度门槛。</td></tr><tr><td>framework hygiene</td><td>pass</td><td>框架选择先从结构出发，而不是只套用著名博弈。</td></tr><tr><td>safety hygiene</td><td>pass</td><td>已标记法律、投资、反垄断或合规边界。</td></tr></tbody></table></div>
+    </section>
+
+    <section id="sensitivity">
+      <h2>敏感性与稳定性</h2>
+      <p><span class="pill">稳定性</span> mixed <span class="pill">收益差距</span> 1.4</p>
+      <div class="callout warn">主推荐与备选方案的预期收益差距较小，少量 payoff 调整就可能改变排序。</div>
+      <div class="table-wrap"><table><thead><tr><th>压力测试</th><th>假设变化</th><th>影响</th><th>对推荐的影响</th></tr></thead><tbody><tr><td>竞品更激进</td><td>将头部竞品跟随降价或攻击渠道的倾向上调。</td><td>降价选项进一步变差，渠道绑定需要更强返点和交付资源支撑。</td><td>通常不改变主推荐，但会提高执行成本。</td></tr><tr><td>渠道收益折扣</td><td>将渠道绑定带来的渠道收益和我方收益下调。</td><td>捆绑渠道与高端差异化的差距缩小。</td><td>若渠道拒绝年度合作包，应提高高端差异化权重。</td></tr><tr><td>承诺可信度下降</td><td>渠道认为年度合作包只是短期销售动作。</td><td>渠道绑定的可信承诺分下降，竞品攻击渠道的胜率上升。</td><td>需要先补强可观察投入，再正式推进绑定。</td></tr></tbody></table></div>
+      <h3>下一步信息</h3>
+      <div class="table-wrap"><table><thead><tr><th>信息</th><th>为什么重要</th><th>收集方法</th></tr></thead><tbody><tr><td>竞品真实降价承受能力</td><td>决定竞品跟随降价是否是可持续威胁，而不是短期信号。</td><td>观察竞品报价、销售话术、续费折扣和公开成本信号。</td></tr><tr><td>核心渠道对年度合作包的接受阈值</td><td>决定渠道绑定是否能成为可信承诺。</td><td>用 2-3 个核心渠道做返点、线索、交付支持的访谈和报价测试。</td></tr><tr><td>免费版本是否有真实资源投入</td><td>决定竞品免费版是便宜信号还是可持续进攻。</td><td>追踪产品可用性、渠道推广、转化路径和续费机制。</td></tr><tr><td>策略准备度缺口</td><td>围绕最危险假设做一次小规模验证或敏感性复核。</td><td>补齐后重新生成博弈报告。</td></tr></tbody></table></div>
+    </section>
+
+    <section id="players">
+      <h2>玩家地图</h2>
+      <div class="table-wrap"><table><thead><tr><th>玩家</th><th>角色</th><th>目标</th><th>约束</th></tr></thead><tbody><tr><td>我们</td><td>focal company</td><td>维持毛利；增强渠道绑定；守住高端客户</td><td>不能长期补贴低价；需要保持品牌价格锚点</td></tr><tr><td>头部竞品</td><td>incumbent competitor</td><td>压低我们的增长速度；保住渠道心智；阻止高端客户迁移</td><td>降价会损害自身利润；免费版本需要交付和获客成本</td></tr><tr><td>渠道商</td><td>distribution gatekeeper</td><td>提高返点；降低客户流失；减少交付风险</td><td>不愿被单一厂商锁死；更重视可售卖方案和服务能力</td></tr></tbody></table></div>
+      <h3>我们的策略集合</h3>
+      <div class="table-wrap"><table><thead><tr><th>动作</th><th>说明</th><th>数据基础</th></tr></thead><tbody><tr><td>降价</td><td>直接下调价格以阻止客户流失。</td><td>estimated</td></tr><tr><td>捆绑渠道</td><td>用联合返点、交付支持、客户线索和年度合作包绑定核心渠道。</td><td>estimated</td></tr><tr><td>高端差异化</td><td>维持价格锚点，强化高端能力、服务 SLA、集成能力和风险降低价值。</td><td>estimated</td></tr><tr><td>维持价格</td><td>不主动降价，只做局部商务折扣。</td><td>assumed</td></tr></tbody></table></div>
+    </section>
+
+    <section id="reactions">
+      <h2>对手反应地图</h2>
+      <div class="table-wrap"><table><thead><tr><th>对手</th><th>如果我们</th><th>可能动作</th><th>概率</th><th>理由</th></tr></thead><tbody><tr><td>head_competitor</td><td>降价</td><td>跟随降价</td><td>65%</td><td>头部竞品有规模和资金缓冲，跟随降价可以阻止我们获得价格优势。</td></tr><tr><td>head_competitor</td><td>降价</td><td>攻击渠道</td><td>25%</td><td>竞品会用返点或独家政策削弱我们的渠道触达。</td></tr><tr><td>head_competitor</td><td>捆绑渠道</td><td>攻击渠道</td><td>45%</td><td>渠道绑定直接触碰竞品防线，但竞品需要付出返点和管理成本。</td></tr><tr><td>head_competitor</td><td>捆绑渠道</td><td>推出免费版本</td><td>25%</td><td>免费版本可制造低端客户噪音，但未必能替代渠道交付价值。</td></tr><tr><td>head_competitor</td><td>高端差异化</td><td>推出免费版本</td><td>35%</td><td>竞品可能用免费版守低端入口，同时避免在高端能力上直接比较。</td></tr><tr><td>head_competitor</td><td>高端差异化</td><td>攻击渠道</td><td>20%</td><td>如果高端差异化带动渠道利润，竞品会攻击关键渠道。</td></tr></tbody></table></div>
+    </section>
+
+    <section id="payoff">
+      <h2>Payoff 矩阵与排序</h2>
+      <div class="table-wrap"><table><thead><tr><th>我们的动作</th><th>对方动作</th><th>我方收益</th><th>对方收益</th><th>渠道收益</th><th>基础</th><th>说明</th></tr></thead><tbody><tr><td>降价</td><td>跟随降价</td><td>-35</td><td>-20</td><td>15</td><td>estimated</td><td>双方毛利受损，渠道短期受益但长期议价上升。</td></tr><tr><td>降价</td><td>攻击渠道</td><td>-20</td><td>5</td><td>20</td><td>estimated</td><td>我们既损失价格锚点，又被迫补贴渠道。</td></tr><tr><td>捆绑渠道</td><td>攻击渠道</td><td>35</td><td>-10</td><td>30</td><td>estimated</td><td>如果绑定包真实提升渠道利润，竞品攻击成本较高。</td></tr><tr><td>捆绑渠道</td><td>推出免费版本</td><td>25</td><td>10</td><td>20</td><td>estimated</td><td>免费版会冲击低端线索，但渠道仍看重交付和返佣。</td></tr><tr><td>高端差异化</td><td>推出免费版本</td><td>30</td><td>15</td><td>10</td><td>estimated</td><td>高端客户受免费版影响有限，但渠道动力弱于绑定方案。</td></tr><tr><td>维持价格</td><td>跟随降价</td><td>-10</td><td>10</td><td>5</td><td>assumed</td><td>维持价格能保护品牌，但若没有差异化会失去低端客户。</td></tr></tbody></table></div>
+      <h3>预期收益排序</h3>
+      <div class="table-wrap"><table><thead><tr><th>动作</th><th>预期收益</th><th>计算方式</th></tr></thead><tbody><tr><td>捆绑渠道</td><td>31.4</td><td>reaction-weighted</td></tr><tr><td>高端差异化</td><td>30</td><td>reaction-weighted</td></tr><tr><td>维持价格</td><td>-10</td><td>matrix-average</td></tr><tr><td>降价</td><td>-30.8</td><td>reaction-weighted</td></tr></tbody></table></div>
+    </section>
+
+    <section id="commitment">
+      <h2>承诺与信号可信度</h2>
+      <div class="table-wrap"><table><thead><tr><th>动作</th><th>承诺</th><th>可信度</th><th>评分</th><th>证据基础</th><th>说明</th></tr></thead><tbody><tr><td>捆绑渠道</td><td>年度渠道合作包</td><td>可信</td><td>79%</td><td>estimated</td><td>返点、联合交付和客户线索投入会让渠道看见真实承诺，撤回成本也较高。</td></tr><tr><td>高端差异化</td><td>高端服务 SLA 与集成路线图</td><td>部分可信</td><td>71%</td><td>estimated</td><td>若已绑定交付团队和路线图，承诺较可信；若只是发布话术，可信度会下降。</td></tr><tr><td>降价</td><td>长期低价</td><td>部分可信</td><td>58%</td><td>assumed</td><td>低价很显眼但与毛利目标冲突，因此时间一致性弱。</td></tr></tbody></table></div>
+      <h3>外部信号</h3>
+      <div class="table-wrap"><table><thead><tr><th>发送方</th><th>信号</th><th>质量</th><th>解释</th></tr></thead><tbody><tr><td>head_competitor</td><td>市场传言其准备推出免费版本</td><td>weak</td><td>目前更像压制渠道和客户预期的信号，除非看到真实产品、预算和分发资源。</td></tr></tbody></table></div>
+    </section>
+
+    <section id="equilibrium">
+      <h2>均衡解释</h2>
+      <p><span class="pill">主模型</span> sequential price-war and channel-commitment game</p>
+      <p>单纯降价容易形成双方跟随降价的低收益均衡；渠道绑定和高端差异化把博弈从价格维度转向渠道利润和客户风险降低，能削弱竞品跟随降价的收益。</p>
+      <ul><li>低质量价格战：我们降价，竞品跟随降价，双方毛利受损。</li><li>渠道绑定均衡：我们绑定渠道，竞品攻击渠道但成本较高，渠道因可售卖方案和服务支持而偏向我们。</li><li>高端差异化均衡：我们维持价格锚点，竞品用免费版守低端入口，双方在不同客户层竞争。</li></ul>
+      <h3>重复博弈与关系动态</h3>
+      <p>这是重复博弈，不是一次性价格选择。短期降价会训练客户和渠道等待折扣；可持续承诺应提高渠道未来收益和高端客户转换成本。</p>
+      <ul><li>渠道可能把绑定条件用于向竞品索要更高返点。</li><li>客户可能把降价视为未来谈判锚点。</li><li>竞品可能用免费版制造舆论压力。</li></ul>
+    </section>
+
+    <section id="updates">
+      <h2>动态更新日志</h2>
+      <div class="table-wrap"><table><thead><tr><th>轮次</th><th>日期</th><th>阶段</th><th>新增信息</th><th>判断</th><th>状态</th></tr></thead><tbody><tr><td>1</td><td>2026-05-04</td><td>初始建模</td><td>我们的可选动作包括降价、捆绑渠道、高端差异化和维持价格。；竞品可能跟随降价、攻击渠道或推出免费版本。</td><td>避免进入低质量价格战，优先采用渠道绑定与高端差异化组合。</td><td>initial</td></tr></tbody></table></div>
+      <h3>重新打开报告的触发器</h3>
+      <div class="table-wrap"><table><thead><tr><th>触发器</th><th>更新规则</th></tr></thead><tbody><tr><td>竞品正式发布免费版本并投入渠道推广</td><td>更新免费版可信度、低端客户流失和渠道支持 payoff。</td></tr><tr><td>核心渠道拒绝年度合作包</td><td>下调渠道绑定承诺可信度，并重新比较高端差异化与维持价格。</td></tr><tr><td>竞品公开长期降价承诺</td><td>检查其降价是否时间一致；若资金和毛利不足，按弱承诺处理。</td></tr></tbody></table></div>
+    </section>
+
+    <section id="risks">
+      <h2>风险与边界</h2>
+      <div class="callout risk"><ul><li>本报告是战略决策支持，不构成法律、投资或反垄断合规意见。</li><li>payoff 为估计值，需用真实毛利、渠道转化和客户留存数据校准。</li><li>任何排他、联合抵制或限制竞争动作都需要单独合规审查。</li></ul></div>
+      <details>
+        <summary>附录：自动化说明</summary>
+        <p>本报告由同一份结构化 JSON 自动生成，Markdown、HTML、DOCX、PDF 与 canonical JSON 应保持同步。后续对手动作可通过 update JSON 合并后重新导出。</p>
+      </details>
+    </section>
+    <footer>Generated by yao-gametheory-skill on 2026-05-11.</footer>
+  </main>
+  <script>
+    function expandAndPrint() {
+      document.querySelectorAll('details').forEach(function(item) { item.open = true; });
+      window.print();
+    }
+  </script>
+</body>
+</html>

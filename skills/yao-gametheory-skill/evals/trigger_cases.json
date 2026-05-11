@@ -1,0 +1,19 @@
+{
+  "recommended_threshold": 0.36,
+  "should_trigger": [
+    "Use game theory to decide whether we should cut price, bundle channels, differentiate upward, or hold price, and forecast how the head competitor and channels may react.",
+    "Build a CEO report for this financing negotiation with players, strategies, payoffs, bargaining leverage, credible commitments, and update triggers.",
+    "A competitor just launched a free version; update our previous game theory report and export Markdown, HTML, Word, and PDF.",
+    "Choose the right game theory frameworks for this platform ecosystem case, combine Nash equilibrium, coordination, signaling, and repeated-game lenses, then produce an application report."
+  ],
+  "should_not_trigger": [
+    "Explain Nash equilibrium to a beginner.",
+    "Solve this textbook payoff matrix homework problem.",
+    "Give me legal advice on whether this competitor behavior violates antitrust law."
+  ],
+  "near_neighbor": [
+    "Brainstorm growth strategy without modeling any competitor or partner reaction.",
+    "Create a Bayesian decision report with priors and posterior probabilities.",
+    "Write a generic market research summary with no strategic move to choose."
+  ]
+}

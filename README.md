@@ -114,6 +114,7 @@ yao-open-skills/
 - [Skill Doctor](docs/skills/skill-doctor.md)
 - [Yao Bayesian Skill](docs/skills/yao-bayesian-skill.md)
 - [Yao Business Skill](docs/skills/yao-business-skill.md)
+- [Yao Game Theory Skill](docs/skills/yao-gametheory-skill.md)
 - [Yao Kelly Skill](docs/skills/yao-kelly-skill.md)
 - [Yao Tutorial Skill](docs/skills/yao-tutorial-skill.md)
 
@@ -170,6 +171,31 @@ yao-open-skills/
 4. [导出脚本](skills/yao-bayesian-skill/scripts/generate_report_bundle.py)
 5. [示例报告目录](skills/yao-bayesian-skill/reports/README.md)
 
+### Yao Game Theory Skill
+
+[`yao-gametheory-skill`](docs/skills/yao-gametheory-skill.md) 是一个面向竞争、谈判、联盟、渠道、平台和竞品反击的博弈论战略报告 Skill。
+
+它不会把博弈论当成教材概念堆叠，而是把 CEO 问题转成玩家、策略、收益、时序、信号、承诺和均衡检查，重点回答“对手可能怎么反应”和“我们的承诺动作是否可信”。
+
+它的公开版本现在有这些比较突出的特点：
+
+- 内置框架目录和 AI 应用路由器，覆盖纳什均衡、囚徒困境、零和、协调、鹰鸽、猎鹿、进入威慑、Stackelberg、Bertrand/Cournot、信号、重复博弈、拍卖、联盟和机制设计
+- 支持从不完整战略输入开始，先建立可更新的弱模型
+- 对价格战、渠道冲突、平台生态、并购竞价、融资谈判、竞品免费版和监管沟通都有明确路由
+- 报告前置推荐动作、对手反应地图、承诺可信度、策略准备度和敏感性检查
+- 支持后续对手新动作并入原案例后重跑报告
+- 默认生成 `Markdown + HTML + Word + PDF + canonical JSON`
+- Word/PDF 宽表格已做横向页面、真实表格、固定宽度和安全换行处理
+
+如果你想快速理解这个 Skill，建议按这个顺序看：
+
+1. [公开说明文档](docs/skills/yao-gametheory-skill.md)
+2. [Skill 入口](skills/yao-gametheory-skill/SKILL.md)
+3. [框架目录与 AI 路由器](skills/yao-gametheory-skill/references/framework-catalog.md)
+4. [价格战示例输入](skills/yao-gametheory-skill/input/price_war_case.json)
+5. [导出脚本](skills/yao-gametheory-skill/scripts/generate_report_bundle.py)
+6. [示例报告目录](skills/yao-gametheory-skill/reports/README.md)
+
 ## 工作流
 
 1. 你给出一个本地 Skill 路径。
@@ -209,6 +235,7 @@ yao-open-skills/
 | [skill-doctor](skills/skill-doctor/SKILL.md) | [guide](docs/skills/skill-doctor.md) | `active` | `published` | [skills/skill-doctor](skills/skill-doctor) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/skill-doctor) |
 | [yao-bayesian-skill](skills/yao-bayesian-skill/SKILL.md) | [guide](docs/skills/yao-bayesian-skill.md) | `active` | `published` | [skills/yao-bayesian-skill](skills/yao-bayesian-skill) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-bayesian-skill) |
 | [yao-business-skill](skills/yao-business-skill/SKILL.md) | [guide](docs/skills/yao-business-skill.md) | `active` | `published` | [skills/yao-business-skill](skills/yao-business-skill) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-business-skill) |
+| [yao-gametheory-skill](skills/yao-gametheory-skill/SKILL.md) | [guide](docs/skills/yao-gametheory-skill.md) | `active` | `published` | [skills/yao-gametheory-skill](skills/yao-gametheory-skill) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-gametheory-skill) |
 | [yao-kelly-skill](skills/yao-kelly-skill/SKILL.md) | [guide](docs/skills/yao-kelly-skill.md) | `active` | `published` | [skills/yao-kelly-skill](skills/yao-kelly-skill) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-kelly-skill) |
 | [yao-open-skills-sync](skills/yao-open-skills-sync/SKILL.md) | [guide](docs/skills/yao-open-skills-sync.md) | `active` | `published` | [skills/yao-open-skills-sync](skills/yao-open-skills-sync) | [skills/yao-open-skills-sync](skills/yao-open-skills-sync) | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-open-skills-sync) |
 | [yao-tutorial-skill](skills/yao-tutorial-skill/SKILL.md) | [guide](docs/skills/yao-tutorial-skill.md) | `active` | `published` | [skills/yao-tutorial-skill](skills/yao-tutorial-skill) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-tutorial-skill) |

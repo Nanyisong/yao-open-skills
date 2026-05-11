@@ -1,0 +1,340 @@
+{
+  "title": "价格战与渠道绑定博弈报告",
+  "case_context": {
+    "decision_question": "面对头部竞品的降价压力，我们应当降价、捆绑渠道、做高端差异化，还是维持价格？",
+    "time_horizon": "未来 1-2 个季度",
+    "success_metric": "保护毛利率、渠道控制力和高端客户留存，同时避免被拖入低质量价格战。"
+  },
+  "framework_selection": {
+    "primary": "Bertrand 价格竞争 + 序贯渠道承诺博弈",
+    "secondary_lenses": [
+      "囚徒困境：直接降价会诱发双方跟随降价的低收益均衡",
+      "重复博弈：今天的价格动作会训练渠道和客户未来的预期",
+      "信号博弈：竞品免费版本和我们的高端路线图都需要检查是否可信",
+      "可信承诺：渠道绑定必须是可观察、成本高、难撤回的动作",
+      "纳什均衡检查：判断每个动作组合下双方是否有单边偏离动机"
+    ],
+    "excluded_frameworks": [
+      {
+        "name": "纯零和博弈",
+        "reason": "渠道绑定和高端差异化可以创造额外交易价值，不是单纯一方所得等于另一方所失。"
+      },
+      {
+        "name": "单次囚徒困境",
+        "reason": "价格、渠道和客户关系会重复发生，因此必须加入重复博弈和承诺机制。"
+      }
+    ],
+    "combination_logic": "先用 Bertrand 价格竞争解释降价为何容易被跟随，再用囚徒困境说明价格战低收益；随后用重复博弈、信号博弈和可信承诺检查，寻找能改变对手和渠道预期的动作。"
+  },
+  "players": [
+    {
+      "id": "us",
+      "name": "我们",
+      "role": "focal company",
+      "objectives": [
+        "维持毛利",
+        "增强渠道绑定",
+        "守住高端客户"
+      ],
+      "constraints": [
+        "不能长期补贴低价",
+        "需要保持品牌价格锚点"
+      ]
+    },
+    {
+      "id": "head_competitor",
+      "name": "头部竞品",
+      "role": "incumbent competitor",
+      "objectives": [
+        "压低我们的增长速度",
+        "保住渠道心智",
+        "阻止高端客户迁移"
+      ],
+      "constraints": [
+        "降价会损害自身利润",
+        "免费版本需要交付和获客成本"
+      ]
+    },
+    {
+      "id": "channel",
+      "name": "渠道商",
+      "role": "distribution gatekeeper",
+      "objectives": [
+        "提高返点",
+        "降低客户流失",
+        "减少交付风险"
+      ],
+      "constraints": [
+        "不愿被单一厂商锁死",
+        "更重视可售卖方案和服务能力"
+      ]
+    }
+  ],
+  "our_actions": [
+    {
+      "id": "cut_price",
+      "name": "降价",
+      "description": "直接下调价格以阻止客户流失。",
+      "data_basis": "estimated"
+    },
+    {
+      "id": "bundle_channel",
+      "name": "捆绑渠道",
+      "description": "用联合返点、交付支持、客户线索和年度合作包绑定核心渠道。",
+      "data_basis": "estimated"
+    },
+    {
+      "id": "high_end_diff",
+      "name": "高端差异化",
+      "description": "维持价格锚点，强化高端能力、服务 SLA、集成能力和风险降低价值。",
+      "data_basis": "estimated"
+    },
+    {
+      "id": "hold_price",
+      "name": "维持价格",
+      "description": "不主动降价，只做局部商务折扣。",
+      "data_basis": "assumed"
+    }
+  ],
+  "opponent_actions": [
+    {
+      "id": "match_cut",
+      "player_id": "head_competitor",
+      "name": "跟随降价"
+    },
+    {
+      "id": "attack_channel",
+      "player_id": "head_competitor",
+      "name": "攻击渠道"
+    },
+    {
+      "id": "launch_free_tier",
+      "player_id": "head_competitor",
+      "name": "推出免费版本"
+    },
+    {
+      "id": "support_bundle",
+      "player_id": "channel",
+      "name": "接受绑定合作"
+    },
+    {
+      "id": "stay_flexible",
+      "player_id": "channel",
+      "name": "保持多供应商"
+    }
+  ],
+  "reaction_estimates": [
+    {
+      "opponent": "head_competitor",
+      "if_we": "cut_price",
+      "likely_actions": [
+        {
+          "action": "match_cut",
+          "probability": 0.65,
+          "rationale": "头部竞品有规模和资金缓冲，跟随降价可以阻止我们获得价格优势。"
+        },
+        {
+          "action": "attack_channel",
+          "probability": 0.25,
+          "rationale": "竞品会用返点或独家政策削弱我们的渠道触达。"
+        }
+      ]
+    },
+    {
+      "opponent": "head_competitor",
+      "if_we": "bundle_channel",
+      "likely_actions": [
+        {
+          "action": "attack_channel",
+          "probability": 0.45,
+          "rationale": "渠道绑定直接触碰竞品防线，但竞品需要付出返点和管理成本。"
+        },
+        {
+          "action": "launch_free_tier",
+          "probability": 0.25,
+          "rationale": "免费版本可制造低端客户噪音，但未必能替代渠道交付价值。"
+        }
+      ]
+    },
+    {
+      "opponent": "head_competitor",
+      "if_we": "high_end_diff",
+      "likely_actions": [
+        {
+          "action": "launch_free_tier",
+          "probability": 0.35,
+          "rationale": "竞品可能用免费版守低端入口，同时避免在高端能力上直接比较。"
+        },
+        {
+          "action": "attack_channel",
+          "probability": 0.2,
+          "rationale": "如果高端差异化带动渠道利润，竞品会攻击关键渠道。"
+        }
+      ]
+    }
+  ],
+  "payoff_matrix": [
+    {
+      "our_action": "cut_price",
+      "opponent_action": "match_cut",
+      "our_payoff": -35,
+      "opponent_payoff": -20,
+      "channel_payoff": 15,
+      "basis": "estimated",
+      "notes": "双方毛利受损，渠道短期受益但长期议价上升。"
+    },
+    {
+      "our_action": "cut_price",
+      "opponent_action": "attack_channel",
+      "our_payoff": -20,
+      "opponent_payoff": 5,
+      "channel_payoff": 20,
+      "basis": "estimated",
+      "notes": "我们既损失价格锚点，又被迫补贴渠道。"
+    },
+    {
+      "our_action": "bundle_channel",
+      "opponent_action": "attack_channel",
+      "our_payoff": 35,
+      "opponent_payoff": -10,
+      "channel_payoff": 30,
+      "basis": "estimated",
+      "notes": "如果绑定包真实提升渠道利润，竞品攻击成本较高。"
+    },
+    {
+      "our_action": "bundle_channel",
+      "opponent_action": "launch_free_tier",
+      "our_payoff": 25,
+      "opponent_payoff": 10,
+      "channel_payoff": 20,
+      "basis": "estimated",
+      "notes": "免费版会冲击低端线索，但渠道仍看重交付和返佣。"
+    },
+    {
+      "our_action": "high_end_diff",
+      "opponent_action": "launch_free_tier",
+      "our_payoff": 30,
+      "opponent_payoff": 15,
+      "channel_payoff": 10,
+      "basis": "estimated",
+      "notes": "高端客户受免费版影响有限，但渠道动力弱于绑定方案。"
+    },
+    {
+      "our_action": "hold_price",
+      "opponent_action": "match_cut",
+      "our_payoff": -10,
+      "opponent_payoff": 10,
+      "channel_payoff": 5,
+      "basis": "assumed",
+      "notes": "维持价格能保护品牌，但若没有差异化会失去低端客户。"
+    }
+  ],
+  "commitment_tests": [
+    {
+      "action_id": "bundle_channel",
+      "commitment": "年度渠道合作包",
+      "costliness": 0.78,
+      "observability": 0.85,
+      "reversibility": 0.25,
+      "incentive_fit": 0.82,
+      "capability_backing": 0.75,
+      "evidence_basis": "estimated",
+      "notes": "返点、联合交付和客户线索投入会让渠道看见真实承诺，撤回成本也较高。"
+    },
+    {
+      "action_id": "high_end_diff",
+      "commitment": "高端服务 SLA 与集成路线图",
+      "costliness": 0.7,
+      "observability": 0.72,
+      "reversibility": 0.35,
+      "incentive_fit": 0.8,
+      "capability_backing": 0.7,
+      "evidence_basis": "estimated",
+      "notes": "若已绑定交付团队和路线图，承诺较可信；若只是发布话术，可信度会下降。"
+    },
+    {
+      "action_id": "cut_price",
+      "commitment": "长期低价",
+      "costliness": 0.9,
+      "observability": 0.9,
+      "reversibility": 0.6,
+      "incentive_fit": 0.25,
+      "capability_backing": 0.45,
+      "evidence_basis": "assumed",
+      "notes": "低价很显眼但与毛利目标冲突，因此时间一致性弱。"
+    }
+  ],
+  "signals": [
+    {
+      "sender": "head_competitor",
+      "signal": "市场传言其准备推出免费版本",
+      "quality": "weak",
+      "interpretation": "目前更像压制渠道和客户预期的信号，除非看到真实产品、预算和分发资源。"
+    }
+  ],
+  "equilibrium": {
+    "primary_frame": "sequential price-war and channel-commitment game",
+    "interpretation": "单纯降价容易形成双方跟随降价的低收益均衡；渠道绑定和高端差异化把博弈从价格维度转向渠道利润和客户风险降低，能削弱竞品跟随降价的收益。",
+    "candidate_equilibria": [
+      "低质量价格战：我们降价，竞品跟随降价，双方毛利受损。",
+      "渠道绑定均衡：我们绑定渠道，竞品攻击渠道但成本较高，渠道因可售卖方案和服务支持而偏向我们。",
+      "高端差异化均衡：我们维持价格锚点，竞品用免费版守低端入口，双方在不同客户层竞争。"
+    ]
+  },
+  "repeated_game": {
+    "interpretation": "这是重复博弈，不是一次性价格选择。短期降价会训练客户和渠道等待折扣；可持续承诺应提高渠道未来收益和高端客户转换成本。",
+    "relationship_risks": [
+      "渠道可能把绑定条件用于向竞品索要更高返点。",
+      "客户可能把降价视为未来谈判锚点。",
+      "竞品可能用免费版制造舆论压力。"
+    ]
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "date": "2026-05-04",
+      "stage": "初始建模",
+      "new_information": [
+        "我们的可选动作包括降价、捆绑渠道、高端差异化和维持价格。",
+        "竞品可能跟随降价、攻击渠道或推出免费版本。"
+      ],
+      "classified_as": [
+        "sequential game",
+        "repeated game",
+        "signaling game"
+      ],
+      "affected_players": [
+        "us",
+        "head_competitor",
+        "channel"
+      ],
+      "recommendation_status": "initial",
+      "interim_judgment": "避免进入低质量价格战，优先采用渠道绑定与高端差异化组合。"
+    }
+  ],
+  "recommendation": {
+    "primary_action": "bundle_channel",
+    "secondary_action": "high_end_diff",
+    "avoid_action": "cut_price",
+    "reason": "降价最容易被头部竞品跟随，且会损害长期价格锚点；渠道绑定和高端差异化更能形成可信承诺和可持续收益。"
+  },
+  "scenario_triggers": [
+    {
+      "trigger": "竞品正式发布免费版本并投入渠道推广",
+      "update_rule": "更新免费版可信度、低端客户流失和渠道支持 payoff。"
+    },
+    {
+      "trigger": "核心渠道拒绝年度合作包",
+      "update_rule": "下调渠道绑定承诺可信度，并重新比较高端差异化与维持价格。"
+    },
+    {
+      "trigger": "竞品公开长期降价承诺",
+      "update_rule": "检查其降价是否时间一致；若资金和毛利不足，按弱承诺处理。"
+    }
+  ],
+  "warnings": [
+    "本报告是战略决策支持，不构成法律、投资或反垄断合规意见。",
+    "payoff 为估计值，需用真实毛利、渠道转化和客户留存数据校准。",
+    "任何排他、联合抵制或限制竞争动作都需要单独合规审查。"
+  ]
+}

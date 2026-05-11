@@ -1,0 +1,26 @@
+{
+  "name": "yao-gametheory-skill",
+  "version": "0.1.0",
+  "owner": "Yao Team",
+  "updated_at": "2026-05-04",
+  "status": "active",
+  "maturity_tier": "library",
+  "lifecycle_stage": "active",
+  "context_budget_tier": "library",
+  "review_cadence": "quarterly",
+  "skill_archetype": "library",
+  "target_platforms": [
+    "openai",
+    "claude",
+    "generic",
+    "agent-skills-compatible"
+  ],
+  "factory_components": [
+    "references",
+    "scripts",
+    "templates",
+    "input",
+    "evals",
+    "reports"
+  ]
+}

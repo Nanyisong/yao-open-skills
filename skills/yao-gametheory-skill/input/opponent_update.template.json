@@ -1,0 +1,34 @@
+{
+  "rounds": [
+    {
+      "round": 2,
+      "date": "2026-05-04",
+      "stage": "竞品动作更新",
+      "new_information": [
+        "头部竞品宣布 30 天免费版本"
+      ],
+      "classified_as": [
+        "signaling game",
+        "price war escalation"
+      ],
+      "affected_players": [
+        "us",
+        "head_competitor",
+        "channel"
+      ],
+      "recommendation_status": "unchanged",
+      "interim_judgment": "继续避免低质量价格战，强化渠道绑定与高端差异化"
+    }
+  ],
+  "signals": [
+    {
+      "sender": "head_competitor",
+      "signal": "宣布 30 天免费版本",
+      "quality": "partially credible",
+      "interpretation": "如果有真实产品和渠道资源支撑，会削弱低端客户留存；对高端服务型客户影响较小。"
+    }
+  ],
+  "warnings": [
+    "本次更新需要继续观察免费版是否有真实转化、渠道推广和续费路径。"
+  ]
+}

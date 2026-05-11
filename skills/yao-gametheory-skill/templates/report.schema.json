@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GameTheoryStrategyReport",
+  "type": "object",
+  "required": [
+    "title",
+    "summary",
+    "framework_selection",
+    "players",
+    "our_actions",
+    "opponent_actions",
+    "reaction_estimates",
+    "payoff_matrix",
+    "commitment_tests",
+    "strategy_readiness",
+    "strategic_hygiene",
+    "sensitivity",
+    "next_information",
+    "scenario_triggers",
+    "warnings"
+  ],
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "one_sentence",
+        "recommended_action",
+        "avoid_action",
+        "commitment_verdict"
+      ]
+    },
+    "framework_selection": {
+      "type": "object",
+      "required": [
+        "primary",
+        "secondary_lenses",
+        "combination_logic"
+      ],
+      "properties": {
+        "primary": {
+          "type": "string"
+        },
+        "secondary_lenses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "excluded_frameworks": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "combination_logic": {
+          "type": "string"
+        }
+      }
+    },
+    "players": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "our_actions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "opponent_actions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "reaction_estimates": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "payoff_matrix": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "commitment_tests": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "strategy_readiness": {
+      "type": "object",
+      "required": [
+        "score",
+        "status",
+        "interpretation"
+      ],
+      "properties": {
+        "score": {
+          "type": "number"
+        },
+        "status": {
+          "type": "string"
+        },
+        "interpretation": {
+          "type": "string"
+        },
+        "remaining_gaps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "strategic_hygiene": {
+      "type": "object",
+      "properties": {
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "sensitivity": {
+      "type": "object",
+      "required": [
+        "stability",
+        "most_dangerous_assumption"
+      ],
+      "properties": {
+        "stability": {
+          "type": "string"
+        },
+        "payoff_gap": {
+          "type": "number"
+        },
+        "most_dangerous_assumption": {
+          "type": "string"
+        },
+        "stress_tests": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "next_information": {
+      "type": "object",
+      "properties": {
+        "priorities": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "signals": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "equilibrium": {
+      "type": "object"
+    },
+    "repeated_game": {
+      "type": "object"
+    },
+    "rounds": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "scenario_triggers": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

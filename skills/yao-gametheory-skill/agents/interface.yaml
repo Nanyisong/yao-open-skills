@@ -1,0 +1,24 @@
+interface:
+  display_name: "Yao Game Theory Skill"
+  short_description: "Turn strategic competition, negotiation, alliance, channel, pricing, and competitor-response questions into dynamic game theory reports"
+  default_prompt: "Use $yao-gametheory-skill to model this strategic interaction: identify players, strategies, payoffs, likely opponent reactions, equilibrium candidates, credible commitments, signals, repeated-game dynamics, and update triggers, then export Markdown, HTML, Word, and PDF-ready reports."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "openai"
+    - "claude"
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    openai: "metadata-adapter"
+    claude: "neutral-source-plus-adapter"
+    generic: "neutral-source"

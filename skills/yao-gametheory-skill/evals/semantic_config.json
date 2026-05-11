@@ -1,0 +1,209 @@
+{
+  "optimizer_hints": {
+    "capability": "Convert strategic interactions into game theory strategy reports",
+    "inputs": [
+      "players",
+      "strategies",
+      "payoffs",
+      "competitor moves",
+      "channel or partner reactions",
+      "commitments",
+      "signals",
+      "negotiation terms"
+    ],
+    "trigger_actions": [
+      "model opponent reactions",
+      "build a payoff matrix",
+      "check credible commitments",
+      "reason about equilibrium",
+      "update the game after a new move",
+      "export a strategy report"
+    ],
+    "exclusions": [
+      "textbook-only tutoring",
+      "homework",
+      "pure math proof",
+      "generic brainstorming",
+      "Bayesian decision report",
+      "final legal or financial advice"
+    ],
+    "artifacts": [
+      "game theory strategy report",
+      "opponent reaction map",
+      "payoff matrix",
+      "credible commitment checklist",
+      "dynamic update log"
+    ]
+  },
+  "fallback_positive_concepts": [
+    "strategic_interaction",
+    "game_theory_model",
+    "opponent_reaction",
+    "credible_commitment",
+    "report_export"
+  ],
+  "positive_concepts": {
+    "strategic_interaction": {
+      "weight": 0.22,
+      "phrases": [
+        "strategic interaction",
+        "competition",
+        "negotiation",
+        "alliance",
+        "channel conflict",
+        "pricing",
+        "price war",
+        "financing negotiation",
+        "竞品",
+        "价格战",
+        "渠道"
+      ]
+    },
+    "game_theory_model": {
+      "weight": 0.24,
+      "phrases": [
+        "game theory",
+        "博弈论",
+        "payoff matrix",
+      "equilibrium",
+      "Nash",
+      "prisoner",
+      "zero-sum",
+      "coordination",
+      "stag hunt",
+      "chicken",
+      "Stackelberg",
+      "Bertrand",
+      "Cournot",
+      "players and strategies",
+        "players, strategies",
+        "bargaining leverage",
+        "均衡"
+      ]
+    },
+    "opponent_reaction": {
+      "weight": 0.2,
+      "phrases": [
+        "opponent reactions",
+        "competitor-response",
+        "competitor response",
+        "head competitor",
+        "how the competitor may react",
+        "forecast how",
+        "对手反应",
+        "竞争反应"
+      ]
+    },
+    "credible_commitment": {
+      "weight": 0.18,
+      "phrases": [
+        "credible commitment",
+        "credible commitments",
+        "credible threat",
+        "signals",
+        "signal",
+        "commitment",
+        "承诺",
+        "可信承诺",
+        "信号"
+      ]
+    },
+    "dynamic_update": {
+      "weight": 0.1,
+      "phrases": [
+        "update our previous",
+        "update the game",
+        "dynamic update",
+        "new move",
+        "just launched",
+        "refresh",
+        "更新"
+      ]
+    },
+    "report_export": {
+      "weight": 0.06,
+      "phrases": [
+        "strategy report",
+        "CEO report",
+        "markdown",
+        "html",
+        "word",
+        "pdf",
+        "export"
+      ]
+    },
+    "framework_router": {
+      "weight": 0.08,
+      "phrases": [
+        "frameworks",
+        "framework",
+        "choose the right",
+        "combine",
+        "lenses",
+        "application report",
+        "框架",
+        "组合",
+        "路由"
+      ]
+    }
+  },
+  "negative_concepts": {
+    "teaching_only": {
+      "weight": 0.42,
+      "exclusive": true,
+      "phrases": [
+        "explain Nash equilibrium",
+        "explain game theory",
+        "what is game theory",
+        "beginner",
+        "teach me",
+        "simple language"
+      ]
+    },
+    "homework_only": {
+      "weight": 0.44,
+      "exclusive": true,
+      "phrases": [
+        "homework",
+        "textbook",
+        "exam question",
+        "solve this payoff matrix",
+        "pure math proof",
+        "theorem proof"
+      ]
+    },
+    "generic_brainstorm": {
+      "weight": 0.28,
+      "exclusive": true,
+      "phrases": [
+        "brainstorm",
+        "ideas only",
+        "generic strategy",
+        "without modeling",
+        "no strategic move"
+      ]
+    },
+    "bayesian_neighbor": {
+      "weight": 0.4,
+      "exclusive": true,
+      "phrases": [
+        "Bayesian decision report",
+        "priors and posterior",
+        "posterior probabilities",
+        "Bayesian posterior",
+        "贝叶斯"
+      ]
+    },
+    "final_professional_advice": {
+      "weight": 0.44,
+      "exclusive": true,
+      "phrases": [
+        "legal advice",
+        "financial advice",
+        "investment advice",
+        "antitrust law",
+        "whether this competitor behavior violates"
+      ]
+    }
+  }
+}
