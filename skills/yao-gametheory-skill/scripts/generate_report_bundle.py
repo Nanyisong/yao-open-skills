@@ -101,6 +101,8 @@ def merge_update(base: dict[str, Any], update: dict[str, Any]) -> dict[str, Any]
         "payoff_matrix",
         "commitment_tests",
         "signals",
+        "historical_behavior_data",
+        "experience_reference_analysis",
         "rounds",
         "scenario_triggers",
         "warnings",
@@ -109,7 +111,7 @@ def merge_update(base: dict[str, Any], update: dict[str, Any]) -> dict[str, Any]
         if update.get(key):
             merged.setdefault(key, [])
             merged[key].extend(as_list(update[key]))
-    for key in ("case_context", "equilibrium", "repeated_game", "recommendation"):
+    for key in ("case_context", "equilibrium", "repeated_game", "recommendation", "rationality_priors"):
         if isinstance(update.get(key), dict):
             merged.setdefault(key, {})
             merged[key].update(update[key])
@@ -128,26 +130,184 @@ def commitment_score(item: dict[str, Any]) -> tuple[float, str]:
     ]
     present = [max(0.0, min(1.0, value)) for value in components]
     score = sum(present) / len(present) if present else 0.0
+    return score, commitment_level(score)
+
+
+def clamp(value: float, low: float = 0.0, high: float = 1.0) -> float:
+    return max(low, min(high, value))
+
+
+def commitment_level(score: float) -> str:
     if score >= 0.75:
-        level = "可信"
-    elif score >= 0.45:
-        level = "部分可信"
-    else:
-        level = "弱承诺/更像口头信号"
-    return score, level
+        return "可信"
+    if score >= 0.45:
+        return "部分可信"
+    return "弱承诺/更像口头信号"
 
 
-def enrich_commitments(request: dict[str, Any]) -> list[dict[str, Any]]:
+def rationality_signal_adjustment(signal: Any) -> float:
+    signal_text = text(signal, "").lower()
+    mapping = {
+        "rational": 0.08,
+        "time_consistent": 0.1,
+        "disciplined": 0.08,
+        "bounded": -0.12,
+        "bounded_rational": -0.12,
+        "opportunistic": -0.14,
+        "inconsistent": -0.18,
+        "cheap_talk": -0.18,
+        "bluff": -0.2,
+        "irrational": -0.25,
+    }
+    return mapping.get(signal_text, 0.0)
+
+
+def rationality_priors(request: dict[str, Any]) -> dict[str, float]:
+    raw = request.get("rationality_priors", {})
+    priors: dict[str, float] = {}
+    if isinstance(raw, dict):
+        for key, value in raw.items():
+            if isinstance(value, dict):
+                priors[str(key)] = clamp(number(value.get("probability"), 0.72), 0.05, 0.95)
+            else:
+                priors[str(key)] = clamp(number(value, 0.72), 0.05, 0.95)
+    elif isinstance(raw, list):
+        for item in raw:
+            if isinstance(item, dict) and item.get("player_id"):
+                priors[str(item["player_id"])] = clamp(number(item.get("probability"), 0.72), 0.05, 0.95)
+    return priors
+
+
+def build_historical_behavior_analysis(request: dict[str, Any]) -> dict[str, Any]:
+    players = index_by_id(request.get("players", []))
+    history_items = [item for item in as_list(request.get("historical_behavior_data")) if isinstance(item, dict)]
+    reference_items = [item for item in as_list(request.get("experience_reference_analysis")) if isinstance(item, dict)]
+    priors = rationality_priors(request)
+    player_ids = set(players.keys()) | {text(item.get("player_id"), "") for item in history_items + reference_items}
+    player_ids = {player_id for player_id in player_ids if player_id}
+    if not player_ids:
+        player_ids = {"head_competitor"}
+
+    player_adjustments = []
+    for player_id in sorted(player_ids):
+        prior = priors.get(player_id, 0.72 if player_id != "us" else 0.78)
+        adjustments: list[float] = []
+        evidence_weights: list[float] = []
+        player_history = [item for item in history_items if text(item.get("player_id"), "") == player_id]
+        player_refs = [item for item in reference_items if text(item.get("player_id"), player_id) == player_id]
+        for item in player_history:
+            similarity = clamp(number(item.get("context_similarity"), 0.55), 0.0, 1.0)
+            follow_raw = item.get("commitment_follow_through")
+            follow_adjustment = 0.0
+            if follow_raw is not None:
+                follow_adjustment = (clamp(number(follow_raw), 0.0, 1.0) - 0.5) * 0.35
+            signal_adjustment = rationality_signal_adjustment(item.get("rationality_signal"))
+            adjustments.append((signal_adjustment + follow_adjustment) * similarity)
+            evidence_weights.append(similarity)
+        for item in player_refs:
+            confidence = clamp(number(item.get("confidence"), 0.55), 0.0, 1.0)
+            adjustments.append(number(item.get("rationality_adjustment"), 0.0) * confidence)
+            evidence_weights.append(confidence)
+        total_adjustment = sum(adjustments)
+        adjusted = clamp(prior + total_adjustment, 0.05, 0.95)
+        evidence_quality = sum(evidence_weights) / len(evidence_weights) if evidence_weights else 0.0
+        if not evidence_weights:
+            interpretation = "未提供真实历史行为数据；理性概率仍是模型先验，承诺和反应判断需要打折。"
+        elif adjusted < prior - 0.08:
+            interpretation = "真实历史行为显示该玩家未必时间一致或完全理性，应下调其长期威胁、承诺或信号可信度。"
+        elif adjusted > prior + 0.08:
+            interpretation = "真实历史行为显示该玩家执行较一致，可适度提高其理性反应和承诺可信度。"
+        else:
+            interpretation = "历史行为没有显著改变理性概率，但可作为反应和承诺判断的校准证据。"
+        player_adjustments.append(
+            {
+                "player_id": player_id,
+                "player": text(players.get(player_id, {}).get("name"), player_id),
+                "prior_rationality": round(prior, 2),
+                "adjusted_rationality": round(adjusted, 2),
+                "adjustment": round(adjusted - prior, 2),
+                "evidence_quality": round(evidence_quality, 2),
+                "history_count": len(player_history),
+                "reference_count": len(player_refs),
+                "interpretation": interpretation,
+            }
+        )
+    history_rows = [
+        {
+            "player_id": text(item.get("player_id")),
+            "player": text(players.get(text(item.get("player_id"), ""), {}).get("name"), text(item.get("player_id"))),
+            "event": text(item.get("event")),
+            "observed_action": text(item.get("observed_action")),
+            "context_similarity": clamp(number(item.get("context_similarity"), 0.0), 0.0, 1.0),
+            "commitment_follow_through": clamp(number(item.get("commitment_follow_through"), 0.0), 0.0, 1.0),
+            "source": text(item.get("source")),
+            "implication": text(item.get("implication")),
+        }
+        for item in history_items
+    ]
+    reference_rows = [
+        {
+            "player_id": text(item.get("player_id"), ""),
+            "reference_class": text(item.get("reference_class")),
+            "pattern": text(item.get("pattern")),
+            "rationality_adjustment": round(number(item.get("rationality_adjustment"), 0.0), 2),
+            "confidence": clamp(number(item.get("confidence"), 0.0), 0.0, 1.0),
+            "implication": text(item.get("implication")),
+        }
+        for item in reference_items
+    ]
+    return {
+        "principle": "真实历史行为优先于纯模型推演；多轮博弈中应防止高估对手完全理性和时间一致性。",
+        "player_adjustments": player_adjustments,
+        "history_rows": history_rows,
+        "reference_rows": reference_rows,
+    }
+
+
+def enrich_commitments(request: dict[str, Any], historical_analysis: dict[str, Any]) -> list[dict[str, Any]]:
     actions = index_by_id(request.get("our_actions", []))
+    opponent_actions = index_by_id(request.get("opponent_actions", []))
+    players = index_by_id(request.get("players", []))
+    rationality_map = {item.get("player_id"): item for item in historical_analysis.get("player_adjustments", [])}
     enriched = []
     for item in request.get("commitment_tests", []):
         score, level = commitment_score(item)
+        action_id = text(item.get("action_id"), "")
+        player_id = text(item.get("player_id"), "")
+        if not player_id and action_id in opponent_actions:
+            player_id = text(opponent_actions[action_id].get("player_id"), "")
+        if not player_id:
+            player_id = "us"
+        adjustment = rationality_map.get(player_id, {})
+        prior_rationality = number(adjustment.get("prior_rationality"), 0.0)
+        adjusted_rationality = number(adjustment.get("adjusted_rationality"), prior_rationality)
+        has_history = bool(number(adjustment.get("history_count"), 0.0) or number(adjustment.get("reference_count"), 0.0))
+        history_adjusted_score = score
+        if has_history:
+            history_adjusted_score = clamp(score + (adjusted_rationality - prior_rationality) * 0.35)
+        adjusted_level = commitment_level(history_adjusted_score)
+        if action_id in actions:
+            target_name = text(actions[action_id].get("name"), action_id)
+        elif action_id in opponent_actions:
+            target_name = text(opponent_actions[action_id].get("name"), action_id)
+        else:
+            target_name = ""
+        if not target_name or target_name == "-":
+            target_name = text(players.get(player_id, {}).get("name"), player_id)
         enriched.append(
             {
                 **item,
-                "action_name": label(item.get("action_id"), actions),
-                "score": score,
-                "level": level,
+                "player_id": player_id,
+                "player_name": text(players.get(player_id, {}).get("name"), player_id),
+                "action_name": target_name,
+                "raw_score": score,
+                "raw_level": level,
+                "score": history_adjusted_score,
+                "level": adjusted_level,
+                "rationality_prior": prior_rationality,
+                "history_adjusted_rationality": adjusted_rationality,
+                "history_adjusted_score": history_adjusted_score,
+                "history_adjustment_note": text(adjustment.get("interpretation"), "未提供该玩家历史行为校正。"),
             }
         )
     return enriched
@@ -290,7 +450,13 @@ def readiness_status(score: float) -> tuple[str, str]:
     return "needs-more-info", "当前模型仍缺少关键玩家、payoff、反应或承诺证据，适合先做低成本验证。"
 
 
-def build_sensitivity(request: dict[str, Any], payoffs: list[dict[str, Any]], commitments: list[dict[str, Any]], primary_id: str) -> dict[str, Any]:
+def build_sensitivity(
+    request: dict[str, Any],
+    payoffs: list[dict[str, Any]],
+    commitments: list[dict[str, Any]],
+    primary_id: str,
+    historical_analysis: dict[str, Any],
+) -> dict[str, Any]:
     if request.get("sensitivity"):
         return request["sensitivity"]
     best = payoffs[0] if payoffs else {}
@@ -304,7 +470,17 @@ def build_sensitivity(request: dict[str, Any], payoffs: list[dict[str, Any]], co
         stability = "mixed"
     else:
         stability = "fragile"
-    if gap < 5:
+    rationality_risk = next(
+        (
+            item
+            for item in historical_analysis.get("player_adjustments", [])
+            if item.get("player_id") != "us" and number(item.get("adjustment"), 0.0) <= -0.08
+        ),
+        None,
+    )
+    if rationality_risk:
+        dangerous = f"可能高估「{text(rationality_risk.get('player'))}」的完全理性和时间一致性；真实历史行为要求下调其长期承诺或威胁可信度。"
+    elif gap < 5:
         dangerous = "主推荐与备选方案的预期收益差距较小，少量 payoff 调整就可能改变排序。"
     elif commitment_score_value < 0.75:
         dangerous = "主推荐依赖承诺可信度；如果渠道或对手认为该承诺可轻易撤回，推荐会变弱。"
@@ -335,31 +511,51 @@ def build_sensitivity(request: dict[str, Any], payoffs: list[dict[str, Any]], co
                 "expected_effect": "渠道绑定的可信承诺分下降，竞品攻击渠道的胜率上升。",
                 "recommendation_impact": "需要先补强可观察投入，再正式推进绑定。",
             },
+            {
+                "name": "对手理性程度下调",
+                "assumption_shift": "用真实历史行为替代模型默认理性假设。",
+                "expected_effect": "长期低价、免费版持续投入或公开威胁可能更像战术噪音，而非时间一致承诺。",
+                "recommendation_impact": "降低对方持续威胁可信度，但仍保留短期扰动和渠道舆论风险。",
+            },
         ],
     }
 
 
-def build_strategy_readiness(request: dict[str, Any], payoffs: list[dict[str, Any]], commitments: list[dict[str, Any]], framework_selection: dict[str, Any], sensitivity: dict[str, Any]) -> dict[str, Any]:
+def build_strategy_readiness(
+    request: dict[str, Any],
+    payoffs: list[dict[str, Any]],
+    commitments: list[dict[str, Any]],
+    framework_selection: dict[str, Any],
+    sensitivity: dict[str, Any],
+    historical_analysis: dict[str, Any],
+) -> dict[str, Any]:
     if request.get("strategy_readiness"):
         return request["strategy_readiness"]
+    historical_scores = [
+        number(item.get("evidence_quality"), 0.0)
+        for item in historical_analysis.get("player_adjustments", [])
+        if item.get("player_id") != "us" and (item.get("history_count") or item.get("reference_count"))
+    ]
     checks = {
         "players": 1.0 if len(request.get("players", [])) >= 2 else 0.3,
         "strategies": 1.0 if request.get("our_actions") and request.get("opponent_actions") else 0.35,
         "payoffs": 1.0 if request.get("payoff_matrix") and all(row.get("basis") for row in request.get("payoff_matrix", [])) else 0.45,
         "reactions": 1.0 if any(item.get("likely_actions") for item in request.get("reaction_estimates", [])) else 0.35,
         "commitments": min(1.0, max([number(item.get("score"), 0.0) for item in commitments] or [0.0]) + 0.15),
+        "history": max(historical_scores) if historical_scores else 0.35,
         "framework": 1.0 if framework_selection.get("primary") and framework_selection.get("secondary_lenses") else 0.4,
         "sensitivity": {"stable": 1.0, "mixed": 0.7, "fragile": 0.35}.get(text(sensitivity.get("stability"), ""), 0.5),
         "updateability": 1.0 if request.get("scenario_triggers") and request.get("rounds") else 0.55,
     }
     weights = {
-        "players": 0.12,
-        "strategies": 0.12,
-        "payoffs": 0.16,
-        "reactions": 0.16,
-        "commitments": 0.14,
-        "framework": 0.1,
-        "sensitivity": 0.12,
+        "players": 0.1,
+        "strategies": 0.1,
+        "payoffs": 0.14,
+        "reactions": 0.14,
+        "commitments": 0.12,
+        "history": 0.14,
+        "framework": 0.08,
+        "sensitivity": 0.1,
         "updateability": 0.08,
     }
     score = sum(checks[key] * weights[key] for key in weights)
@@ -374,6 +570,8 @@ def build_strategy_readiness(request: dict[str, Any], payoffs: list[dict[str, An
         gaps.append("补齐竞品跟随降价、渠道攻击、免费版本推进的证据和概率。")
     if checks["commitments"] < 0.75:
         gaps.append("提高主推荐动作的可观察投入、合同约束或撤回成本。")
+    if checks["history"] < 0.7:
+        gaps.append("补充对手真实历史行为数据、过往威胁兑现率和同类经验参考，校正理性概率。")
     if sensitivity.get("stability") != "stable":
         gaps.append("围绕最危险假设做一次小规模验证或敏感性复核。")
     status, interpretation = readiness_status(score)
@@ -386,12 +584,18 @@ def build_strategy_readiness(request: dict[str, Any], payoffs: list[dict[str, An
     }
 
 
-def build_strategic_hygiene(request: dict[str, Any], commitments: list[dict[str, Any]], framework_selection: dict[str, Any]) -> dict[str, Any]:
+def build_strategic_hygiene(
+    request: dict[str, Any],
+    commitments: list[dict[str, Any]],
+    framework_selection: dict[str, Any],
+    historical_analysis: dict[str, Any],
+) -> dict[str, Any]:
     if request.get("strategic_hygiene"):
         return request["strategic_hygiene"]
     payoff_basis_ok = bool(request.get("payoff_matrix")) and all(row.get("basis") for row in request.get("payoff_matrix", []))
     reaction_rationale_ok = all(likely.get("rationale") for item in request.get("reaction_estimates", []) for likely in item.get("likely_actions", []))
     commitment_ok = bool(commitments) and max(number(item.get("score"), 0.0) for item in commitments) >= 0.75
+    history_ok = bool(historical_analysis.get("history_rows") or historical_analysis.get("reference_rows"))
     checks = [
         {
             "name": "payoff hygiene",
@@ -409,6 +613,11 @@ def build_strategic_hygiene(request: dict[str, Any], commitments: list[dict[str,
             "note": "至少一个关键承诺通过可信度门槛。" if commitment_ok else "承诺仍可能被视为便宜话术。",
         },
         {
+            "name": "historical behavior hygiene",
+            "status": "pass" if history_ok else "watch",
+            "note": "已用真实历史行为或同类经验校正玩家理性概率。" if history_ok else "缺少历史行为校正，模型可能高估对手完全理性和时间一致性。",
+        },
+        {
             "name": "framework hygiene",
             "status": "pass" if framework_selection.get("primary") else "watch",
             "note": "框架选择先从结构出发，而不是只套用著名博弈。" if framework_selection.get("primary") else "需要说明主框架为何适配。",
@@ -422,10 +631,20 @@ def build_strategic_hygiene(request: dict[str, Any], commitments: list[dict[str,
     return {"checks": checks}
 
 
-def build_next_information(request: dict[str, Any], readiness: dict[str, Any], sensitivity: dict[str, Any]) -> dict[str, Any]:
+def build_next_information(
+    request: dict[str, Any],
+    readiness: dict[str, Any],
+    sensitivity: dict[str, Any],
+    historical_analysis: dict[str, Any],
+) -> dict[str, Any]:
     if request.get("next_information"):
         return request["next_information"]
     priorities = [
+        {
+            "item": "对手真实历史行为样本",
+            "why_it_matters": "AI 估算 payoff 和可信承诺时容易高估对手理性；历史行为能校正威胁兑现率和时间一致性。",
+            "collection_method": "整理过往价格战、免费版发布、渠道攻击、公开威胁与实际兑现记录，并标注相似度和来源。",
+        },
         {
             "item": "竞品真实降价承受能力",
             "why_it_matters": "决定竞品跟随降价是否是可持续威胁，而不是短期信号。",
@@ -442,6 +661,8 @@ def build_next_information(request: dict[str, Any], readiness: dict[str, Any], s
             "collection_method": "追踪产品可用性、渠道推广、转化路径和续费机制。",
         },
     ]
+    if historical_analysis.get("history_rows") or historical_analysis.get("reference_rows"):
+        priorities = priorities[1:]
     for gap in readiness.get("remaining_gaps", []):
         priorities.append({"item": "策略准备度缺口", "why_it_matters": gap, "collection_method": "补齐后重新生成博弈报告。"})
     if sensitivity.get("stability") == "fragile":
@@ -459,7 +680,8 @@ def build_next_information(request: dict[str, Any], readiness: dict[str, Any], s
 def build_report(request: dict[str, Any]) -> dict[str, Any]:
     actions = index_by_id(request.get("our_actions", []))
     payoffs = expected_payoffs(request)
-    commitments = enrich_commitments(request)
+    historical_analysis = build_historical_behavior_analysis(request)
+    commitments = enrich_commitments(request, historical_analysis)
     framework_selection = request.get("framework_selection") or infer_framework_selection(request)
     recommendation = request.get("recommendation", {})
     primary_id = text(recommendation.get("primary_action"), "") or (payoffs[0]["action_id"] if payoffs else "")
@@ -482,10 +704,10 @@ def build_report(request: dict[str, Any]) -> dict[str, Any]:
         + f"，避免「{avoid_name}」；"
         + (f"主反应风险是「{top_reaction['action']}」（约 {fmt_pct(top_reaction['probability'])}）。" if top_reaction else "当前反应数据不足，需继续补齐对手动作。")
     )
-    sensitivity = build_sensitivity(request, payoffs, commitments, primary_id)
-    readiness = build_strategy_readiness(request, payoffs, commitments, framework_selection, sensitivity)
-    strategic_hygiene = build_strategic_hygiene(request, commitments, framework_selection)
-    next_information = build_next_information(request, readiness, sensitivity)
+    sensitivity = build_sensitivity(request, payoffs, commitments, primary_id, historical_analysis)
+    readiness = build_strategy_readiness(request, payoffs, commitments, framework_selection, sensitivity, historical_analysis)
+    strategic_hygiene = build_strategic_hygiene(request, commitments, framework_selection, historical_analysis)
+    next_information = build_next_information(request, readiness, sensitivity, historical_analysis)
     return {
         "title": text(request.get("title"), "博弈论策略报告"),
         "generated_at": str(date.today()),
@@ -509,6 +731,7 @@ def build_report(request: dict[str, Any]) -> dict[str, Any]:
         "payoff_matrix": request.get("payoff_matrix", []),
         "expected_payoffs": payoffs,
         "commitment_tests": commitments,
+        "historical_behavior_analysis": historical_analysis,
         "strategy_readiness": readiness,
         "strategic_hygiene": strategic_hygiene,
         "sensitivity": sensitivity,
@@ -534,6 +757,7 @@ def md_table(headers: list[str], rows: list[list[Any]]) -> str:
 def render_markdown(report: dict[str, Any]) -> str:
     context = report.get("case_context", {})
     frameworks = report.get("framework_selection", {})
+    history = report.get("historical_behavior_analysis", {})
     md: list[str] = [
         f"# {report['title']}",
         "",
@@ -597,6 +821,59 @@ def render_markdown(report: dict[str, Any]) -> str:
             md_table(
                 ["检查", "状态", "说明"],
                 [[item.get("name"), item.get("status"), item.get("note")] for item in report.get("strategic_hygiene", {}).get("checks", [])],
+            ),
+            "",
+            "## 历史行为与理性概率校正",
+            "",
+            text(history.get("principle")),
+            "",
+            md_table(
+                ["玩家", "先验理性", "历史校正后", "调整", "证据质量", "解释"],
+                [
+                    [
+                        item.get("player"),
+                        fmt_pct(item.get("prior_rationality")),
+                        fmt_pct(item.get("adjusted_rationality")),
+                        fmt_pct(item.get("adjustment")),
+                        fmt_pct(item.get("evidence_quality")),
+                        item.get("interpretation"),
+                    ]
+                    for item in history.get("player_adjustments", [])
+                ],
+            ),
+            "",
+            "### 真实历史行为样本",
+            "",
+            md_table(
+                ["玩家", "历史事件", "观察动作", "相似度", "兑现率", "来源", "启发"],
+                [
+                    [
+                        item.get("player"),
+                        item.get("event"),
+                        item.get("observed_action"),
+                        fmt_pct(item.get("context_similarity")),
+                        fmt_pct(item.get("commitment_follow_through")),
+                        item.get("source"),
+                        item.get("implication"),
+                    ]
+                    for item in history.get("history_rows", [])
+                ],
+            ),
+            "",
+            "### 经验参考分析",
+            "",
+            md_table(
+                ["参考类", "模式", "理性调整", "置信度", "启发"],
+                [
+                    [
+                        item.get("reference_class"),
+                        item.get("pattern"),
+                        fmt_pct(item.get("rationality_adjustment")),
+                        fmt_pct(item.get("confidence")),
+                        item.get("implication"),
+                    ]
+                    for item in history.get("reference_rows", [])
+                ],
             ),
             "",
             "## 敏感性与稳定性",
@@ -684,9 +961,17 @@ def render_markdown(report: dict[str, Any]) -> str:
             "## 承诺与信号可信度",
             "",
             md_table(
-                ["动作", "承诺", "可信度", "评分", "证据基础", "说明"],
+                ["动作", "承诺", "可信度", "原始评分", "历史校正评分", "证据基础", "历史校正说明"],
                 [
-                    [item.get("action_name"), item.get("commitment"), item.get("level"), fmt_pct(item.get("score")), item.get("evidence_basis"), item.get("notes")]
+                    [
+                        item.get("action_name"),
+                        item.get("commitment"),
+                        item.get("level"),
+                        fmt_pct(item.get("raw_score")),
+                        fmt_pct(item.get("history_adjusted_score")),
+                        item.get("evidence_basis"),
+                        item.get("history_adjustment_note"),
+                    ]
                     for item in report.get("commitment_tests", [])
                 ],
             ),
@@ -919,6 +1204,7 @@ def render_html(report: dict[str, Any]) -> str:
     frameworks = report.get("framework_selection", {})
     readiness = report.get("strategy_readiness", {})
     hygiene = report.get("strategic_hygiene", {})
+    history = report.get("historical_behavior_analysis", {})
     sensitivity = report.get("sensitivity", {})
     next_information = report.get("next_information", {})
     action_map = index_by_id(report.get("our_actions", []))
@@ -967,6 +1253,7 @@ def render_html(report: dict[str, Any]) -> str:
       <a href="#summary">结论</a>
       <a href="#frameworks">框架</a>
       <a href="#readiness">准备度</a>
+      <a href="#history">历史</a>
       <a href="#sensitivity">敏感性</a>
       <a href="#players">玩家</a>
       <a href="#reactions">反应</a>
@@ -1023,6 +1310,16 @@ def render_html(report: dict[str, Any]) -> str:
       {html_table(["检查", "状态", "说明"], [[item.get("name"), item.get("status"), item.get("note")] for item in hygiene.get("checks", [])])}
     </section>
 
+    <section id="history">
+      <h2>历史行为与理性概率校正</h2>
+      <div class="callout">{h(history.get('principle'))}</div>
+      {html_table(["玩家", "先验理性", "历史校正后", "调整", "证据质量", "解释"], [[item.get("player"), fmt_pct(item.get("prior_rationality")), fmt_pct(item.get("adjusted_rationality")), fmt_pct(item.get("adjustment")), fmt_pct(item.get("evidence_quality")), item.get("interpretation")] for item in history.get("player_adjustments", [])])}
+      <h3>真实历史行为样本</h3>
+      {html_table(["玩家", "历史事件", "观察动作", "相似度", "兑现率", "来源", "启发"], [[item.get("player"), item.get("event"), item.get("observed_action"), fmt_pct(item.get("context_similarity")), fmt_pct(item.get("commitment_follow_through")), item.get("source"), item.get("implication")] for item in history.get("history_rows", [])])}
+      <h3>经验参考分析</h3>
+      {html_table(["参考类", "模式", "理性调整", "置信度", "启发"], [[item.get("reference_class"), item.get("pattern"), fmt_pct(item.get("rationality_adjustment")), fmt_pct(item.get("confidence")), item.get("implication")] for item in history.get("reference_rows", [])])}
+    </section>
+
     <section id="sensitivity">
       <h2>敏感性与稳定性</h2>
       <p><span class="pill">稳定性</span> {h(sensitivity.get('stability'))} <span class="pill">收益差距</span> {fmt_num(sensitivity.get('payoff_gap'))}</p>
@@ -1053,7 +1350,7 @@ def render_html(report: dict[str, Any]) -> str:
 
     <section id="commitment">
       <h2>承诺与信号可信度</h2>
-      {html_table(["动作", "承诺", "可信度", "评分", "证据基础", "说明"], [[item.get("action_name"), item.get("commitment"), item.get("level"), fmt_pct(item.get("score")), item.get("evidence_basis"), item.get("notes")] for item in report.get("commitment_tests", [])])}
+      {html_table(["动作", "承诺", "可信度", "原始评分", "历史校正评分", "证据基础", "历史校正说明"], [[item.get("action_name"), item.get("commitment"), item.get("level"), fmt_pct(item.get("raw_score")), fmt_pct(item.get("history_adjusted_score")), item.get("evidence_basis"), item.get("history_adjustment_note")] for item in report.get("commitment_tests", [])])}
       <h3>外部信号</h3>
       {html_table(["发送方", "信号", "质量", "解释"], signal_rows)}
     </section>
@@ -1238,6 +1535,7 @@ def simple_docx_blocks(report: dict[str, Any]) -> list[str]:
     frameworks = report.get("framework_selection", {})
     readiness = report.get("strategy_readiness", {})
     hygiene = report.get("strategic_hygiene", {})
+    history = report.get("historical_behavior_analysis", {})
     sensitivity = report.get("sensitivity", {})
     next_information = report.get("next_information", {})
     action_map = index_by_id(report.get("our_actions", []))
@@ -1283,6 +1581,34 @@ def simple_docx_blocks(report: dict[str, Any]) -> list[str]:
                 ["检查", "状态", "说明"],
                 [[item.get("name"), item.get("status"), item.get("note")] for item in hygiene.get("checks", [])],
                 [3400, 2200, 9800],
+            ),
+            simple_docx_paragraph("heading", "历史行为与理性概率校正"),
+            simple_docx_paragraph("normal", text(history.get("principle"))),
+            simple_docx_table(
+                ["玩家", "先验理性", "历史校正后", "调整", "证据质量", "解释"],
+                [
+                    [item.get("player"), fmt_pct(item.get("prior_rationality")), fmt_pct(item.get("adjusted_rationality")), fmt_pct(item.get("adjustment")), fmt_pct(item.get("evidence_quality")), item.get("interpretation")]
+                    for item in history.get("player_adjustments", [])
+                ],
+                [1800, 1700, 1900, 1400, 1700, 6900],
+            ),
+            simple_docx_paragraph("heading", "真实历史行为样本"),
+            simple_docx_table(
+                ["玩家", "历史事件", "观察动作", "相似度", "兑现率", "来源", "启发"],
+                [
+                    [item.get("player"), item.get("event"), item.get("observed_action"), fmt_pct(item.get("context_similarity")), fmt_pct(item.get("commitment_follow_through")), item.get("source"), item.get("implication")]
+                    for item in history.get("history_rows", [])
+                ],
+                [1400, 4200, 2200, 1200, 1200, 2200, 3000],
+            ),
+            simple_docx_paragraph("heading", "经验参考分析"),
+            simple_docx_table(
+                ["参考类", "模式", "理性调整", "置信度", "启发"],
+                [
+                    [item.get("reference_class"), item.get("pattern"), fmt_pct(item.get("rationality_adjustment")), fmt_pct(item.get("confidence")), item.get("implication")]
+                    for item in history.get("reference_rows", [])
+                ],
+                [3000, 5200, 1700, 1500, 4000],
             ),
             simple_docx_paragraph("heading", "敏感性与稳定性"),
             simple_docx_paragraph("normal", f"稳定性：{text(sensitivity.get('stability'))}｜收益差距：{fmt_num(sensitivity.get('payoff_gap'))}"),
@@ -1356,12 +1682,12 @@ def simple_docx_blocks(report: dict[str, Any]) -> list[str]:
             ),
             simple_docx_paragraph("heading", "承诺可信度"),
             simple_docx_table(
-                ["动作", "承诺", "可信度", "评分", "证据基础", "说明"],
+                ["动作", "承诺", "可信度", "原始评分", "历史校正", "证据基础", "历史校正说明"],
                 [
-                    [item.get("action_name"), item.get("commitment"), item.get("level"), fmt_pct(item.get("score")), item.get("evidence_basis"), item.get("notes")]
+                    [item.get("action_name"), item.get("commitment"), item.get("level"), fmt_pct(item.get("raw_score")), fmt_pct(item.get("history_adjusted_score")), item.get("evidence_basis"), item.get("history_adjustment_note")]
                     for item in report.get("commitment_tests", [])
                 ],
-                [1900, 3300, 1700, 1300, 1800, 5400],
+                [1700, 2600, 1500, 1400, 1600, 1600, 5000],
             ),
             simple_docx_paragraph("heading", "动态更新日志"),
             simple_docx_table(
@@ -1449,6 +1775,7 @@ def write_docx(path: Path, report: dict[str, Any]) -> None:
     frameworks = report.get("framework_selection", {})
     readiness = report.get("strategy_readiness", {})
     hygiene = report.get("strategic_hygiene", {})
+    history = report.get("historical_behavior_analysis", {})
     sensitivity = report.get("sensitivity", {})
     next_information = report.get("next_information", {})
     document.add_heading("框架选择与组合", level=1)
@@ -1463,6 +1790,29 @@ def write_docx(path: Path, report: dict[str, Any]) -> None:
     for gap in readiness.get("remaining_gaps", []):
         document.add_paragraph(text(gap), style="List Bullet")
     add_table("战略卫生检查", ["检查", "状态", "说明"], [[item.get("name"), item.get("status"), item.get("note")] for item in hygiene.get("checks", [])])
+    document.add_heading("历史行为与理性概率校正", level=1)
+    document.add_paragraph(text(history.get("principle")))
+    add_table(
+        "玩家理性概率校正",
+        ["玩家", "先验理性", "历史校正后", "调整", "证据质量", "解释"],
+        [
+            [item.get("player"), fmt_pct(item.get("prior_rationality")), fmt_pct(item.get("adjusted_rationality")), fmt_pct(item.get("adjustment")), fmt_pct(item.get("evidence_quality")), item.get("interpretation")]
+            for item in history.get("player_adjustments", [])
+        ],
+    )
+    add_table(
+        "真实历史行为样本",
+        ["玩家", "历史事件", "观察动作", "相似度", "兑现率", "来源", "启发"],
+        [
+            [item.get("player"), item.get("event"), item.get("observed_action"), fmt_pct(item.get("context_similarity")), fmt_pct(item.get("commitment_follow_through")), item.get("source"), item.get("implication")]
+            for item in history.get("history_rows", [])
+        ],
+    )
+    add_table(
+        "经验参考分析",
+        ["参考类", "模式", "理性调整", "置信度", "启发"],
+        [[item.get("reference_class"), item.get("pattern"), fmt_pct(item.get("rationality_adjustment")), fmt_pct(item.get("confidence")), item.get("implication")] for item in history.get("reference_rows", [])],
+    )
     document.add_heading("敏感性与稳定性", level=1)
     document.add_paragraph(f"稳定性：{text(sensitivity.get('stability'))}｜收益差距：{fmt_num(sensitivity.get('payoff_gap'))}")
     document.add_paragraph(f"最危险假设：{text(sensitivity.get('most_dangerous_assumption'))}")
@@ -1506,8 +1856,8 @@ def write_docx(path: Path, report: dict[str, Any]) -> None:
     )
     add_table(
         "承诺可信度",
-        ["动作", "承诺", "可信度", "评分", "说明"],
-        [[item.get("action_name"), item.get("commitment"), item.get("level"), fmt_pct(item.get("score")), item.get("notes")] for item in report.get("commitment_tests", [])],
+        ["动作", "承诺", "可信度", "原始评分", "历史校正评分", "历史校正说明"],
+        [[item.get("action_name"), item.get("commitment"), item.get("level"), fmt_pct(item.get("raw_score")), fmt_pct(item.get("history_adjusted_score")), item.get("history_adjustment_note")] for item in report.get("commitment_tests", [])],
     )
     add_table(
         "动态更新日志",

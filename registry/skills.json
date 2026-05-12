@@ -1,6 +1,6 @@
 {
   "repo_name": "yao-open-skills",
-  "updated_at": "2026-05-11",
+  "updated_at": "2026-05-12",
   "skills": [
     {
       "slug": "learning-builder",
@@ -94,7 +94,7 @@
     {
       "slug": "yao-gametheory-skill",
       "title": "Yao Game Theory Skill",
-      "summary": "Turn strategic competition, negotiation, channel, pricing, platform, M&A, financing, competitor-response, and regulator problems into dynamic game-theory strategy reports with framework routing, opponent reactions, credible commitments, strategy readiness, sensitivity checks, and Markdown/HTML/Word/PDF exports.",
+      "summary": "Turn strategic competition, negotiation, channel, pricing, platform, M&A, financing, competitor-response, and regulator problems into dynamic game-theory strategy reports with framework routing, historical behavior rationality calibration, opponent reactions, credible commitments, strategy readiness, sensitivity checks, and Markdown/HTML/Word/PDF exports.",
       "source_local_path": "/Users/laoyao/AI Coding/03-Development/Skills/yao-gametheory-skill",
       "collection_path": "skills/yao-gametheory-skill",
       "lifecycle": "active",
@@ -110,10 +110,11 @@
         "negotiation",
         "reporting",
         "export",
-        "workflow"
+        "workflow",
+        "historical-behavior"
       ],
-      "last_synced_at": "2026-05-11",
-      "updated_at": "2026-05-11"
+      "last_synced_at": "2026-05-12",
+      "updated_at": "2026-05-12"
     },
     {
       "slug": "yao-kelly-skill",

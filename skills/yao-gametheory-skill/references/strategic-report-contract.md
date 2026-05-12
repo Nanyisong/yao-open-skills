@@ -14,15 +14,16 @@ Every report should be executive-readable before it becomes technical.
 8. Payoff matrix
 9. Expected payoff or scenario ranking
 10. Equilibrium interpretation
-11. Strategy readiness and remaining gaps
-12. Strategic hygiene checks
-13. Sensitivity and stability analysis
-14. Next information to collect
-15. Repeated-game and relationship dynamics
-16. Dynamic update log when available
-17. Triggers that should reopen the report
-18. Risks, caveats, and illegal or unethical tactic boundaries
-19. Appendix with assumptions and data provenance
+11. Historical behavior and rationality-probability calibration
+12. Strategy readiness and remaining gaps
+13. Strategic hygiene checks
+14. Sensitivity and stability analysis
+15. Next information to collect
+16. Repeated-game and relationship dynamics
+17. Dynamic update log when available
+18. Triggers that should reopen the report
+19. Risks, caveats, and illegal or unethical tactic boundaries
+20. Appendix with assumptions and data provenance
 
 ## Mandatory Distinctions
 
@@ -40,6 +41,7 @@ The report must answer:
 - what we should do now
 - how the opponent is likely to react
 - whether our commitment is credible
+- whether opponent rationality and credible commitments were adjusted with real historical behavior
 - which move would trap us in a worse game
 - what evidence would change the recommendation
 - whether the strategy is ready enough to act on
@@ -68,6 +70,7 @@ At minimum, fill:
 - `reaction_estimates`
 - `payoff_matrix`
 - `commitment_tests`
+- `historical_behavior_analysis`
 - `strategy_readiness`
 - `strategic_hygiene`
 - `sensitivity`

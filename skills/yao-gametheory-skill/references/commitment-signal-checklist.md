@@ -15,6 +15,29 @@ A commitment is more credible when it is:
 
 Score each dimension from `0.0` to `1.0`.
 
+## Historical Behavior Adjustment
+
+After the structural score, adjust credibility with real behavior data.
+
+This is especially important in repeated games. A model may assume the opponent will behave rationally and time-consistently because the payoff matrix says so, but real players often bluff, reverse, underfund commitments, or optimize for internal politics rather than modeled payoffs.
+
+Collect:
+
+- prior rationality probability for each important player
+- similar historical events and context similarity
+- observed follow-through rate for past threats, commitments, launches, bids, or channel attacks
+- whether the player behaved rationally, bounded-rationally, opportunistically, inconsistently, or as cheap talk
+- reference-class experience from similar markets or negotiations
+
+Use the adjustment to answer:
+
+- Should we lower the credibility of an opponent threat?
+- Should we treat a free-version launch as sustained strategy or short-term noise?
+- Is a channel attack likely to be funded and repeated?
+- Is our own commitment more credible than the opponent's historical pattern?
+
+Never let a clean payoff matrix override strong historical non-follow-through evidence.
+
 Default interpretation:
 
 - `0.75 - 1.00`: credible
@@ -47,6 +70,8 @@ Treat a commitment or signal as weak when:
 For each important commitment or signal, report:
 
 - score
+- history-adjusted score when historical data exists
+- prior and adjusted rationality probability for the relevant player
 - credibility level
 - evidence basis
 - who must observe it

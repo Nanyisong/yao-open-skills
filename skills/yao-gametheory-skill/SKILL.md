@@ -1,17 +1,18 @@
 ---
 name: yao-gametheory-skill
-description: Route competitive, negotiation, alliance, channel, pricing, platform, M&A, financing, competitor-response, and regulator problems through a game theory framework catalog and AI application router; combine Nash equilibrium, prisoner dilemma, zero-sum, coordination, chicken, stag hunt, entry deterrence, Stackelberg, Bertrand/Cournot, signaling, repeated, bargaining, auction, coalition, commitment, payoff, and equilibrium lenses into dynamic strategy reports with opponent reactions, credible commitments, and Markdown/HTML/Word/PDF outputs. Do not use for textbook tutoring, pure math proofs, gambling tips, generic brainstorming with no strategic counterparty, or final licensed legal, financial, or regulatory advice.
+description: Route CEO-facing competition, negotiation, channel, pricing, platform, M&A, financing, competitor-response, alliance, and regulator problems through an applied game-theory framework router when decisions depend on opponent reactions, credible commitments, signals, payoff/equilibrium logic, historical behavior, dynamic updates, or Markdown/HTML/Word/PDF report export. Do not use for textbook tutoring, proofs, gambling, generic brainstorming, or final legal/financial/regulatory advice.
 ---
 
 # Yao Game Theory Skill
 
 ## Use This Skill For
 
-- convert CEO-facing competition, negotiation, alliance, pricing, platform, M&A, financing, competitor-response, or regulator questions into game theory reports
-- choose and combine frameworks from `references/framework-catalog.md`
+- convert CEO-facing strategic interactions into game theory reports
+- choose and combine game theory frameworks from `references/framework-catalog.md`
 - answer "对手可能怎么反应" and "我们的承诺动作是否可信"
+- use historical behavior and reference-class experience to adjust rationality and commitment probabilities
 - update prior reports when a player makes a new move
-- export synchronized `markdown`, `html`, `docx`, and PDF-ready artifacts
+- export synchronized Markdown, HTML, Word/DOCX, and PDF reports
 
 ## Do Not Route Here
 
@@ -25,17 +26,18 @@ description: Route competitive, negotiation, alliance, channel, pricing, platfor
 1. Convert the request with `references/intake-contract.md`; use `references/dynamic-iteration-loop.md` for incomplete input or later player moves.
 2. Route through `references/framework-catalog.md`: select one primary framework and 2-4 secondary lenses.
 3. Instantiate the combination with `references/game-model-playbook.md`: players, strategies, payoffs, timing, beliefs, and equilibrium logic.
-4. Test commitments and signals with `references/commitment-signal-checklist.md`.
-5. Run `references/strategic-hygiene-checklist.md`, `references/strategy-readiness-loop.md`, and `references/sensitivity-and-safety.md`.
-6. Build framework selection, opponent reactions, payoff matrix, readiness, sensitivity, next information, and update triggers.
-7. Run `scripts/generate_report_bundle.py`; finalize with `references/strategic-report-contract.md` and `references/report-export-pipeline.md`.
+4. Calibrate player rationality with real historical behavior and experience references before trusting payoff-matrix inference.
+5. Test commitments and signals with `references/commitment-signal-checklist.md`.
+6. Run `references/strategic-hygiene-checklist.md`, `references/strategy-readiness-loop.md`, and `references/sensitivity-and-safety.md`.
+7. Build framework selection, opponent reactions, payoff matrix, historical behavior calibration, readiness, sensitivity, next information, and update triggers.
+8. Run `scripts/generate_report_bundle.py`; finalize with `references/strategic-report-contract.md` and `references/report-export-pipeline.md`.
 
 ## Output Contract
 
 - Produce an executive strategy report, not a theory lecture.
 - Put the recommendation, opponent reaction forecast, and credible-commitment call before technical sections.
 - Mark payoffs, probabilities, and assumptions as observed, estimated, or assumed.
-- Include primary framework, secondary lenses, payoff matrix, reactions, equilibrium candidates, commitment/signal checks, strategy readiness, sensitivity, next information, update log, reopen triggers, and caveats.
+- Include frameworks, payoff matrix, reactions, equilibria, historical rationality calibration, commitment/signal checks, readiness, sensitivity, next information, update log, triggers, and caveats.
 - Default language is Simplified Chinese; generate PDF automatically when possible, otherwise keep HTML print-ready.
 
 ## Reference Map

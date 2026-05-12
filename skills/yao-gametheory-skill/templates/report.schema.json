@@ -12,6 +12,7 @@
     "reaction_estimates",
     "payoff_matrix",
     "commitment_tests",
+    "historical_behavior_analysis",
     "strategy_readiness",
     "strategic_hygiene",
     "sensitivity",
@@ -94,6 +95,42 @@
       "type": "array",
       "items": {
         "type": "object"
+      }
+    },
+    "historical_behavior_analysis": {
+      "type": "object",
+      "required": [
+        "principle",
+        "player_adjustments"
+      ],
+      "properties": {
+        "principle": {
+          "type": "string"
+        },
+        "player_adjustments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "player_id",
+              "prior_rationality",
+              "adjusted_rationality",
+              "interpretation"
+            ]
+          }
+        },
+        "history_rows": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "reference_rows": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
       }
     },
     "strategy_readiness": {

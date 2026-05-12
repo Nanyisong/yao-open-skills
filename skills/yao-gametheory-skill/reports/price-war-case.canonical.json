@@ -1,6 +1,6 @@
 {
   "title": "价格战与渠道绑定博弈报告",
-  "generated_at": "2026-05-11",
+  "generated_at": "2026-05-12",
   "case_context": {
     "decision_question": "面对头部竞品的降价压力，我们应当降价、捆绑渠道、做高端差异化，还是维持价格？",
     "time_horizon": "未来 1-2 个季度",
@@ -319,6 +319,28 @@
   ],
   "commitment_tests": [
     {
+      "player_id": "head_competitor",
+      "action_id": "match_cut",
+      "commitment": "长期低价威胁",
+      "costliness": 0.82,
+      "observability": 0.78,
+      "reversibility": 0.45,
+      "incentive_fit": 0.5,
+      "capability_backing": 0.58,
+      "evidence_basis": "estimated",
+      "notes": "从承诺结构看有一定可见度，但历史行为显示竞品经常用低价威胁制造渠道压力，实际兑现并不稳定。",
+      "player_name": "头部竞品",
+      "action_name": "跟随降价",
+      "raw_score": 0.646,
+      "raw_level": "部分可信",
+      "score": 0.499,
+      "level": "部分可信",
+      "rationality_prior": 0.74,
+      "history_adjusted_rationality": 0.32,
+      "history_adjusted_score": 0.499,
+      "history_adjustment_note": "真实历史行为显示该玩家未必时间一致或完全理性，应下调其长期威胁、承诺或信号可信度。"
+    },
+    {
       "action_id": "bundle_channel",
       "commitment": "年度渠道合作包",
       "costliness": 0.78,
@@ -328,9 +350,17 @@
       "capability_backing": 0.75,
       "evidence_basis": "estimated",
       "notes": "返点、联合交付和客户线索投入会让渠道看见真实承诺，撤回成本也较高。",
+      "player_id": "us",
+      "player_name": "我们",
       "action_name": "捆绑渠道",
+      "raw_score": 0.79,
+      "raw_level": "可信",
       "score": 0.79,
-      "level": "可信"
+      "level": "可信",
+      "rationality_prior": 0.78,
+      "history_adjusted_rationality": 0.78,
+      "history_adjusted_score": 0.79,
+      "history_adjustment_note": "未提供真实历史行为数据；理性概率仍是模型先验，承诺和反应判断需要打折。"
     },
     {
       "action_id": "high_end_diff",
@@ -342,9 +372,17 @@
       "capability_backing": 0.7,
       "evidence_basis": "estimated",
       "notes": "若已绑定交付团队和路线图，承诺较可信；若只是发布话术，可信度会下降。",
+      "player_id": "us",
+      "player_name": "我们",
       "action_name": "高端差异化",
+      "raw_score": 0.714,
+      "raw_level": "部分可信",
       "score": 0.714,
-      "level": "部分可信"
+      "level": "部分可信",
+      "rationality_prior": 0.78,
+      "history_adjusted_rationality": 0.78,
+      "history_adjusted_score": 0.714,
+      "history_adjustment_note": "未提供真实历史行为数据；理性概率仍是模型先验，承诺和反应判断需要打折。"
     },
     {
       "action_id": "cut_price",
@@ -356,11 +394,89 @@
       "capability_backing": 0.45,
       "evidence_basis": "assumed",
       "notes": "低价很显眼但与毛利目标冲突，因此时间一致性弱。",
+      "player_id": "us",
+      "player_name": "我们",
       "action_name": "降价",
+      "raw_score": 0.58,
+      "raw_level": "部分可信",
       "score": 0.58,
-      "level": "部分可信"
+      "level": "部分可信",
+      "rationality_prior": 0.78,
+      "history_adjusted_rationality": 0.78,
+      "history_adjusted_score": 0.58,
+      "history_adjustment_note": "未提供真实历史行为数据；理性概率仍是模型先验，承诺和反应判断需要打折。"
     }
   ],
+  "historical_behavior_analysis": {
+    "principle": "真实历史行为优先于纯模型推演；多轮博弈中应防止高估对手完全理性和时间一致性。",
+    "player_adjustments": [
+      {
+        "player_id": "channel",
+        "player": "渠道商",
+        "prior_rationality": 0.68,
+        "adjusted_rationality": 0.68,
+        "adjustment": 0.0,
+        "evidence_quality": 0.0,
+        "history_count": 0,
+        "reference_count": 0,
+        "interpretation": "未提供真实历史行为数据；理性概率仍是模型先验，承诺和反应判断需要打折。"
+      },
+      {
+        "player_id": "head_competitor",
+        "player": "头部竞品",
+        "prior_rationality": 0.74,
+        "adjusted_rationality": 0.32,
+        "adjustment": -0.42,
+        "evidence_quality": 0.77,
+        "history_count": 2,
+        "reference_count": 1,
+        "interpretation": "真实历史行为显示该玩家未必时间一致或完全理性，应下调其长期威胁、承诺或信号可信度。"
+      },
+      {
+        "player_id": "us",
+        "player": "我们",
+        "prior_rationality": 0.78,
+        "adjusted_rationality": 0.78,
+        "adjustment": 0.0,
+        "evidence_quality": 0.0,
+        "history_count": 0,
+        "reference_count": 0,
+        "interpretation": "未提供真实历史行为数据；理性概率仍是模型先验，承诺和反应判断需要打折。"
+      }
+    ],
+    "history_rows": [
+      {
+        "player_id": "head_competitor",
+        "player": "头部竞品",
+        "event": "上一轮区域价格战中，竞品公开威胁长期低价，但 6 周后恢复价格并收窄折扣。",
+        "observed_action": "cheap_talk_then_reversal",
+        "context_similarity": 0.82,
+        "commitment_follow_through": 0.25,
+        "source": "销售 CRM 报价记录和渠道访谈",
+        "implication": "不要把竞品长期低价威胁直接当成完全理性且时间一致的可信承诺。"
+      },
+      {
+        "player_id": "head_competitor",
+        "player": "头部竞品",
+        "event": "过去两次免费版发布都带来短期线索噪音，但缺少持续交付资源，90 天后活跃度明显下降。",
+        "observed_action": "free_tier_launch_with_low_follow_through",
+        "context_similarity": 0.76,
+        "commitment_follow_through": 0.35,
+        "source": "渠道复盘、公开产品更新和客户迁移记录",
+        "implication": "免费版可能是战术压制信号，不应默认其会长期理性投入。"
+      }
+    ],
+    "reference_rows": [
+      {
+        "player_id": "head_competitor",
+        "reference_class": "同类 SaaS 渠道价格战",
+        "pattern": "头部竞品常用免费版或低价话术制造短期噪音，但持续兑现受毛利和交付成本约束。",
+        "rationality_adjustment": -0.14,
+        "confidence": 0.72,
+        "implication": "下调其长期执行免费版/低价策略的理性概率，保留短期攻击渠道的风险。"
+      }
+    ]
+  },
   "strategy_readiness": {
     "score": 0.74,
     "status": "nearly-ready",
@@ -374,6 +490,7 @@
       "payoffs": 1.0,
       "reactions": 1.0,
       "commitments": 0.94,
+      "history": 0.77,
       "framework": 1.0,
       "sensitivity": 0.7,
       "updateability": 1.0
@@ -397,6 +514,11 @@
         "note": "至少一个关键承诺通过可信度门槛。"
       },
       {
+        "name": "historical behavior hygiene",
+        "status": "pass",
+        "note": "已用真实历史行为或同类经验校正玩家理性概率。"
+      },
+      {
         "name": "framework hygiene",
         "status": "pass",
         "note": "框架选择先从结构出发，而不是只套用著名博弈。"
@@ -413,7 +535,7 @@
     "payoff_gap": 1.428571428571427,
     "base_recommendation": "捆绑渠道",
     "runner_up": "高端差异化",
-    "most_dangerous_assumption": "主推荐与备选方案的预期收益差距较小，少量 payoff 调整就可能改变排序。",
+    "most_dangerous_assumption": "可能高估「头部竞品」的完全理性和时间一致性；真实历史行为要求下调其长期承诺或威胁可信度。",
     "stress_tests": [
       {
         "name": "竞品更激进",
@@ -432,6 +554,12 @@
         "assumption_shift": "渠道认为年度合作包只是短期销售动作。",
         "expected_effect": "渠道绑定的可信承诺分下降，竞品攻击渠道的胜率上升。",
         "recommendation_impact": "需要先补强可观察投入，再正式推进绑定。"
+      },
+      {
+        "name": "对手理性程度下调",
+        "assumption_shift": "用真实历史行为替代模型默认理性假设。",
+        "expected_effect": "长期低价、免费版持续投入或公开威胁可能更像战术噪音，而非时间一致承诺。",
+        "recommendation_impact": "降低对方持续威胁可信度，但仍保留短期扰动和渠道舆论风险。"
       }
     ]
   },

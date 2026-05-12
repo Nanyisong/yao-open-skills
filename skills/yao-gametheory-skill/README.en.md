@@ -37,6 +37,28 @@ The skill focuses on three questions:
 - Are our commitments credible?
 - Which strategy remains robust after opponent reactions?
 
+## Key Iteration: Historical Behavior Calibration
+
+There is a practical failure mode in game-theory reports: AI-generated payoff matrices can oversimplify the game. In repeated games and credible-commitment analysis, the model often overestimates the opponent's rationality and time consistency.
+
+This skill now prefers real historical behavior data and reference-class experience over pure model inference when estimating whether an opponent will actually follow through.
+
+Useful inputs include:
+
+- whether the competitor actually sustained past discounts
+- whether a free-tier launch received real product, budget, channel, and delivery investment
+- whether channel attacks were actually funded
+- whether public threats were later reversed
+- reference-class experience from similar markets, negotiations, or channel conflicts
+
+The report outputs:
+
+- prior rationality probability by player
+- history-adjusted rationality probability
+- historical behavior samples and reference analysis
+- history-adjusted commitment credibility scores
+- assumptions that may be fragile because the model overestimated opponent rationality
+
 ## Processing Logic
 
 The skill first detects the strategic structure of the case, then combines a primary game-theory framework with secondary lenses.
@@ -61,6 +83,7 @@ The report puts action before theory:
 - opponent reaction map
 - payoff matrix
 - credible commitment checks
+- historical behavior and rationality calibration
 - signal-quality checks
 - possible equilibria
 - strategy-readiness score

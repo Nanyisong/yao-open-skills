@@ -70,6 +70,42 @@
       ]
     }
   ],
+  "rationality_priors": {
+    "head_competitor": 0.74,
+    "channel": 0.68
+  },
+  "historical_behavior_data": [
+    {
+      "player_id": "head_competitor",
+      "event": "上一轮区域价格战中，竞品公开威胁长期低价，但 6 周后恢复价格并收窄折扣。",
+      "observed_action": "cheap_talk_then_reversal",
+      "context_similarity": 0.82,
+      "rationality_signal": "bounded",
+      "commitment_follow_through": 0.25,
+      "source": "销售 CRM 报价记录和渠道访谈",
+      "implication": "不要把竞品长期低价威胁直接当成完全理性且时间一致的可信承诺。"
+    },
+    {
+      "player_id": "head_competitor",
+      "event": "过去两次免费版发布都带来短期线索噪音，但缺少持续交付资源，90 天后活跃度明显下降。",
+      "observed_action": "free_tier_launch_with_low_follow_through",
+      "context_similarity": 0.76,
+      "rationality_signal": "opportunistic",
+      "commitment_follow_through": 0.35,
+      "source": "渠道复盘、公开产品更新和客户迁移记录",
+      "implication": "免费版可能是战术压制信号，不应默认其会长期理性投入。"
+    }
+  ],
+  "experience_reference_analysis": [
+    {
+      "player_id": "head_competitor",
+      "reference_class": "同类 SaaS 渠道价格战",
+      "pattern": "头部竞品常用免费版或低价话术制造短期噪音，但持续兑现受毛利和交付成本约束。",
+      "rationality_adjustment": -0.14,
+      "confidence": 0.72,
+      "implication": "下调其长期执行免费版/低价策略的理性概率，保留短期攻击渠道的风险。"
+    }
+  ],
   "our_actions": [
     {
       "id": "cut_price",
@@ -230,6 +266,18 @@
     }
   ],
   "commitment_tests": [
+    {
+      "player_id": "head_competitor",
+      "action_id": "match_cut",
+      "commitment": "长期低价威胁",
+      "costliness": 0.82,
+      "observability": 0.78,
+      "reversibility": 0.45,
+      "incentive_fit": 0.5,
+      "capability_backing": 0.58,
+      "evidence_basis": "estimated",
+      "notes": "从承诺结构看有一定可见度，但历史行为显示竞品经常用低价威胁制造渠道压力，实际兑现并不稳定。"
+    },
     {
       "action_id": "bundle_channel",
       "commitment": "年度渠道合作包",

@@ -140,6 +140,7 @@ footer { color: var(--muted); font-size: 13px; margin-top: 42px; border-top: 1px
       <a href="#summary">结论</a>
       <a href="#frameworks">框架</a>
       <a href="#readiness">准备度</a>
+      <a href="#history">历史</a>
       <a href="#sensitivity">敏感性</a>
       <a href="#players">玩家</a>
       <a href="#reactions">反应</a>
@@ -193,14 +194,24 @@ footer { color: var(--muted); font-size: 13px; margin-top: 42px; border-top: 1px
       <h3>剩余缺口</h3>
       <ul><li>围绕最危险假设做一次小规模验证或敏感性复核。</li></ul>
       <h3>战略卫生检查</h3>
-      <div class="table-wrap"><table><thead><tr><th>检查</th><th>状态</th><th>说明</th></tr></thead><tbody><tr><td>payoff hygiene</td><td>pass</td><td>payoff 已标记 observed / estimated / assumed。</td></tr><tr><td>reaction hygiene</td><td>pass</td><td>对手反应均有激励理由。</td></tr><tr><td>commitment hygiene</td><td>pass</td><td>至少一个关键承诺通过可信度门槛。</td></tr><tr><td>framework hygiene</td><td>pass</td><td>框架选择先从结构出发，而不是只套用著名博弈。</td></tr><tr><td>safety hygiene</td><td>pass</td><td>已标记法律、投资、反垄断或合规边界。</td></tr></tbody></table></div>
+      <div class="table-wrap"><table><thead><tr><th>检查</th><th>状态</th><th>说明</th></tr></thead><tbody><tr><td>payoff hygiene</td><td>pass</td><td>payoff 已标记 observed / estimated / assumed。</td></tr><tr><td>reaction hygiene</td><td>pass</td><td>对手反应均有激励理由。</td></tr><tr><td>commitment hygiene</td><td>pass</td><td>至少一个关键承诺通过可信度门槛。</td></tr><tr><td>historical behavior hygiene</td><td>pass</td><td>已用真实历史行为或同类经验校正玩家理性概率。</td></tr><tr><td>framework hygiene</td><td>pass</td><td>框架选择先从结构出发，而不是只套用著名博弈。</td></tr><tr><td>safety hygiene</td><td>pass</td><td>已标记法律、投资、反垄断或合规边界。</td></tr></tbody></table></div>
+    </section>
+
+    <section id="history">
+      <h2>历史行为与理性概率校正</h2>
+      <div class="callout">真实历史行为优先于纯模型推演；多轮博弈中应防止高估对手完全理性和时间一致性。</div>
+      <div class="table-wrap"><table><thead><tr><th>玩家</th><th>先验理性</th><th>历史校正后</th><th>调整</th><th>证据质量</th><th>解释</th></tr></thead><tbody><tr><td>渠道商</td><td>68%</td><td>68%</td><td>0%</td><td>0%</td><td>未提供真实历史行为数据；理性概率仍是模型先验，承诺和反应判断需要打折。</td></tr><tr><td>头部竞品</td><td>74%</td><td>32%</td><td>-42%</td><td>77%</td><td>真实历史行为显示该玩家未必时间一致或完全理性，应下调其长期威胁、承诺或信号可信度。</td></tr><tr><td>我们</td><td>78%</td><td>78%</td><td>0%</td><td>0%</td><td>未提供真实历史行为数据；理性概率仍是模型先验，承诺和反应判断需要打折。</td></tr></tbody></table></div>
+      <h3>真实历史行为样本</h3>
+      <div class="table-wrap"><table><thead><tr><th>玩家</th><th>历史事件</th><th>观察动作</th><th>相似度</th><th>兑现率</th><th>来源</th><th>启发</th></tr></thead><tbody><tr><td>头部竞品</td><td>上一轮区域价格战中，竞品公开威胁长期低价，但 6 周后恢复价格并收窄折扣。</td><td>cheap_talk_then_reversal</td><td>82%</td><td>25%</td><td>销售 CRM 报价记录和渠道访谈</td><td>不要把竞品长期低价威胁直接当成完全理性且时间一致的可信承诺。</td></tr><tr><td>头部竞品</td><td>过去两次免费版发布都带来短期线索噪音，但缺少持续交付资源，90 天后活跃度明显下降。</td><td>free_tier_launch_with_low_follow_through</td><td>76%</td><td>35%</td><td>渠道复盘、公开产品更新和客户迁移记录</td><td>免费版可能是战术压制信号，不应默认其会长期理性投入。</td></tr></tbody></table></div>
+      <h3>经验参考分析</h3>
+      <div class="table-wrap"><table><thead><tr><th>参考类</th><th>模式</th><th>理性调整</th><th>置信度</th><th>启发</th></tr></thead><tbody><tr><td>同类 SaaS 渠道价格战</td><td>头部竞品常用免费版或低价话术制造短期噪音，但持续兑现受毛利和交付成本约束。</td><td>-14%</td><td>72%</td><td>下调其长期执行免费版/低价策略的理性概率，保留短期攻击渠道的风险。</td></tr></tbody></table></div>
     </section>
 
     <section id="sensitivity">
       <h2>敏感性与稳定性</h2>
       <p><span class="pill">稳定性</span> mixed <span class="pill">收益差距</span> 1.4</p>
-      <div class="callout warn">主推荐与备选方案的预期收益差距较小，少量 payoff 调整就可能改变排序。</div>
-      <div class="table-wrap"><table><thead><tr><th>压力测试</th><th>假设变化</th><th>影响</th><th>对推荐的影响</th></tr></thead><tbody><tr><td>竞品更激进</td><td>将头部竞品跟随降价或攻击渠道的倾向上调。</td><td>降价选项进一步变差，渠道绑定需要更强返点和交付资源支撑。</td><td>通常不改变主推荐，但会提高执行成本。</td></tr><tr><td>渠道收益折扣</td><td>将渠道绑定带来的渠道收益和我方收益下调。</td><td>捆绑渠道与高端差异化的差距缩小。</td><td>若渠道拒绝年度合作包，应提高高端差异化权重。</td></tr><tr><td>承诺可信度下降</td><td>渠道认为年度合作包只是短期销售动作。</td><td>渠道绑定的可信承诺分下降，竞品攻击渠道的胜率上升。</td><td>需要先补强可观察投入，再正式推进绑定。</td></tr></tbody></table></div>
+      <div class="callout warn">可能高估「头部竞品」的完全理性和时间一致性；真实历史行为要求下调其长期承诺或威胁可信度。</div>
+      <div class="table-wrap"><table><thead><tr><th>压力测试</th><th>假设变化</th><th>影响</th><th>对推荐的影响</th></tr></thead><tbody><tr><td>竞品更激进</td><td>将头部竞品跟随降价或攻击渠道的倾向上调。</td><td>降价选项进一步变差，渠道绑定需要更强返点和交付资源支撑。</td><td>通常不改变主推荐，但会提高执行成本。</td></tr><tr><td>渠道收益折扣</td><td>将渠道绑定带来的渠道收益和我方收益下调。</td><td>捆绑渠道与高端差异化的差距缩小。</td><td>若渠道拒绝年度合作包，应提高高端差异化权重。</td></tr><tr><td>承诺可信度下降</td><td>渠道认为年度合作包只是短期销售动作。</td><td>渠道绑定的可信承诺分下降，竞品攻击渠道的胜率上升。</td><td>需要先补强可观察投入，再正式推进绑定。</td></tr><tr><td>对手理性程度下调</td><td>用真实历史行为替代模型默认理性假设。</td><td>长期低价、免费版持续投入或公开威胁可能更像战术噪音，而非时间一致承诺。</td><td>降低对方持续威胁可信度，但仍保留短期扰动和渠道舆论风险。</td></tr></tbody></table></div>
       <h3>下一步信息</h3>
       <div class="table-wrap"><table><thead><tr><th>信息</th><th>为什么重要</th><th>收集方法</th></tr></thead><tbody><tr><td>竞品真实降价承受能力</td><td>决定竞品跟随降价是否是可持续威胁，而不是短期信号。</td><td>观察竞品报价、销售话术、续费折扣和公开成本信号。</td></tr><tr><td>核心渠道对年度合作包的接受阈值</td><td>决定渠道绑定是否能成为可信承诺。</td><td>用 2-3 个核心渠道做返点、线索、交付支持的访谈和报价测试。</td></tr><tr><td>免费版本是否有真实资源投入</td><td>决定竞品免费版是便宜信号还是可持续进攻。</td><td>追踪产品可用性、渠道推广、转化路径和续费机制。</td></tr><tr><td>策略准备度缺口</td><td>围绕最危险假设做一次小规模验证或敏感性复核。</td><td>补齐后重新生成博弈报告。</td></tr></tbody></table></div>
     </section>
@@ -226,7 +237,7 @@ footer { color: var(--muted); font-size: 13px; margin-top: 42px; border-top: 1px
 
     <section id="commitment">
       <h2>承诺与信号可信度</h2>
-      <div class="table-wrap"><table><thead><tr><th>动作</th><th>承诺</th><th>可信度</th><th>评分</th><th>证据基础</th><th>说明</th></tr></thead><tbody><tr><td>捆绑渠道</td><td>年度渠道合作包</td><td>可信</td><td>79%</td><td>estimated</td><td>返点、联合交付和客户线索投入会让渠道看见真实承诺，撤回成本也较高。</td></tr><tr><td>高端差异化</td><td>高端服务 SLA 与集成路线图</td><td>部分可信</td><td>71%</td><td>estimated</td><td>若已绑定交付团队和路线图，承诺较可信；若只是发布话术，可信度会下降。</td></tr><tr><td>降价</td><td>长期低价</td><td>部分可信</td><td>58%</td><td>assumed</td><td>低价很显眼但与毛利目标冲突，因此时间一致性弱。</td></tr></tbody></table></div>
+      <div class="table-wrap"><table><thead><tr><th>动作</th><th>承诺</th><th>可信度</th><th>原始评分</th><th>历史校正评分</th><th>证据基础</th><th>历史校正说明</th></tr></thead><tbody><tr><td>跟随降价</td><td>长期低价威胁</td><td>部分可信</td><td>65%</td><td>50%</td><td>estimated</td><td>真实历史行为显示该玩家未必时间一致或完全理性，应下调其长期威胁、承诺或信号可信度。</td></tr><tr><td>捆绑渠道</td><td>年度渠道合作包</td><td>可信</td><td>79%</td><td>79%</td><td>estimated</td><td>未提供真实历史行为数据；理性概率仍是模型先验，承诺和反应判断需要打折。</td></tr><tr><td>高端差异化</td><td>高端服务 SLA 与集成路线图</td><td>部分可信</td><td>71%</td><td>71%</td><td>estimated</td><td>未提供真实历史行为数据；理性概率仍是模型先验，承诺和反应判断需要打折。</td></tr><tr><td>降价</td><td>长期低价</td><td>部分可信</td><td>58%</td><td>58%</td><td>assumed</td><td>未提供真实历史行为数据；理性概率仍是模型先验，承诺和反应判断需要打折。</td></tr></tbody></table></div>
       <h3>外部信号</h3>
       <div class="table-wrap"><table><thead><tr><th>发送方</th><th>信号</th><th>质量</th><th>解释</th></tr></thead><tbody><tr><td>head_competitor</td><td>市场传言其准备推出免费版本</td><td>weak</td><td>目前更像压制渠道和客户预期的信号，除非看到真实产品、预算和分发资源。</td></tr></tbody></table></div>
     </section>
@@ -256,7 +267,7 @@ footer { color: var(--muted); font-size: 13px; margin-top: 42px; border-top: 1px
         <p>本报告由同一份结构化 JSON 自动生成，Markdown、HTML、DOCX、PDF 与 canonical JSON 应保持同步。后续对手动作可通过 update JSON 合并后重新导出。</p>
       </details>
     </section>
-    <footer>Generated by yao-gametheory-skill on 2026-05-11.</footer>
+    <footer>Generated by yao-gametheory-skill on 2026-05-12.</footer>
   </main>
   <script>
     function expandAndPrint() {
