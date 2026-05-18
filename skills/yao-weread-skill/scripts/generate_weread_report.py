@@ -778,12 +778,12 @@ def build_poetic_summary(data: dict[str, Any]) -> str:
     terms = [row["name"] for row in data["notes"].get("wordCloud", [])[:4]]
     term_phrase = "、".join(terms) if terms else "问题、方法和判断"
     closing = (
-        "那些被划下的句子不是碎片，而是路标；它们把兴趣、判断和行动慢慢连成一张个人地图。"
+        "你划下的句子不是碎片，而是路标；它们把你的兴趣、判断和行动慢慢连成一张个人地图。"
         if kpis.get("highlightsFetchedInRange")
-        else "这些阅读记录不是冷冰冰的数字，而是一条持续靠近问题、方法和生活秩序的路径。"
+        else "这些阅读记录不是冷冰冰的数字，而是你持续靠近问题、方法和生活秩序的路径。"
     )
     return (
-        f"这位读者把书架当作一间有灯的工作室：在 {kpis['readDays']} 个阅读日里，"
+        f"你把书架当作一间有灯的工作室：在 {kpis['readDays']} 个阅读日里，"
         f"时间流向「{top_category}」和《{top_book}》，又在 {kpis['noteTotal']} 条笔记里沉淀为{term_phrase}。"
         f"{closing}"
     )
@@ -804,7 +804,7 @@ def build_reader_portrait(data: dict[str, Any], highlight_candidates: list[dict[
                 **candidate,
                 "fingerprint": fingerprint,
                 "keywords": keywords,
-                "reason": "关联：" + " / ".join(keywords[:3]) if keywords else "关联：阅读画像",
+                "reason": "关联：" + " / ".join(keywords[:3]) if keywords else "关联：你的阅读画像",
                 "score": quote_score(candidate, top_terms, top_categories, top_titles),
             }
         )
@@ -846,7 +846,7 @@ def build_reader_portrait(data: dict[str, Any], highlight_candidates: list[dict[
                 "author": row.get("author") or "",
                 "category": row.get("category") or "",
                 "keywords": row.get("keywords") or [],
-                "reason": row.get("reason") or "关联：阅读画像",
+                "reason": row.get("reason") or "关联：你的阅读画像",
             }
         )
     return {
@@ -1151,10 +1151,10 @@ def build_synthetic_ai_founder_report(report_range: Range, scale: int) -> dict[s
     data["meta"].update(
         {
             "title": "微信读书个人可视化报告：AI创业者版",
-            "subtitle": "一个 AI 创业者读者的近两年阅读画像。把阅读时间、书架资产、内容偏好和笔记语义放在同一张纸面上：先看节律，再看兴趣，最后看留下来的句子。",
+            "subtitle": "你的 AI 创业者版近两年阅读画像。把阅读时间、书架资产、内容偏好和笔记语义放在同一张纸面上：先看节律，再看兴趣，最后看你留下来的句子。",
             "eyebrow": "WeRead AI-Founder Analytics",
             "sampleReport": True,
-            "persona": "AI创业者读者",
+            "persona": "AI创业者视角",
             "dataCaveat": "月度数据使用 readTimes 做日级过滤；年度偏好模块按触达自然年聚合。",
         }
     )
@@ -1758,9 +1758,9 @@ def build_insights(data: dict[str, Any]) -> list[str]:
 
 def build_html(data: dict[str, Any]) -> str:
     report_title = data["meta"].get("title") or "微信读书个人可视化报告"
-    report_subtitle = data["meta"].get("subtitle") or "把近两年的阅读时间、书架资产、内容偏好和笔记语义放在同一张纸面上：先看节律，再看兴趣，最后看留下来的句子。"
+    report_subtitle = data["meta"].get("subtitle") or "把你近两年的阅读时间、书架资产、内容偏好和笔记语义放在同一张纸面上：先看节律，再看兴趣，最后看你留下来的句子。"
     report_eyebrow = data["meta"].get("eyebrow") or "WeRead Personal Analytics"
-    overview_copy = data["meta"].get("overviewCopy") or "这里的数字来自微信读书账户数据。阅读时长按秒计算后转成人类可读格式，书架总数包含电子书、有声/专辑和文章收藏入口。"
+    overview_copy = data["meta"].get("overviewCopy") or "这里的数字来自你的微信读书账户数据。阅读时长按秒计算后转成人类可读格式，书架总数包含电子书、有声/专辑和文章收藏入口。"
     portrait = data.get("readerPortrait") or {}
     golden_quote = portrait.get("goldenQuote") or {}
     poetic_summary = portrait.get("poeticSummary") or ""
@@ -1842,7 +1842,7 @@ def build_html(data: dict[str, Any]) -> str:
     if poetic_summary:
         portrait_summary_html = f"""
       <div class="portrait-summary">
-        <span>读者画像</span>
+        <span>你的阅读画像</span>
         <p>{escape_html(poetic_summary)}</p>
       </div>
         """
@@ -1856,11 +1856,11 @@ def build_html(data: dict[str, Any]) -> str:
         <article class="quote-card">
           <span class="quote-index">{int(quote.get('rank') or 0):02d}</span>
           <p>{escape_html(quote.get('text') or '')}</p>
-          <footer>{escape_html(source)}<em>{escape_html(quote.get('reason') or '关联：阅读画像')}</em></footer>
+          <footer>{escape_html(source)}<em>{escape_html(quote.get('reason') or '关联：你的阅读画像')}</em></footer>
         </article>
             """
         )
-    portrait_quotes_html = "\n".join(quote_items) if quote_items else '<div class="quote-empty">当前没有足够划线文本生成画像清单。</div>'
+    portrait_quotes_html = "\n".join(quote_items) if quote_items else '<div class="quote-empty">当前没有足够划线文本生成你的画像清单。</div>'
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -2012,7 +2012,7 @@ def build_html(data: dict[str, Any]) -> str:
   <section>
     <div class="section-title">
       <h2>书架资产</h2>
-      <p>书架是阅读资产的全量视角：未读、已读、有声、私密、书单和最近活动都在这里。</p>
+      <p>你的书架是阅读资产的全量视角：未读、已读、有声、私密、书单和最近活动都在这里。</p>
     </div>
     <div class="chart-grid">{groups['shelf']}</div>
   </section>
@@ -2020,15 +2020,15 @@ def build_html(data: dict[str, Any]) -> str:
   <section>
     <div class="section-title">
       <h2>笔记与语义</h2>
-      <p>划线和想法是阅读后真正留下来的东西。词云是高频短语抽取，不等于严格自然语言分词。</p>
+      <p>划线和想法是你阅读后真正留下来的东西。词云是高频短语抽取，不等于严格自然语言分词。</p>
     </div>
     <div class="chart-grid">{groups['notes']}</div>
   </section>
 
   <section>
     <div class="section-title">
-      <h2>画像划线清单</h2>
-      <p>从近两年划线中挑出最贴近本报告画像的句子。顶部金句来自这组清单的第一条。</p>
+      <h2>你的画像划线清单</h2>
+      <p>从你近两年划线中挑出最能说明阅读画像的句子。顶部金句来自这组清单的第一条。</p>
     </div>
     <div class="quote-grid">{portrait_quotes_html}</div>
   </section>
