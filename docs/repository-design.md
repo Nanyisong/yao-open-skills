@@ -79,7 +79,7 @@ yao-open-skills/
 - 每个收录 Skill 都使用稳定 slug，目录名和登记表 slug 一致。
 - `docs/` 解释仓库治理，不替代 Skill 自身说明。
 - `scripts/` 只放仓库级维护脚本，不放具体 Skill 的业务脚本。
-- 可以为未来能力家族预留空目录，例如 `skill-builder`、`skill-analyzer`，但不要把占位目录当成已发布 Skill 登记。
+- 未来能力家族先记录在文档或登记草案中，确认发布前不保留空占位目录。
 
 ## 3.1 命名系统
 
@@ -93,7 +93,7 @@ yao-open-skills/
 
 例如：
 
-- `skill-doctor`
+- `skill-reviewer`
 - `skill-optimizer`
 - `skill-ranker`
 

@@ -24,7 +24,7 @@
 
 例如：
 
-- `skill-doctor`
+- `skill-reviewer`
 - `tutorial-builder`
 - `release-orchestrator`
 - `note-cleanup`
@@ -66,11 +66,10 @@
 
 推荐模式：
 
-- `skill-builder`
-- `skill-analyzer`
-- `skill-doctor`
 - `skill-reviewer`
 - `skill-publisher`
+- `skill-optimizer`
+- `skill-ranker`
 
 适用条件：
 
@@ -126,7 +125,7 @@
 
 - `frontend-reviewer`
 - `seo-analyzer`
-- `skill-doctor`
+- `content-doctor`
 
 选择建议：
 
@@ -230,14 +229,6 @@
 如果一个名字同时满足“清楚、短、稳、可扩展”，它通常就是更好的选择。
 
 ## 7. 当前仓库中的应用建议
-
-### 已经比较好的名字
-
-- `skill-builder`
-- `skill-analyzer`
-- `skill-doctor`
-
-这些名字属于元技能家族，风格统一，保留 `skill-*` 是合理的。
 
 ### 可接受的简洁名字
 

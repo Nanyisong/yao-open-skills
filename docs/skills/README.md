@@ -10,7 +10,6 @@ Current guides:
 
 - [learning-builder](learning-builder.md)
 - [yao-open-skills-sync](yao-open-skills-sync.md)
-- [skill-doctor](skill-doctor.md)
 - [yao-bayesian-skill](yao-bayesian-skill.md)
 - [yao-business-skill](yao-business-skill.md)
 - [yao-gametheory-skill](yao-gametheory-skill.md)

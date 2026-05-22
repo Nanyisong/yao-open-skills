@@ -98,20 +98,10 @@ yao-open-skills/
 - `scripts/`: 更新登记表和 README 的辅助脚本。
 - `skills/`: 真正收录进公开合集的 Skill 副本。
 
-## Planned Capability Families
-
-为了让这个仓库像生态而不是像杂货堆，先预留两条能力家族目录：
-
-- `skills/skill-builder/`
-- `skills/skill-analyzer/`
-
-它们当前只是占位目录，用来约束未来的扩展方向。
-
 ## Published Skill Guides
 
 - [Skill Guides Index](docs/skills/README.md)
 - [Yao Open Skills Sync](docs/skills/yao-open-skills-sync.md)
-- [Skill Doctor](docs/skills/skill-doctor.md)
 - [Yao Bayesian Skill](docs/skills/yao-bayesian-skill.md)
 - [Yao Business Skill](docs/skills/yao-business-skill.md)
 - [Yao Game Theory Skill](docs/skills/yao-gametheory-skill.md)
@@ -297,7 +287,6 @@ yao-open-skills/
 | Skill | Guide | Lifecycle | Sync | Collection Path | Source Path | GitHub |
 | --- | --- | --- | --- | --- | --- | --- |
 | [learning-builder](skills/learning-builder/SKILL.md) | [guide](docs/skills/learning-builder.md) | `active` | `published` | [skills/learning-builder](skills/learning-builder) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/learning-builder) |
-| [skill-doctor](skills/skill-doctor/SKILL.md) | [guide](docs/skills/skill-doctor.md) | `active` | `published` | [skills/skill-doctor](skills/skill-doctor) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/skill-doctor) |
 | [yao-bayesian-skill](skills/yao-bayesian-skill/SKILL.md) | [guide](docs/skills/yao-bayesian-skill.md) | `active` | `published` | [skills/yao-bayesian-skill](skills/yao-bayesian-skill) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-bayesian-skill) |
 | [yao-business-skill](skills/yao-business-skill/SKILL.md) | [guide](docs/skills/yao-business-skill.md) | `active` | `published` | [skills/yao-business-skill](skills/yao-business-skill) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-business-skill) |
 | [yao-gametheory-skill](skills/yao-gametheory-skill/SKILL.md) | [guide](docs/skills/yao-gametheory-skill.md) | `active` | `published` | [skills/yao-gametheory-skill](skills/yao-gametheory-skill) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-gametheory-skill) |
