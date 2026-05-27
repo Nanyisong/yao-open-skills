@@ -146,6 +146,15 @@ def confidence_label(value: str | None) -> str:
     return CONFIDENCE_LABELS.get(value or "medium", value or "中")
 
 
+def aggressiveness_label(value: str | None) -> str:
+    labels = {
+        "soft": "谨慎倾斜",
+        "balanced": "适度倾斜",
+        "aggressive": "激进倾斜",
+    }
+    return labels.get(value or "aggressive", value or "激进倾斜")
+
+
 def plain_type_label(value: str | None) -> str:
     labels = {
         "value": "价值没闭上",
@@ -212,6 +221,7 @@ def action_rows(request: dict[str, Any]) -> list[dict[str, Any]]:
         row["estimated_uplift"] = uplift
         row["dependency_discount"] = discount
         row["expected_uplift"] = expected
+        row["principal_aspect_shift"] = str(item.get("principal_aspect_shift") or "").strip()
         rows.append(row)
     return rows
 
@@ -300,6 +310,27 @@ def build_analysis_logic(request: dict[str, Any], rows: list[dict[str, Any]], pr
         "先列出候选矛盾，再按目标影响、因果牵引、阶段紧迫、资源约束、可改变性、风险外溢和证据强度排序。"
         "如果两个候选接近，优先选择更上游、能释放最稀缺资源的那个。"
     )
+    principal_name = principal.get("name", "-")
+    decisiveness = logic.get("decisiveness") or (
+        f"决定性：{principal_name}直接影响当前目标。如果它不缓解，其他动作大多只能带来局部改善。"
+    )
+    leverage = logic.get("leverage") or (
+        f"牵引性：{principal_name}改善后，会同时释放资源、降低反复救火，并带动多个次要问题变轻。"
+    )
+    stage_fit = logic.get("stage_fit") or (
+        "阶段性：按当前期限、资源和约束，这个矛盾比后续优化事项更适合作为当前主攻线。"
+    )
+    internal_changeable = string_list(
+        logic.get("internal_changeable"),
+        ["资源分配、执行节奏、判断标准、关键人注意力和证据收集方式。"],
+    )
+    external_conditions = string_list(
+        logic.get("external_conditions"),
+        ["外部规则、市场节奏、客户或平台反馈等无法直接控制但必须尊重的条件。"],
+    )
+    external_through_internal = logic.get("external_through_internal") or (
+        "外部条件不会自动决定结果，它会通过内部能力、流程、资源倾斜和执行质量放大或减弱影响。"
+    )
     return {
         "method_note": method_note,
         "first_principles_question": first_principles_question,
@@ -308,6 +339,12 @@ def build_analysis_logic(request: dict[str, Any], rows: list[dict[str, Any]], pr
         "hidden_root_variables": string_list(logic.get("hidden_root_variables"), hidden_fallback),
         "why_not_surface": why_not_surface,
         "ranking_rule": ranking_rule,
+        "decisiveness": decisiveness,
+        "leverage": leverage,
+        "stage_fit": stage_fit,
+        "internal_changeable": internal_changeable,
+        "external_conditions": external_conditions,
+        "external_through_internal": external_through_internal,
         "candidate_count": len(rows),
     }
 
@@ -374,16 +411,26 @@ def build_decision_model(request: dict[str, Any], rows: list[dict[str, Any]], pr
 def build_resource_allocation(request: dict[str, Any]) -> dict[str, Any]:
     explicit = request.get("resource_allocation") or {}
     if explicit.get("items"):
-        return explicit
+        result = dict(explicit)
+        result.setdefault("aggressiveness", "aggressive")
+        result.setdefault("main_focus_share", 60)
+        result.setdefault("secondary_cap_share", 20)
+        result.setdefault("monitoring_share", 20)
+        result.setdefault("note", "把高杠杆资源更明确地压到主要矛盾上，次要矛盾只做止血和监控。")
+        return result
     return {
         "title": "时间、精力、资源倾斜",
         "unit": "%",
-        "note": "把负责人和团队的高杠杆资源从低价值救火中抽出来，转向能改变根部变量的动作。",
+        "aggressiveness": "aggressive",
+        "main_focus_share": 65,
+        "secondary_cap_share": 20,
+        "monitoring_share": 15,
+        "note": "采用激进倾斜：把负责人和团队的高杠杆资源从低价值救火中抽出来，主攻能改变主要矛盾的动作；次要矛盾只保留止血和触发监控。",
         "items": [
-            {"label": "救火/临时响应", "current": 45, "recommended": 20},
-            {"label": "沟通协调", "current": 25, "recommended": 15},
-            {"label": "流程止血", "current": 20, "recommended": 25},
-            {"label": "找人/系统建设", "current": 10, "recommended": 40},
+            {"label": "救火/临时响应", "current": 45, "recommended": 10},
+            {"label": "沟通协调", "current": 25, "recommended": 10},
+            {"label": "流程止血", "current": 20, "recommended": 15},
+            {"label": "主攻根部变量", "current": 10, "recommended": 65},
         ],
     }
 
@@ -451,6 +498,10 @@ def build_report(request: dict[str, Any]) -> dict[str, Any]:
     visuals = build_visuals(request)
     confidence = request.get("confidence") or "medium"
     principal_score = principal["weighted_total"]
+    principal_aspect_text = principal.get("principal_aspect") or "需要继续追问以判断主要方面。"
+    for action in actions:
+        if not action.get("principal_aspect_shift"):
+            action["principal_aspect_shift"] = f"指向主要方面：{principal_aspect_text}"
     first_action = actions[0]["action"] if actions else "先补齐目标、阶段、资源和事实证据。"
     if principal_score < 3.5:
         one_sentence = f"现在还不能稳定判断最关键卡点，先验证：{principal.get('name', '-')}"
@@ -482,7 +533,7 @@ def build_report(request: dict[str, Any]) -> dict[str, Any]:
         "warnings": request.get("warnings") or [],
         "summary": {
             "one_sentence": one_sentence,
-            "principal_aspect": principal.get("principal_aspect") or "需要继续追问以判断主要方面。",
+            "principal_aspect": principal_aspect_text,
             "confidence_label": confidence_label(confidence),
             "principal_score": principal_score,
             "first_action": first_action,
@@ -627,6 +678,17 @@ def render_markdown(report: dict[str, Any]) -> str:
         "",
         f"第一性原理追问：{display_text(analysis_logic['first_principles_question'])}",
         "",
+        "### 先用三问判断是不是主要矛盾",
+        "",
+        md_table(
+            ["判断", "结论"],
+            [
+                ["决定性", analysis_logic["decisiveness"]],
+                ["牵引性", analysis_logic["leverage"]],
+                ["阶段性", analysis_logic["stage_fit"]],
+            ],
+        ),
+        "",
         "### 看得见的问题",
         "",
         list_md(analysis_logic["visible_problems"]),
@@ -640,6 +702,17 @@ def render_markdown(report: dict[str, Any]) -> str:
         "### 为什么不是先处理表面问题",
         "",
         display_text(analysis_logic["why_not_surface"]),
+        "",
+        "### 内因、外因和可改变路径",
+        "",
+        md_table(
+            ["层级", "内容"],
+            [
+                ["内部可改变结构", "；".join(analysis_logic["internal_changeable"])],
+                ["外部硬条件", "；".join(analysis_logic["external_conditions"])],
+                ["外因如何通过内因起作用", analysis_logic["external_through_internal"]],
+            ],
+        ),
         "",
         "### 候选矛盾怎么排序",
         "",
@@ -672,6 +745,16 @@ def render_markdown(report: dict[str, Any]) -> str:
         display_text(allocation.get("note", "-")),
         "",
         md_table(
+            ["倾斜强度", "主攻主要矛盾", "压缩次要矛盾", "证据与监控"],
+            [[
+                aggressiveness_label(allocation.get("aggressiveness")),
+                f"{as_float(allocation.get('main_focus_share'), 0):.0f}%",
+                f"{as_float(allocation.get('secondary_cap_share'), 0):.0f}%",
+                f"{as_float(allocation.get('monitoring_share'), 0):.0f}%",
+            ]],
+        ),
+        "",
+        md_table(
             ["资源项", "当前分配", "建议分配", "变化方向"],
             [
                 [
@@ -687,10 +770,11 @@ def render_markdown(report: dict[str, Any]) -> str:
         "## 接下来怎么做",
         "",
         md_table(
-            ["动作", "谁来做", "什么时候", "要用什么", "做到什么算完成", "做成把握", "预计帮助"],
+            ["动作", "改变主要方面", "谁来做", "什么时候", "要用什么", "做到什么算完成", "做成把握", "预计帮助"],
             [
                 [
                     row.get("action", "-"),
+                    row.get("principal_aspect_shift", "-"),
                     row.get("owner", "-"),
                     row.get("deadline", "-"),
                     row.get("resource", "-"),
@@ -873,8 +957,8 @@ def svg_iceberg(report: dict[str, Any]) -> str:
 
 def svg_decision_matrix(report: dict[str, Any]) -> str:
     rows = report["contradictions"][:5]
-    parts = ['<svg id="chart-decision-matrix" class="chart-svg chart-svg-tall" viewBox="0 0 960 520" role="img" aria-label="矛盾候选决策矩阵">']
-    plot_x, plot_y, plot_w, plot_h = 88, 86, 570, 310
+    parts = ['<svg id="chart-decision-matrix" class="chart-svg chart-svg-tall" viewBox="0 0 960 450" role="img" aria-label="矛盾候选决策矩阵">']
+    plot_x, plot_y, plot_w, plot_h = 108, 76, 744, 280
     parts.append(f'<rect class="chart-plot-bg" x="{plot_x}" y="{plot_y}" width="{plot_w}" height="{plot_h}" rx="8" fill="#fffdf8" stroke="#e8e6dc"></rect>')
     for idx in range(1, 5):
         x = plot_x + idx * plot_w / 5
@@ -898,19 +982,30 @@ def svg_decision_matrix(report: dict[str, Any]) -> str:
         width = 2 if idx == 0 else 1
         parts.append(f'<circle class="{klass}" cx="{x:.1f}" cy="{y:.1f}" r="{radius:.1f}" fill="{fill}" stroke="{stroke}" stroke-width="{width}"></circle>')
         parts.append(svg_text(str(idx + 1), x, y + 5, "chart-text-strong" if idx == 0 else "chart-text"))
-    parts.append('<rect class="chart-legend-box" x="696" y="86" width="214" height="310" rx="8" fill="#faf9f5" stroke="#e8e6dc"></rect>')
-    parts.append(svg_text("候选矛盾", 718, 122, "chart-kicker", "start"))
-    for idx, row in enumerate(rows):
-        y = 154 + idx * 48
-        index_class = "chart-legend-index-primary" if idx == 0 else "chart-legend-index"
-        fill = "#1B365D" if idx == 0 else "#d6d1c3"
-        stroke = "#1B365D" if idx == 0 else "#6b6a64"
-        parts.append(f'<circle class="{index_class}" cx="718" cy="{y - 6}" r="11" fill="{fill}" stroke="{stroke}"></circle>')
-        parts.append(svg_text(str(idx + 1), 718, y - 2, "chart-text-strong"))
-        parts.append(svg_multiline(row.get("name", "-"), 742, y - 10, "chart-note", "start", length=14, max_lines=2, line_height=18))
-    parts.append(svg_text("越靠右上，越应优先处理；圆越大，越消耗稀缺资源。", 480, 462, "chart-note"))
+    parts.append(svg_text("越靠右上，越应优先处理；圆越大，越消耗稀缺资源。", 480, 414, "chart-note"))
     parts.append("</svg>")
     return "".join(parts)
+
+
+def html_decision_matrix_legend(report: dict[str, Any]) -> str:
+    rows = report["contradictions"][:5]
+    items = []
+    for idx, row in enumerate(rows):
+        primary = " matrix-legend-item-primary" if idx == 0 else ""
+        number_class = "matrix-legend-number-primary" if idx == 0 else "matrix-legend-number"
+        items.append(
+            f'<li class="matrix-legend-item{primary}">'
+            f'<span class="{number_class}">{idx + 1}</span>'
+            f'<span class="matrix-legend-text">{html_text(row.get("name", "-"))}</span>'
+            "</li>"
+        )
+    return (
+        '<div class="chart-legend-box matrix-legend-panel">'
+        '<div class="matrix-legend-title">候选矛盾</div>'
+        '<ol class="matrix-legend-list">'
+        + "".join(items)
+        + "</ol></div>"
+    )
 
 
 def svg_resource_allocation(report: dict[str, Any]) -> str:
@@ -1043,6 +1138,7 @@ def render_html(report: dict[str, Any]) -> str:
         {html_table(['候选矛盾', '更新后可信度', '解释力', '简洁度'], [[row['name'], pct(row.get('posterior')), pct(row.get('likelihood')), pct(row.get('parsimony'))] for row in decision_model['candidates'][:5]], top_first=True)}
         <h3>矛盾候选决策矩阵</h3>
         {svg_decision_matrix(report)}
+        {html_decision_matrix_legend(report)}
       </div>
     </section>
 
@@ -1051,6 +1147,8 @@ def render_html(report: dict[str, Any]) -> str:
       <div class="panel">
         <p>{html_text(analysis_logic['method_note'])}</p>
         <div class="callout"><strong>第一性原理追问：</strong>{html_text(analysis_logic['first_principles_question'])}</div>
+        <h3>先用三问判断是不是主要矛盾</h3>
+        {html_table(['判断', '结论'], [['决定性', analysis_logic['decisiveness']], ['牵引性', analysis_logic['leverage']], ['阶段性', analysis_logic['stage_fit']]])}
         <h3>看得见的问题</h3>
         {html_list(analysis_logic['visible_problems'])}
         <h3>上升一层：找看不见的根部变量</h3>
@@ -1058,6 +1156,8 @@ def render_html(report: dict[str, Any]) -> str:
         {html_list(analysis_logic['hidden_root_variables'])}
         <h3>为什么不是先处理表面问题</h3>
         <p>{html_text(analysis_logic['why_not_surface'])}</p>
+        <h3>内因、外因和可改变路径</h3>
+        {html_table(['层级', '内容'], [['内部可改变结构', '；'.join(analysis_logic['internal_changeable'])], ['外部硬条件', '；'.join(analysis_logic['external_conditions'])], ['外因如何通过内因起作用', analysis_logic['external_through_internal']]])}
         <h3>候选矛盾怎么排序</h3>
         <p>{html_text(analysis_logic['ranking_rule'])}</p>
         {html_table(['排序', '可能的卡点', '大致类型', '优先级', '依据'], [[idx + 1, row.get('name', '-'), plain_type_label(row.get('type')), f"{row['weighted_total']:.2f}/5", '；'.join(row.get('evidence') or ['-'])] for idx, row in enumerate(report['contradictions'])], top_first=True)}
@@ -1085,6 +1185,7 @@ def render_html(report: dict[str, Any]) -> str:
       <div class="section-title"><div class="section-kicker">Resource tilt</div><h2>时间、精力、资源应该怎么重新分配</h2></div>
       <div class="panel">
         <p>{html_text(allocation.get('note', '-'))}</p>
+        {html_table(['倾斜强度', '主攻主要矛盾', '压缩次要矛盾', '证据与监控'], [[aggressiveness_label(allocation.get('aggressiveness')), f"{as_float(allocation.get('main_focus_share'), 0):.0f}%", f"{as_float(allocation.get('secondary_cap_share'), 0):.0f}%", f"{as_float(allocation.get('monitoring_share'), 0):.0f}%"]])}
         {svg_resource_allocation(report)}
         {html_table(['资源项', '当前分配', '建议分配', '变化方向'], [[item.get('label', '-'), f"{as_float(item.get('current')):.0f}{allocation.get('unit', '%')}", f"{as_float(item.get('recommended')):.0f}{allocation.get('unit', '%')}", f"{as_float(item.get('recommended')) - as_float(item.get('current')):+.0f}{allocation.get('unit', '%')}"] for item in allocation.get('items', [])])}
       </div>
@@ -1093,7 +1194,7 @@ def render_html(report: dict[str, Any]) -> str:
     <section class="section" id="actions">
       <div class="section-title"><div class="section-kicker">Actions</div><h2>接下来怎么做</h2></div>
       <div class="panel">
-        {html_table(['动作', '谁来做', '什么时候', '要用什么', '做到什么算完成', '做成把握', '预计帮助'], [[row.get('action', '-'), row.get('owner', '-'), row.get('deadline', '-'), row.get('resource', '-'), row.get('metric', '-'), pct(row['completion_probability']), pct(row['expected_uplift'])] for row in report['actions']])}
+        {html_table(['动作', '改变主要方面', '谁来做', '什么时候', '要用什么', '做到什么算完成', '做成把握', '预计帮助'], [[row.get('action', '-'), row.get('principal_aspect_shift', '-'), row.get('owner', '-'), row.get('deadline', '-'), row.get('resource', '-'), row.get('metric', '-'), pct(row['completion_probability']), pct(row['expected_uplift'])] for row in report['actions']])}
       </div>
     </section>
 
@@ -1222,6 +1323,16 @@ def write_docx(report: dict[str, Any], path: Path) -> None:
     document.add_heading("主要矛盾判断过程", level=1)
     document.add_paragraph(display_text(analysis_logic["method_note"]))
     document.add_paragraph(f"第一性原理追问：{display_text(analysis_logic['first_principles_question'])}")
+    document.add_heading("先用三问判断是不是主要矛盾", level=2)
+    add_docx_table(
+        document,
+        ["判断", "结论"],
+        [
+            ["决定性", analysis_logic["decisiveness"]],
+            ["牵引性", analysis_logic["leverage"]],
+            ["阶段性", analysis_logic["stage_fit"]],
+        ],
+    )
     document.add_heading("看得见的问题", level=2)
     add_docx_bullets(document, analysis_logic["visible_problems"])
     document.add_heading("上升一层：找看不见的根部变量", level=2)
@@ -1229,6 +1340,16 @@ def write_docx(report: dict[str, Any], path: Path) -> None:
     add_docx_bullets(document, analysis_logic["hidden_root_variables"])
     document.add_heading("为什么不是先处理表面问题", level=2)
     document.add_paragraph(display_text(analysis_logic["why_not_surface"]))
+    document.add_heading("内因、外因和可改变路径", level=2)
+    add_docx_table(
+        document,
+        ["层级", "内容"],
+        [
+            ["内部可改变结构", "；".join(analysis_logic["internal_changeable"])],
+            ["外部硬条件", "；".join(analysis_logic["external_conditions"])],
+            ["外因如何通过内因起作用", analysis_logic["external_through_internal"]],
+        ],
+    )
     document.add_heading("候选矛盾怎么排序", level=2)
     document.add_paragraph(display_text(analysis_logic["ranking_rule"]))
     add_docx_table(
@@ -1249,6 +1370,16 @@ def write_docx(report: dict[str, Any], path: Path) -> None:
     document.add_paragraph(display_text(allocation.get("note", "-")))
     add_docx_table(
         document,
+        ["倾斜强度", "主攻主要矛盾", "压缩次要矛盾", "证据与监控"],
+        [[
+            aggressiveness_label(allocation.get("aggressiveness")),
+            f"{as_float(allocation.get('main_focus_share'), 0):.0f}%",
+            f"{as_float(allocation.get('secondary_cap_share'), 0):.0f}%",
+            f"{as_float(allocation.get('monitoring_share'), 0):.0f}%",
+        ]],
+    )
+    add_docx_table(
+        document,
         ["资源项", "当前分配", "建议分配", "变化方向"],
         [
             [
@@ -1263,8 +1394,8 @@ def write_docx(report: dict[str, Any], path: Path) -> None:
     document.add_heading("接下来怎么做", level=1)
     add_docx_table(
         document,
-        ["动作", "谁来做", "什么时候", "要用什么", "做到什么算完成", "做成把握", "预计帮助"],
-        [[row.get("action", "-"), row.get("owner", "-"), row.get("deadline", "-"), row.get("resource", "-"), row.get("metric", "-"), pct(row["completion_probability"]), pct(row["expected_uplift"])] for row in report["actions"]],
+        ["动作", "改变主要方面", "谁来做", "什么时候", "要用什么", "做到什么算完成", "做成把握", "预计帮助"],
+        [[row.get("action", "-"), row.get("principal_aspect_shift", "-"), row.get("owner", "-"), row.get("deadline", "-"), row.get("resource", "-"), row.get("metric", "-"), pct(row["completion_probability"]), pct(row["expected_uplift"])] for row in report["actions"]],
     )
     projection = report["projection"]
     document.add_heading("做完以后可能怎样", level=1)

@@ -388,6 +388,71 @@ pre {
   stroke: #e8e6dc;
 }
 
+.matrix-legend-panel {
+  margin: -2px 0 20px;
+  padding: 18px 22px 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #faf9f5;
+}
+
+.matrix-legend-title {
+  margin-bottom: 12px;
+  color: var(--brand);
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.matrix-legend-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.matrix-legend-item {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  min-width: 0;
+  color: var(--muted);
+}
+
+.matrix-legend-item-primary {
+  color: var(--ink);
+}
+
+.matrix-legend-number,
+.matrix-legend-number-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--muted);
+  background: #d6d1c3;
+  color: #fff;
+  font-size: 15px;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+.matrix-legend-number-primary {
+  border-color: var(--brand);
+  background: var(--brand);
+}
+
+.matrix-legend-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.45;
+}
+
 .chart-grid-line {
   fill: none;
   stroke: #e8e6dc;
@@ -618,6 +683,10 @@ pre {
     text-align: left;
   }
 
+  .matrix-legend-list {
+    grid-template-columns: 1fr;
+  }
+
   table {
     display: block;
     overflow-x: auto;
@@ -696,6 +765,15 @@ pre {
 
   .iceberg-card-principal p {
     font-size: 14px;
+  }
+
+  .matrix-legend-panel {
+    padding: 12px 14px;
+  }
+
+  .matrix-legend-list {
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
 
   .section {
@@ -808,7 +886,8 @@ pre {
         <p>奥卡姆剃刀：当两个候选解释力接近时，优先选择能解释更多表面问题、但额外假设更少的那个。</p>
         <table><thead><tr><th>候选矛盾</th><th>更新后可信度</th><th>解释力</th><th>简洁度</th></tr></thead><tbody><tr class="top-row"><td>客诉响应压力 与 根因闭环能力不足的冲突</td><td>25.8%</td><td>94.0%</td><td>92.0%</td></tr><tr><td>首次响应SLA 与 客户真实解决感的冲突</td><td>21.5%</td><td>80.0%</td><td>92.0%</td></tr><tr><td>产品修复需求 与 研发注意力分散的冲突</td><td>19.7%</td><td>80.0%</td><td>84.0%</td></tr><tr><td>关键客户个性化诉求 与 标准服务边界的冲突</td><td>17.3%</td><td>75.0%</td><td>84.0%</td></tr><tr><td>客服人手有限 与 工单增长的冲突</td><td>15.7%</td><td>66.0%</td><td>84.0%</td></tr></tbody></table>
         <h3>矛盾候选决策矩阵</h3>
-        <svg id="chart-decision-matrix" class="chart-svg chart-svg-tall" viewBox="0 0 960 520" role="img" aria-label="矛盾候选决策矩阵"><rect class="chart-plot-bg" x="88" y="86" width="570" height="310" rx="8" fill="#fffdf8" stroke="#e8e6dc"></rect><path class="chart-grid-line" d="M202.0 86 L202.0 396 M88 148.0 L658 148.0" fill="none" stroke="#e8e6dc" stroke-width="1"></path><path class="chart-grid-line" d="M316.0 86 L316.0 396 M88 210.0 L658 210.0" fill="none" stroke="#e8e6dc" stroke-width="1"></path><path class="chart-grid-line" d="M430.0 86 L430.0 396 M88 272.0 L658 272.0" fill="none" stroke="#e8e6dc" stroke-width="1"></path><path class="chart-grid-line" d="M544.0 86 L544.0 396 M88 334.0 L658 334.0" fill="none" stroke="#e8e6dc" stroke-width="1"></path><path class="chart-axis" d="M88 396 L658 396 M88 396 L88 86" fill="none" stroke="#1B365D" stroke-width="2"></path><text class="chart-note" x="654.0" y="438.0" text-anchor="end" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">因果牵引力</text><text class="chart-note" x="76.0" y="66.0" text-anchor="middle" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">目标影响力</text><circle class="matrix-dot-primary" cx="596.0" cy="114.0" r="25.2" fill="#1B365D" stroke="#1B365D" stroke-width="2"></circle><text class="chart-text-strong" x="596.0" y="119.0" text-anchor="middle" fill="#ffffff" font-size="17" font-family="Songti SC, STSong, Georgia, serif">1</text><circle class="matrix-dot" cx="532.4" cy="197.6" r="25.2" fill="#d6d1c3" stroke="#6b6a64" stroke-width="1"></circle><text class="chart-text" x="532.4" y="202.6" text-anchor="middle" fill="#141413" font-size="17" font-family="Songti SC, STSong, Georgia, serif">2</text><circle class="matrix-dot" cx="492.4" cy="203.6" r="28.0" fill="#d6d1c3" stroke="#6b6a64" stroke-width="1"></circle><text class="chart-text" x="492.4" y="208.6" text-anchor="middle" fill="#141413" font-size="17" font-family="Songti SC, STSong, Georgia, serif">3</text><circle class="matrix-dot" cx="422.8" cy="157.6" r="25.2" fill="#d6d1c3" stroke="#6b6a64" stroke-width="1"></circle><text class="chart-text" x="422.8" y="162.6" text-anchor="middle" fill="#141413" font-size="17" font-family="Songti SC, STSong, Georgia, serif">4</text><circle class="matrix-dot" cx="404.8" cy="235.2" r="25.2" fill="#d6d1c3" stroke="#6b6a64" stroke-width="1"></circle><text class="chart-text" x="404.8" y="240.2" text-anchor="middle" fill="#141413" font-size="17" font-family="Songti SC, STSong, Georgia, serif">5</text><rect class="chart-legend-box" x="696" y="86" width="214" height="310" rx="8" fill="#faf9f5" stroke="#e8e6dc"></rect><text class="chart-kicker" x="718.0" y="122.0" text-anchor="start" fill="#1B365D" font-size="15" font-family="Songti SC, STSong, Georgia, serif">候选矛盾</text><circle class="chart-legend-index-primary" cx="718" cy="148" r="11" fill="#1B365D" stroke="#1B365D"></circle><text class="chart-text-strong" x="718.0" y="152.0" text-anchor="middle" fill="#ffffff" font-size="17" font-family="Songti SC, STSong, Georgia, serif">1</text><text class="chart-note" x="742.0" y="144.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif"><tspan x="742.0" dy="0">客诉响应压力 与 根因闭环能</tspan><tspan x="742.0" dy="18">力不足的冲突</tspan></text><circle class="chart-legend-index" cx="718" cy="196" r="11" fill="#d6d1c3" stroke="#6b6a64"></circle><text class="chart-text-strong" x="718.0" y="200.0" text-anchor="middle" fill="#ffffff" font-size="17" font-family="Songti SC, STSong, Georgia, serif">2</text><text class="chart-note" x="742.0" y="192.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif"><tspan x="742.0" dy="0">首次响应SLA 与 客户真实</tspan><tspan x="742.0" dy="18">解决感的冲突</tspan></text><circle class="chart-legend-index" cx="718" cy="244" r="11" fill="#d6d1c3" stroke="#6b6a64"></circle><text class="chart-text-strong" x="718.0" y="248.0" text-anchor="middle" fill="#ffffff" font-size="17" font-family="Songti SC, STSong, Georgia, serif">3</text><text class="chart-note" x="742.0" y="240.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif"><tspan x="742.0" dy="0">产品修复需求 与 研发注意力</tspan><tspan x="742.0" dy="18">分散的冲突</tspan></text><circle class="chart-legend-index" cx="718" cy="292" r="11" fill="#d6d1c3" stroke="#6b6a64"></circle><text class="chart-text-strong" x="718.0" y="296.0" text-anchor="middle" fill="#ffffff" font-size="17" font-family="Songti SC, STSong, Georgia, serif">4</text><text class="chart-note" x="742.0" y="288.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif"><tspan x="742.0" dy="0">关键客户个性化诉求 与 标准</tspan><tspan x="742.0" dy="18">服务边界的冲突</tspan></text><circle class="chart-legend-index" cx="718" cy="340" r="11" fill="#d6d1c3" stroke="#6b6a64"></circle><text class="chart-text-strong" x="718.0" y="344.0" text-anchor="middle" fill="#ffffff" font-size="17" font-family="Songti SC, STSong, Georgia, serif">5</text><text class="chart-note" x="742.0" y="336.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif"><tspan x="742.0" dy="0">客服人手有限 与 工单增长的</tspan><tspan x="742.0" dy="18">冲突</tspan></text><text class="chart-note" x="480.0" y="462.0" text-anchor="middle" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">越靠右上，越应优先处理；圆越大，越消耗稀缺…</text></svg>
+        <svg id="chart-decision-matrix" class="chart-svg chart-svg-tall" viewBox="0 0 960 450" role="img" aria-label="矛盾候选决策矩阵"><rect class="chart-plot-bg" x="108" y="76" width="744" height="280" rx="8" fill="#fffdf8" stroke="#e8e6dc"></rect><path class="chart-grid-line" d="M256.8 76 L256.8 356 M108 132.0 L852 132.0" fill="none" stroke="#e8e6dc" stroke-width="1"></path><path class="chart-grid-line" d="M405.6 76 L405.6 356 M108 188.0 L852 188.0" fill="none" stroke="#e8e6dc" stroke-width="1"></path><path class="chart-grid-line" d="M554.4 76 L554.4 356 M108 244.0 L852 244.0" fill="none" stroke="#e8e6dc" stroke-width="1"></path><path class="chart-grid-line" d="M703.2 76 L703.2 356 M108 300.0 L852 300.0" fill="none" stroke="#e8e6dc" stroke-width="1"></path><path class="chart-axis" d="M108 356 L852 356 M108 356 L108 76" fill="none" stroke="#1B365D" stroke-width="2"></path><text class="chart-note" x="848.0" y="398.0" text-anchor="end" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">因果牵引力</text><text class="chart-note" x="96.0" y="56.0" text-anchor="middle" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">目标影响力</text><circle class="matrix-dot-primary" cx="790.0" cy="104.0" r="25.2" fill="#1B365D" stroke="#1B365D" stroke-width="2"></circle><text class="chart-text-strong" x="790.0" y="109.0" text-anchor="middle" fill="#ffffff" font-size="17" font-family="Songti SC, STSong, Georgia, serif">1</text><circle class="matrix-dot" cx="691.6" cy="181.6" r="25.2" fill="#d6d1c3" stroke="#6b6a64" stroke-width="1"></circle><text class="chart-text" x="691.6" y="186.6" text-anchor="middle" fill="#141413" font-size="17" font-family="Songti SC, STSong, Georgia, serif">2</text><circle class="matrix-dot" cx="651.6" cy="187.6" r="28.0" fill="#d6d1c3" stroke="#6b6a64" stroke-width="1"></circle><text class="chart-text" x="651.6" y="192.6" text-anchor="middle" fill="#141413" font-size="17" font-family="Songti SC, STSong, Georgia, serif">3</text><circle class="matrix-dot" cx="547.2" cy="141.6" r="25.2" fill="#d6d1c3" stroke="#6b6a64" stroke-width="1"></circle><text class="chart-text" x="547.2" y="146.6" text-anchor="middle" fill="#141413" font-size="17" font-family="Songti SC, STSong, Georgia, serif">4</text><circle class="matrix-dot" cx="529.2" cy="213.2" r="25.2" fill="#d6d1c3" stroke="#6b6a64" stroke-width="1"></circle><text class="chart-text" x="529.2" y="218.2" text-anchor="middle" fill="#141413" font-size="17" font-family="Songti SC, STSong, Georgia, serif">5</text><text class="chart-note" x="480.0" y="414.0" text-anchor="middle" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">越靠右上，越应优先处理；圆越大，越消耗稀缺…</text></svg>
+        <div class="chart-legend-box matrix-legend-panel"><div class="matrix-legend-title">候选矛盾</div><ol class="matrix-legend-list"><li class="matrix-legend-item matrix-legend-item-primary"><span class="matrix-legend-number-primary">1</span><span class="matrix-legend-text">客诉响应压力 与 根因闭环能力不足的冲突</span></li><li class="matrix-legend-item"><span class="matrix-legend-number">2</span><span class="matrix-legend-text">首次响应SLA 与 客户真实解决感的冲突</span></li><li class="matrix-legend-item"><span class="matrix-legend-number">3</span><span class="matrix-legend-text">产品修复需求 与 研发注意力分散的冲突</span></li><li class="matrix-legend-item"><span class="matrix-legend-number">4</span><span class="matrix-legend-text">关键客户个性化诉求 与 标准服务边界的冲突</span></li><li class="matrix-legend-item"><span class="matrix-legend-number">5</span><span class="matrix-legend-text">客服人手有限 与 工单增长的冲突</span></li></ol></div>
       </div>
     </section>
 
@@ -817,6 +896,8 @@ pre {
       <div class="panel">
         <p>这个案例不能把客服响应速度当成唯一指标。主要矛盾要看哪个问题最能解释工单增长、重复客诉、研发被打断和续约风险同时出现。</p>
         <div class="callout"><strong>第一性原理追问：</strong>如果只能改变一个机制，改变什么能让重复问题减少，而不是只让客服更快回复？</div>
+        <h3>先用三问判断是不是主要矛盾</h3>
+        <table><thead><tr><th>判断</th><th>结论</th></tr></thead><tbody><tr><td>决定性</td><td>决定性：根因闭环不建立，响应速度再快也不能稳定降低重复工单和续约风险。</td></tr><tr><td>牵引性</td><td>牵引性：Top问题进入闭环后，客服压力、研发无序打断、客户成功焦虑和客户重复投诉会一起下降。</td></tr><tr><td>阶段性</td><td>阶段性：当前45天最重要的是止住重复问题外溢，先解决闭环机制，比扩编客服或重做服务体系更贴近阶段窗口。</td></tr></tbody></table>
         <h3>看得见的问题</h3>
         <ul><li>看得见的问题：工单量上升，客服压力增加。</li><li>看得见的问题：首次响应SLA维持，但客户仍不满意。</li><li>看得见的问题：客户成功担心续约风险。</li><li>看得见的问题：产品、研发和客服互相觉得对方没解决根本问题。</li></ul>
         <h3>上升一层：找看不见的根部变量</h3>
@@ -824,6 +905,8 @@ pre {
         <ul><li>看不见的根部变量：客户问题没有稳定进入根因分类、定责、修复和验证闭环。</li><li>看不见的根部变量：团队过度关注响应速度，忽略重复问题减少。</li><li>看不见的根部变量：产品研发缺少按客户影响排序的修复清单。</li></ul>
         <h3>为什么不是先处理表面问题</h3>
         <p>如果只是增加客服或催产品修复，重复问题仍会继续流入。当前要先让Top问题从工单变成有负责人、有修复、有验证的闭环。</p>
+        <h3>内因、外因和可改变路径</h3>
+        <table><thead><tr><th>层级</th><th>内容</th></tr></thead><tbody><tr><td>内部可改变结构</td><td>Top重复问题分类和客户影响排序；产品、研发、客服、客户成功的每日根因闭环节奏；修复后的客户回访和重复工单验证机制</td></tr><tr><td>外部硬条件</td><td>新版本已经上线，客户使用反馈短期会集中出现；关键客户续约周期临近；研发可用修复窗口有限</td></tr><tr><td>外因如何通过内因起作用</td><td>新版本反馈和续约压力会通过内部根因闭环能力放大或缓解；如果问题只停留在客服回复层，外部压力会持续转成重复工单和续约风险。</td></tr></tbody></table>
         <h3>候选矛盾怎么排序</h3>
         <p>优先级按能否降低重复工单、影响续约风险、释放客服时间和减少研发无序打断来排序。</p>
         <table><thead><tr><th>排序</th><th>可能的卡点</th><th>大致类型</th><th>优先级</th><th>依据</th></tr></thead><tbody><tr class="top-row"><td>1</td><td>客诉响应压力 与 根因闭环能力不足的冲突</td><td>流程/排序问题</td><td>4.70/5</td><td>工单量增长约45%；SLA维持但重复问题增加；产品和客服缺少统一根因闭环</td></tr><tr><td>2</td><td>首次响应SLA 与 客户真实解决感的冲突</td><td>metric</td><td>4.00/5</td><td>SLA基本维持；客户仍不满意；重复问题继续出现</td></tr><tr><td>3</td><td>产品修复需求 与 研发注意力分散的冲突</td><td>资源卡住</td><td>4.00/5</td><td>产品研发被多个客户问题打断；缺少按客户影响排序的修复清单</td></tr><tr><td>4</td><td>关键客户个性化诉求 与 标准服务边界的冲突</td><td>customer</td><td>3.75/5</td><td>关键客户升级工单增加；客户成功担心续约风险</td></tr><tr><td>5</td><td>客服人手有限 与 工单增长的冲突</td><td>资源卡住</td><td>3.30/5</td><td>工单量增长；客服加班增加</td></tr></tbody></table>
@@ -850,16 +933,17 @@ pre {
     <section class="section" id="allocation">
       <div class="section-title"><div class="section-kicker">Resource tilt</div><h2>时间、精力、资源应该怎么重新分配</h2></div>
       <div class="panel">
-        <p>把资源从被动回复和临时拉群，转向Top问题根因闭环、客户影响排序和修复验证。</p>
-        <svg id="chart-resource-allocation" class="chart-svg" viewBox="0 0 960 420" role="img" aria-label="资源倾斜图"><text class="chart-note" x="74.0" y="90.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">被动回复</text><rect class="bar-current" x="250" y="70" width="300.0" height="18" rx="4" fill="#d6d1c3"></rect><rect class="bar-recommended" x="250" y="96" width="166.7" height="18" rx="4" fill="#1B365D"></rect><text class="chart-note" x="570.0" y="85.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前 45%</text><text class="chart-note" x="570.0" y="111.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议 25%</text><text class="chart-note" x="74.0" y="158.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">临时拉群</text><rect class="bar-current" x="250" y="138" width="166.7" height="18" rx="4" fill="#d6d1c3"></rect><rect class="bar-recommended" x="250" y="164" width="66.7" height="18" rx="4" fill="#1B365D"></rect><text class="chart-note" x="570.0" y="153.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前 25%</text><text class="chart-note" x="570.0" y="179.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议 10%</text><text class="chart-note" x="74.0" y="226.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">根因分类</text><rect class="bar-current" x="250" y="206" width="66.7" height="18" rx="4" fill="#d6d1c3"></rect><rect class="bar-recommended" x="250" y="232" width="166.7" height="18" rx="4" fill="#1B365D"></rect><text class="chart-note" x="570.0" y="221.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前 10%</text><text class="chart-note" x="570.0" y="247.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议 25%</text><text class="chart-note" x="74.0" y="294.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">产品修复</text><rect class="bar-current" x="250" y="274" width="100.0" height="18" rx="4" fill="#d6d1c3"></rect><rect class="bar-recommended" x="250" y="300" width="166.7" height="18" rx="4" fill="#1B365D"></rect><text class="chart-note" x="570.0" y="289.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前 15%</text><text class="chart-note" x="570.0" y="315.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议 25%</text><text class="chart-note" x="74.0" y="362.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">修复验证</text><rect class="bar-current" x="250" y="342" width="33.3" height="18" rx="4" fill="#d6d1c3"></rect><rect class="bar-recommended" x="250" y="368" width="100.0" height="18" rx="4" fill="#1B365D"></rect><text class="chart-note" x="570.0" y="357.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前 5%</text><text class="chart-note" x="570.0" y="383.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议 15%</text><rect class="bar-current" x="700" y="338" width="18" height="12" fill="#d6d1c3"></rect><text class="chart-note" x="746.0" y="349.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前</text><rect class="bar-recommended" x="700" y="362" width="18" height="12" fill="#1B365D"></rect><text class="chart-note" x="746.0" y="373.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议</text></svg>
-        <table><thead><tr><th>资源项</th><th>当前分配</th><th>建议分配</th><th>变化方向</th></tr></thead><tbody><tr><td>被动回复</td><td>45%</td><td>25%</td><td>-20%</td></tr><tr><td>临时拉群</td><td>25%</td><td>10%</td><td>-15%</td></tr><tr><td>根因分类</td><td>10%</td><td>25%</td><td>+15%</td></tr><tr><td>产品修复</td><td>15%</td><td>25%</td><td>+10%</td></tr><tr><td>修复验证</td><td>5%</td><td>15%</td><td>+10%</td></tr></tbody></table>
+        <p>采用激进倾斜：把65%的服务和产品协作精力压到Top问题根因闭环上，被动回复和临时拉群只保留止血能力。</p>
+        <table><thead><tr><th>倾斜强度</th><th>主攻主要矛盾</th><th>压缩次要矛盾</th><th>证据与监控</th></tr></thead><tbody><tr><td>激进倾斜</td><td>65%</td><td>20%</td><td>15%</td></tr></tbody></table>
+        <svg id="chart-resource-allocation" class="chart-svg" viewBox="0 0 960 420" role="img" aria-label="资源倾斜图"><text class="chart-note" x="74.0" y="90.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">被动回复</text><rect class="bar-current" x="250" y="70" width="300.0" height="18" rx="4" fill="#d6d1c3"></rect><rect class="bar-recommended" x="250" y="96" width="100.0" height="18" rx="4" fill="#1B365D"></rect><text class="chart-note" x="570.0" y="85.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前 45%</text><text class="chart-note" x="570.0" y="111.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议 15%</text><text class="chart-note" x="74.0" y="158.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">临时拉群</text><rect class="bar-current" x="250" y="138" width="166.7" height="18" rx="4" fill="#d6d1c3"></rect><rect class="bar-recommended" x="250" y="164" width="33.3" height="18" rx="4" fill="#1B365D"></rect><text class="chart-note" x="570.0" y="153.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前 25%</text><text class="chart-note" x="570.0" y="179.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议 5%</text><text class="chart-note" x="74.0" y="226.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">根因分类</text><rect class="bar-current" x="250" y="206" width="66.7" height="18" rx="4" fill="#d6d1c3"></rect><rect class="bar-recommended" x="250" y="232" width="200.0" height="18" rx="4" fill="#1B365D"></rect><text class="chart-note" x="570.0" y="221.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前 10%</text><text class="chart-note" x="570.0" y="247.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议 30%</text><text class="chart-note" x="74.0" y="294.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">产品修复</text><rect class="bar-current" x="250" y="274" width="100.0" height="18" rx="4" fill="#d6d1c3"></rect><rect class="bar-recommended" x="250" y="300" width="233.3" height="18" rx="4" fill="#1B365D"></rect><text class="chart-note" x="570.0" y="289.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前 15%</text><text class="chart-note" x="570.0" y="315.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议 35%</text><text class="chart-note" x="74.0" y="362.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">修复验证</text><rect class="bar-current" x="250" y="342" width="33.3" height="18" rx="4" fill="#d6d1c3"></rect><rect class="bar-recommended" x="250" y="368" width="100.0" height="18" rx="4" fill="#1B365D"></rect><text class="chart-note" x="570.0" y="357.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前 5%</text><text class="chart-note" x="570.0" y="383.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议 15%</text><rect class="bar-current" x="700" y="338" width="18" height="12" fill="#d6d1c3"></rect><text class="chart-note" x="746.0" y="349.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前</text><rect class="bar-recommended" x="700" y="362" width="18" height="12" fill="#1B365D"></rect><text class="chart-note" x="746.0" y="373.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议</text></svg>
+        <table><thead><tr><th>资源项</th><th>当前分配</th><th>建议分配</th><th>变化方向</th></tr></thead><tbody><tr><td>被动回复</td><td>45%</td><td>15%</td><td>-30%</td></tr><tr><td>临时拉群</td><td>25%</td><td>5%</td><td>-20%</td></tr><tr><td>根因分类</td><td>10%</td><td>30%</td><td>+20%</td></tr><tr><td>产品修复</td><td>15%</td><td>35%</td><td>+20%</td></tr><tr><td>修复验证</td><td>5%</td><td>15%</td><td>+10%</td></tr></tbody></table>
       </div>
     </section>
 
     <section class="section" id="actions">
       <div class="section-title"><div class="section-kicker">Actions</div><h2>接下来怎么做</h2></div>
       <div class="panel">
-        <table><thead><tr><th>动作</th><th>谁来做</th><th>什么时候</th><th>要用什么</th><th>做到什么算完成</th><th>做成把握</th><th>预计帮助</th></tr></thead><tbody><tr><td>3天内从最近6周工单中整理Top 20重复问题，并按客户影响和出现频率排序。</td><td>服务负责人 + 客服组长</td><td>3天</td><td>工单导出、客户健康度、续约客户清单</td><td>形成Top 20问题表，每个问题有客户影响、频次和初步归类。</td><td>86.0%</td><td>6.2%</td></tr><tr><td>7天内建立每日30分钟根因闭环会，只处理Top问题的定责、修复、话术和验证。</td><td>服务负责人 + 产品经理</td><td>7天</td><td>产品/研发代表、客服组长、客户成功代表</td><td>Top 20问题全部有负责人、下一步动作和预计关闭时间。</td><td>74.0%</td><td>9.4%</td></tr><tr><td>30天内关闭至少70%的Top问题，并用客户回访确认是否真的减少重复咨询。</td><td>产品经理 + 客服组长</td><td>30天</td><td>研发修复窗口、客服话术、回访样本</td><td>Top问题关闭率超过70%，重复工单占比下降30%。</td><td>66.0%</td><td>10.6%</td></tr></tbody></table>
+        <table><thead><tr><th>动作</th><th>改变主要方面</th><th>谁来做</th><th>什么时候</th><th>要用什么</th><th>做到什么算完成</th><th>做成把握</th><th>预计帮助</th></tr></thead><tbody><tr><td>3天内从最近6周工单中整理Top 20重复问题，并按客户影响和出现频率排序。</td><td>把分散工单拉回根因分类，削弱“根因闭环能力不足”的支配地位。</td><td>服务负责人 + 客服组长</td><td>3天</td><td>工单导出、客户健康度、续约客户清单</td><td>形成Top 20问题表，每个问题有客户影响、频次和初步归类。</td><td>86.0%</td><td>6.2%</td></tr><tr><td>7天内建立每日30分钟根因闭环会，只处理Top问题的定责、修复、话术和验证。</td><td>让Top问题从客服回复进入跨团队闭环，直接改变主要方面。</td><td>服务负责人 + 产品经理</td><td>7天</td><td>产品/研发代表、客服组长、客户成功代表</td><td>Top 20问题全部有负责人、下一步动作和预计关闭时间。</td><td>74.0%</td><td>9.4%</td></tr><tr><td>30天内关闭至少70%的Top问题，并用客户回访确认是否真的减少重复咨询。</td><td>用修复和回访验证关闭根因，让重复问题不再持续生成服务压力。</td><td>产品经理 + 客服组长</td><td>30天</td><td>研发修复窗口、客服话术、回访样本</td><td>Top问题关闭率超过70%，重复工单占比下降30%。</td><td>66.0%</td><td>10.6%</td></tr></tbody></table>
       </div>
     </section>
 

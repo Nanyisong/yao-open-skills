@@ -123,8 +123,10 @@ yao-open-skills/
 它的公开版本现在有这些比较突出的特点：
 
 - 先做现状清晰度判断，信息不足时优先追问，不急着输出结论
-- 用主次矛盾、第一性原理、贝叶斯式证据更新和奥卡姆剃刀辅助判断真正的上游卡点
+- 用 `决定性`、`牵引性`、`阶段性` 解释主要矛盾判断，再用主次矛盾、第一性原理、贝叶斯式证据更新和奥卡姆剃刀辅助校验
+- 区分内部可改变结构、外部硬条件，以及外因如何通过内因起作用
 - 明确区分 `主要矛盾（最关键的卡点）` 和 `次要矛盾（先不主攻，但要盯住）`
+- 当主要矛盾足够清楚时，更激进地把 50%-70% 高杠杆资源压到主攻线
 - 每个结论都带反转条件、复盘时间和下一阶段主要矛盾可能转移的信号
 - 报告包含分析流程图、照片式冰山模型、矛盾候选矩阵、资源倾斜图和动态阶段迁移图
 - 默认生成 `Markdown + HTML + DOCX + PDF + report JSON`
@@ -137,9 +139,10 @@ yao-open-skills/
 3. [English README](skills/yao-crux-skill/README.en.md)
 4. [Skill 入口](skills/yao-crux-skill/SKILL.md)
 5. [追问与现状清晰度](skills/yao-crux-skill/references/intake-and-questioning.md)
-6. [主次矛盾判断模型](skills/yao-crux-skill/references/contradiction-model.md)
-7. [报告导出流程](skills/yao-crux-skill/references/report-export-pipeline.md)
-8. [虚构示例报告](skills/yao-crux-skill/reports/github-examples/README.md)
+6. [理论锚点与规则](skills/yao-crux-skill/references/theory-anchors.md)
+7. [主次矛盾判断模型](skills/yao-crux-skill/references/contradiction-model.md)
+8. [报告导出流程](skills/yao-crux-skill/references/report-export-pipeline.md)
+9. [虚构示例报告](skills/yao-crux-skill/reports/github-examples/README.md)
 
 ### Yao WeRead Skill
 

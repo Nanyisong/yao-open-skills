@@ -69,6 +69,8 @@ def check_markdown(path: Path) -> list[str]:
         "先把现状说清楚",
         "一张图看懂：从表象到主要矛盾",
         "主要矛盾判断过程",
+        "先用三问判断是不是主要矛盾",
+        "内因、外因和可改变路径",
         "主要矛盾（最关键的卡点）",
         "次要矛盾（先不主攻，但要盯住）",
         "时间、精力、资源应该怎么重新分配",
@@ -186,6 +188,27 @@ def check_report_json(path: Path) -> list[str]:
     clarity = report.get("current_state_clarity") or {}
     if "score" not in clarity or "diagnosis_allowed" not in clarity:
         issues.append(f"{path.name}: current_state_clarity lacks score or diagnosis gate")
+    logic = report.get("analysis_logic") or {}
+    for key in [
+        "decisiveness",
+        "leverage",
+        "stage_fit",
+        "internal_changeable",
+        "external_conditions",
+        "external_through_internal",
+    ]:
+        if not logic.get(key):
+            issues.append(f"{path.name}: analysis_logic lacks {key}")
+    allocation = report.get("resource_allocation") or {}
+    for key in ["aggressiveness", "main_focus_share", "secondary_cap_share", "monitoring_share"]:
+        if key not in allocation:
+            issues.append(f"{path.name}: resource_allocation lacks {key}")
+    if float(allocation.get("main_focus_share") or 0) < 50 and clarity.get("diagnosis_allowed"):
+        issues.append(f"{path.name}: main_focus_share should be aggressive when diagnosis is allowed")
+    actions = report.get("actions") or []
+    for idx, action in enumerate(actions, start=1):
+        if not action.get("principal_aspect_shift"):
+            issues.append(f"{path.name}: action {idx} lacks principal_aspect_shift")
     probability = (report.get("summary") or {}).get("recommended_probability")
     if probability is None or not (0 <= float(probability) <= 1):
         issues.append(f"{path.name}: recommended_probability is missing or outside 0..1")

@@ -63,7 +63,21 @@
       "看不见的根部变量：产品研发缺少按客户影响排序的修复清单。"
     ],
     "why_not_surface": "如果只是增加客服或催产品修复，重复问题仍会继续流入。当前要先让Top问题从工单变成有负责人、有修复、有验证的闭环。",
-    "ranking_rule": "优先级按能否降低重复工单、影响续约风险、释放客服时间和减少研发无序打断来排序。"
+    "ranking_rule": "优先级按能否降低重复工单、影响续约风险、释放客服时间和减少研发无序打断来排序。",
+    "decisiveness": "决定性：根因闭环不建立，响应速度再快也不能稳定降低重复工单和续约风险。",
+    "leverage": "牵引性：Top问题进入闭环后，客服压力、研发无序打断、客户成功焦虑和客户重复投诉会一起下降。",
+    "stage_fit": "阶段性：当前45天最重要的是止住重复问题外溢，先解决闭环机制，比扩编客服或重做服务体系更贴近阶段窗口。",
+    "internal_changeable": [
+      "Top重复问题分类和客户影响排序",
+      "产品、研发、客服、客户成功的每日根因闭环节奏",
+      "修复后的客户回访和重复工单验证机制"
+    ],
+    "external_conditions": [
+      "新版本已经上线，客户使用反馈短期会集中出现",
+      "关键客户续约周期临近",
+      "研发可用修复窗口有限"
+    ],
+    "external_through_internal": "新版本反馈和续约压力会通过内部根因闭环能力放大或缓解；如果问题只停留在客服回复层，外部压力会持续转成重复工单和续约风险。"
   },
   "visuals": {
     "summary": "这组图展示为什么客服人手不是唯一解，真正要先处理的是跨团队根因闭环。",
@@ -78,12 +92,16 @@
   "resource_allocation": {
     "title": "服务资源倾斜",
     "unit": "%",
-    "note": "把资源从被动回复和临时拉群，转向Top问题根因闭环、客户影响排序和修复验证。",
+    "aggressiveness": "aggressive",
+    "main_focus_share": 65,
+    "secondary_cap_share": 20,
+    "monitoring_share": 15,
+    "note": "采用激进倾斜：把65%的服务和产品协作精力压到Top问题根因闭环上，被动回复和临时拉群只保留止血能力。",
     "items": [
-      {"label": "被动回复", "current": 45, "recommended": 25},
-      {"label": "临时拉群", "current": 25, "recommended": 10},
-      {"label": "根因分类", "current": 10, "recommended": 25},
-      {"label": "产品修复", "current": 15, "recommended": 25},
+      {"label": "被动回复", "current": 45, "recommended": 15},
+      {"label": "临时拉群", "current": 25, "recommended": 5},
+      {"label": "根因分类", "current": 10, "recommended": 30},
+      {"label": "产品修复", "current": 15, "recommended": 35},
       {"label": "修复验证", "current": 5, "recommended": 15}
     ]
   },
@@ -152,6 +170,7 @@
       "deadline": "3天",
       "resource": "工单导出、客户健康度、续约客户清单",
       "metric": "形成Top 20问题表，每个问题有客户影响、频次和初步归类。",
+      "principal_aspect_shift": "把分散工单拉回根因分类，削弱“根因闭环能力不足”的支配地位。",
       "completion_probability": 0.86,
       "estimated_uplift": 0.08,
       "dependency_discount": 0.9
@@ -162,6 +181,7 @@
       "deadline": "7天",
       "resource": "产品/研发代表、客服组长、客户成功代表",
       "metric": "Top 20问题全部有负责人、下一步动作和预计关闭时间。",
+      "principal_aspect_shift": "让Top问题从客服回复进入跨团队闭环，直接改变主要方面。",
       "completion_probability": 0.74,
       "estimated_uplift": 0.15,
       "dependency_discount": 0.85
@@ -172,6 +192,7 @@
       "deadline": "30天",
       "resource": "研发修复窗口、客服话术、回访样本",
       "metric": "Top问题关闭率超过70%，重复工单占比下降30%。",
+      "principal_aspect_shift": "用修复和回访验证关闭根因，让重复问题不再持续生成服务压力。",
       "completion_probability": 0.66,
       "estimated_uplift": 0.2,
       "dependency_discount": 0.8

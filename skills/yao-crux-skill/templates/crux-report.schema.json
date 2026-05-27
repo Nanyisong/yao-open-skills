@@ -45,7 +45,13 @@
         "visible_problems": {"type": "array", "items": {"type": "string"}},
         "hidden_root_variables": {"type": "array", "items": {"type": "string"}},
         "why_not_surface": {"type": "string"},
-        "ranking_rule": {"type": "string"}
+        "ranking_rule": {"type": "string"},
+        "decisiveness": {"type": "string"},
+        "leverage": {"type": "string"},
+        "stage_fit": {"type": "string"},
+        "internal_changeable": {"type": "array", "items": {"type": "string"}},
+        "external_conditions": {"type": "array", "items": {"type": "string"}},
+        "external_through_internal": {"type": "string"}
       }
     },
     "decision_model": {
@@ -93,6 +99,10 @@
         "title": {"type": "string"},
         "unit": {"type": "string"},
         "note": {"type": "string"},
+        "aggressiveness": {"type": "string", "enum": ["soft", "balanced", "aggressive"]},
+        "main_focus_share": {"type": "number", "minimum": 0, "maximum": 100},
+        "secondary_cap_share": {"type": "number", "minimum": 0, "maximum": 100},
+        "monitoring_share": {"type": "number", "minimum": 0, "maximum": 100},
         "items": {
           "type": "array",
           "items": {
@@ -166,6 +176,7 @@
           "deadline": {"type": "string"},
           "resource": {"type": "string"},
           "metric": {"type": "string"},
+          "principal_aspect_shift": {"type": "string"},
           "completion_probability": {"type": "number", "minimum": 0, "maximum": 1},
           "estimated_uplift": {"type": "number", "minimum": 0, "maximum": 1},
           "dependency_discount": {"type": "number", "minimum": 0, "maximum": 1}

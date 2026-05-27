@@ -22,13 +22,14 @@ It is not intended for pure philosophy summaries, historical text commentary, ge
 
 This skill does not rank problems by which one is loudest. It ranks contradictions by which one most determines the current stage's outcome.
 
-It uses five layers of reasoning:
+It uses six layers of reasoning:
 
 1. **Current-state clarity first**: If the goal, facts, stage, resources, constraints, and previous attempts are unclear, ask follow-up questions before diagnosing.
-2. **Principal and secondary contradiction analysis**: Rewrite conflicts as `force A vs force B`, then identify which contradiction currently drives the situation.
-3. **First-principles upward scan**: Move from visible symptoms to the upstream variable that can reduce several visible problems at once.
-4. **Bayesian-style evidence updates + Ockham's razor**: Update candidate credibility with new facts; when candidates are close, prefer the one that explains more with fewer assumptions.
-5. **Dynamic stage view**: The principal contradiction is stage-dependent. Once it changes, the next principal contradiction may emerge.
+2. **Three-question main line**: Explain the candidate through decisiveness, leverage, and stage fit before showing scores.
+3. **Principal and secondary contradiction analysis**: Rewrite conflicts as `force A vs force B`, then identify which contradiction currently drives the situation.
+4. **First-principles upward scan**: Move from visible symptoms to the upstream variable that can reduce several visible problems at once.
+5. **Internal/external cause split**: Separate changeable internal structures from external hard conditions, then explain how external conditions act through internal structure.
+6. **Dynamic stage view**: The principal contradiction is stage-dependent. Once it changes, the next principal contradiction may emerge.
 
 ## Workflow
 
@@ -40,13 +41,15 @@ flowchart TD
     C -- "Yes" --> E["Build current-state snapshot<br/>Goal / facts / stage / resources / constraints"]
     E --> F["Separate visible problems"]
     F --> G["Look one layer higher for hidden root variables"]
-    G --> H["Create 3-7 candidate contradictions"]
-    H --> I["Score by goal impact, causal leverage, urgency, resource constraint, and evidence"]
-    I --> J["Check with Bayesian updates and Ockham's razor"]
-    J --> K["Identify principal contradiction, principal aspect, and secondary contradictions"]
-    K --> L["Recommend 1-3 breakthrough actions"]
-    L --> M["Project probability, risks, and review triggers"]
-    M --> N["Generate Markdown / HTML / DOCX / PDF reports"]
+    G --> H["Check decisiveness / leverage / stage fit"]
+    H --> I["Separate internal changeable structure from external hard conditions"]
+    I --> J["Create 3-7 candidates and score them"]
+    J --> K["Check with Bayesian updates and Ockham's razor"]
+    K --> L["Identify principal contradiction, principal aspect, and secondary contradictions"]
+    L --> M["Recommend 1-3 actions that change the principal aspect"]
+    M --> P["Reallocate time, attention, and resources aggressively"]
+    P --> Q["Project probability, risks, and review triggers"]
+    Q --> N["Generate Markdown / HTML / DOCX / PDF reports"]
     N --> O["Run report verification"]
 ```
 
@@ -60,11 +63,12 @@ A full report usually includes:
 - **Fact vs judgment separation**: observed, estimated, and assumed statements.
 - **Visual reasoning path**: how the diagnosis moves from user description to principal contradiction.
 - **Iceberg model**: visible problems above the waterline and hidden root variables below.
-- **Contradiction decision process**: candidates, evidence, scoring, and selection logic.
+- **Contradiction decision process**: decisiveness, leverage, stage fit, candidates, evidence, scoring, and selection logic.
+- **Internal/external cause path**: changeable internal structures, external hard conditions, and how external pressure works through internal setup.
 - **Principal contradiction**: the current stage's key bottleneck.
 - **Secondary contradictions**: issues to monitor but not attack first.
-- **Resource reallocation**: where time, attention, and resources should move.
-- **Action plan**: 1-3 actions with owner, deadline, resources, metrics, and expected effect.
+- **Resource reallocation**: where time, attention, and resources should move; when the diagnosis is stable, 50%-70% of high-leverage resources should usually go to the principal contradiction.
+- **Action plan**: 1-3 actions with owner, deadline, resources, metrics, expected effect, and how each action changes the principal aspect.
 - **Probability projection**: baseline probability, action uplift, risk drag, and sensitivity.
 - **Dynamic shift conditions**: when the principal contradiction should be re-evaluated.
 
@@ -99,9 +103,12 @@ HTML/PDF reports include five visual modules:
 
 - **Ask before judging**: prevents overconfident conclusions when the situation is unclear.
 - **Finds upstream causes**: the principal contradiction can be a hidden root variable, not just a visible symptom.
+- **Explains the judgment plainly**: decisiveness, leverage, and stage fit make the conclusion easier to review.
+- **Separates internal and external causes**: external rules and market conditions are respected, while actions focus on changeable internal structures.
 - **Keeps theory practical**: principal and secondary contradictions are translated into user-facing labels such as "key bottleneck" and "monitor, but do not attack first."
 - **Uses charts to explain reasoning**: visuals are tied to the logic, not decorative.
 - **Keeps action narrow**: the default action plan focuses on 1-3 moves instead of a long task dump.
+- **Tilts resources decisively**: when the principal contradiction is clear, the report names what to attack, compress, protect, and monitor.
 - **Treats probability as decision support**: projections include baseline, uplift, risk drag, and sensitivity instead of promises.
 - **Stays reviewable**: every principal contradiction includes reversal conditions and review triggers.
 
@@ -118,9 +125,9 @@ Real user cases, private inputs, and local drafts are intentionally excluded fro
 ## Source Layout
 
 - `SKILL.md`: routing rules and default workflow
-- `references/`: questioning rules, contradiction model, report contract, and layout guidance
+- `references/`: theory anchors, questioning rules, contradiction model, report contract, and layout guidance
 - `scripts/`: current-state clarity assessment, report generation, and report verification
 - `templates/`: canonical report schema and HTML/PDF theme
 - `input/`: template and fictional example inputs
-- `evals/`: tests for clarity, first-principles reasoning, plain language, and visual reports
+- `evals/`: tests for clarity, first-principles reasoning, theory anchors, plain language, and visual reports
 - `reports/github-examples/`: fictional example report bundles

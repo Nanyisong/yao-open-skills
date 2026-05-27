@@ -24,9 +24,11 @@ GitHub 目录页默认使用简体中文说明：
 1. 先判断现状是否足够清楚。
 2. 如果不清楚，先问少量关键问题，不急着下结论。
 3. 把看得见的问题和看不见的根部变量分开。
-4. 用主次矛盾、第一性原理、贝叶斯式证据更新和奥卡姆剃刀做辅助判断。
-5. 输出当前阶段的主要矛盾、次要矛盾、主要方面、行动建议和结果估计。
-6. 生成多格式报告，并用图表把分析过程讲清楚。
+4. 用 `决定性`、`牵引性`、`阶段性` 解释为什么当前先抓这个矛盾。
+5. 区分内部可改变结构、外部硬条件，以及外因如何通过内因起作用。
+6. 用主次矛盾、第一性原理、贝叶斯式证据更新和奥卡姆剃刀做辅助判断。
+7. 输出当前阶段的主要矛盾、次要矛盾、主要方面、行动建议和结果估计。
+8. 生成多格式报告，并用图表把分析过程讲清楚。
 
 ## 输出内容
 
@@ -37,10 +39,10 @@ GitHub 目录页默认使用简体中文说明：
 - 哪些是事实，哪些只是判断
 - 一张图看懂：从表象到主要矛盾
 - 冰山模型：看得见的问题与看不见的根部变量
-- 主要矛盾判断过程
+- 主要矛盾判断过程：决定性、牵引性、阶段性、内因外因和候选矛盾排序
 - 主要矛盾（最关键的卡点）
 - 次要矛盾（先不主攻，但要盯住）
-- 时间、精力、资源应该怎么重新分配
+- 时间、精力、资源应该怎么重新分配：主要矛盾清楚时，默认更激进地把 50%-70% 高杠杆资源投向主攻线
 - 接下来怎么做
 - 做完以后可能怎样
 - 主要矛盾什么时候会转移
@@ -83,7 +85,13 @@ HTML/PDF 报告包含：
 
 这些图不是装饰，而是为了帮助读者看懂为什么这个矛盾是主要矛盾，以及为什么其他矛盾暂时不主攻。
 
-### 4. 动态判断，不把结论写死
+### 4. 更果断地倾斜资源
+
+当现状足够清楚、主要矛盾判断稳定时，报告不会把资源平均分给所有问题。它会明确哪些事情要主攻、哪些事情要压缩、哪些只做止血和监控。
+
+默认建议是把 50%-70% 的高杠杆时间、注意力、决策权和稀缺预算投向主要矛盾，同时保留少量资源盯住次要矛盾的触发条件。
+
+### 5. 动态判断，不把结论写死
 
 每个主要矛盾结论都要配：
 
@@ -123,7 +131,8 @@ python3 scripts/verify_report_bundle.py reports/github-examples
 2. [中文目录说明](../../skills/yao-crux-skill/README.md)
 3. [English README](../../skills/yao-crux-skill/README.en.md)
 4. [追问与现状清晰度](../../skills/yao-crux-skill/references/intake-and-questioning.md)
-5. [主次矛盾判断模型](../../skills/yao-crux-skill/references/contradiction-model.md)
-6. [报告结构契约](../../skills/yao-crux-skill/references/report-contract.md)
-7. [报告导出流程](../../skills/yao-crux-skill/references/report-export-pipeline.md)
-8. [虚构示例报告](../../skills/yao-crux-skill/reports/github-examples/README.md)
+5. [理论锚点与规则](../../skills/yao-crux-skill/references/theory-anchors.md)
+6. [主次矛盾判断模型](../../skills/yao-crux-skill/references/contradiction-model.md)
+7. [报告结构契约](../../skills/yao-crux-skill/references/report-contract.md)
+8. [报告导出流程](../../skills/yao-crux-skill/references/report-export-pipeline.md)
+9. [虚构示例报告](../../skills/yao-crux-skill/reports/github-examples/README.md)

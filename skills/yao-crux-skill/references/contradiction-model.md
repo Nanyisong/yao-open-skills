@@ -17,6 +17,18 @@ Write every candidate contradiction as:
 
 Avoid naming symptoms as contradictions. `会议太多` is a symptom. `多目标并行 与 关键人时间有限的冲突` is a contradiction.
 
+## Principal Contradiction Three-Question Gate
+
+Before detailed scoring, state why the leading candidate passes these checks:
+
+| Check | Plain Question | Failure Signal |
+| --- | --- | --- |
+| 决定性 | 不解决它，当前目标是不是很难真正推进？ | Solving it would feel useful but not move the target metric. |
+| 牵引性 | 解决它后，多个表面问题会不会一起变轻？ | It only fixes one local pain point. |
+| 阶段性 | 在当前期限、资源和阶段里，它是不是最该先抓？ | It matters, but belongs to a later stage. |
+
+These checks are the user-facing explanation. The weighted score is the audit trail.
+
 ## First-Principles Layer Gate
 
 The main diagnosis risk is staying too close to the user's visible complaint. The principal contradiction is often upstream and partly invisible.
@@ -53,6 +65,23 @@ Practical implication:
 
 This does not mean process is unimportant. It means process may be a secondary contradiction or a stop-loss action while the principal contradiction is talent density or organization capability.
 
+## Internal And External Cause Gate
+
+Run this before finalizing the principal contradiction:
+
+1. Name `内部可改变结构`: the user's controllable or influenceable structure, such as capability, process, talent density, content quality, decision rights, trust, data routine, or attention allocation.
+2. Name `外部硬条件`: the external rules or constraints, such as platform rules, law, market competition, customer budget, safety, or health boundaries.
+3. Explain `外因如何通过内因起作用`: how the external condition creates results through the user's internal setup.
+4. Choose actions that change the internal response path unless the external condition is truly non-negotiable and no meaningful response path exists.
+
+Example:
+
+```text
+外部硬条件：平台规则更偏好原生、可信、持续活跃的内容。
+内部可改变结构：账号矩阵的内容结构、存活模型、单位有效引用成本统计、举证周期。
+外因通过内因起作用：平台规则不可直接改变，但会通过账号存活率和内容可信度影响AI引用率。
+```
+
 ## Method Anchors From Contradiction Theory
 
 Use these as operating principles rather than slogans:
@@ -61,6 +90,7 @@ Use these as operating principles rather than slogans:
 - Principal and secondary contradictions can change when the stage or external condition changes.
 - The principal aspect inside the principal contradiction decides what currently defines the situation.
 - Different contradictions require different methods; do not apply one fixed solution to every case.
+- External conditions matter, but practical diagnosis should first identify which internal response path can change the result.
 
 In report language, show the logic plainly: `为什么不是先改流程`, `为什么不是先招人`, `为什么不是先做营销`, etc. The point is to prove why the chosen principal contradiction is more upstream than the obvious alternatives.
 
@@ -165,6 +195,14 @@ Common signals:
 - the side reinforced by environment, incentives, habit, or resource allocation
 - the side that would change the situation's nature if reversed
 
+Every breakthrough action should tie back to this section:
+
+| Action Test | Required Answer |
+| --- | --- |
+| Which side does this action change? | Weakens the dominant side, strengthens the constrained side, or changes their relationship. |
+| Why is it not just a support task? | It directly changes the principal contradiction or produces decisive evidence about it. |
+| What should be reduced to make room? | Name the secondary activity that loses time, money, or attention. |
+
 ## Secondary Contradictions
 
 Do not call secondary contradictions unimportant. They should receive defer reasons and monitor triggers.
@@ -176,6 +214,27 @@ Do not call secondary contradictions unimportant. They should receive defer reas
 | high_consumption | It consumes scarce resources. | Principal contradiction is relieved or risk crosses threshold. |
 | replaceable_patch | A simple workaround is enough for now. | Patch failure affects target metric. |
 | wrong_stage | It matters later, not in the current stage. | Stage transition or new milestone reached. |
+
+## Aggressive Resource Allocation
+
+When clarity is sufficient and the principal contradiction score is stable, do not spread resources evenly. Recommend a visible tilt.
+
+Default allocation:
+
+| Bucket | Typical Share | Meaning |
+| --- | ---: | --- |
+| 主攻主要矛盾 | 50%-70% | High-leverage time, attention, decision rights, and scarce budget go to the main line. |
+| 压缩次要矛盾 | 10%-25% | Keep only stop-loss actions for secondary contradictions. |
+| 证据与监控 | 10%-20% | Collect evidence, watch triggers, and prepare for stage transfer. |
+
+Make the tilt more aggressive when:
+
+- the principal contradiction explains several visible problems
+- the current resource pattern is heavily stuck in low-leverage response work
+- the deadline is short and opportunity cost is high
+- secondary contradictions are real but not yet decisive
+
+Make the tilt softer when there are hard safety, legal, health, cash, or reputation constraints.
 
 ## Probability Projection
 

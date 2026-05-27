@@ -56,6 +56,9 @@ Before delivery, check:
 - probability numbers are clamped between `0%` and `100%`
 - high-risk reports contain a review or professional-support warning
 - generated report JSON includes `current_state_clarity`, `analysis_logic`, `decision_model`, `visuals`, `resource_allocation`, and `stage_transition`
+- generated report JSON includes the theory anchors in `analysis_logic`: `decisiveness`, `leverage`, `stage_fit`, `internal_changeable`, `external_conditions`, and `external_through_internal`
+- action rows include `principal_aspect_shift` so recommendations show how they change the principal aspect
+- `resource_allocation` includes `aggressiveness`, `main_focus_share`, `secondary_cap_share`, and `monitoring_share`; when the diagnosis is clear, the main focus share should usually be at least `50%`
 - HTML includes four SVG chart ids plus the photo-based iceberg module: `chart-analysis-flow`, `chart-iceberg`, `chart-decision-matrix`, `chart-resource-allocation`, and `chart-stage-transition`
 - HTML contains the upgraded layout hooks: split conclusion header, compact summary strip, photo-based iceberg, matrix legend box, and vertical stage cards
 - browser screenshot checks cover at least the conclusion panel, content-width alignment, iceberg section, decision matrix, and stage transition; fail the handoff if any screenshot shows horizontal overflow, cropped legends, overlapping labels, mismatched gutters, or large unintended blank space

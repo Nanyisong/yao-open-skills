@@ -64,7 +64,21 @@
       "看不见的根部变量：清仓、补货和上新没有在同一张经营账上取舍。"
     ],
     "why_not_surface": "如果只继续加投放，可能放大断货和现金压力；如果只清库存，可能牺牲热销增长。当前要先建立SKU分层和现金周转规则，让采购和投放都围绕同一套经营约束行动。",
-    "ranking_rule": "排序时看哪个矛盾最能同时影响GMV、现金、库存和团队协作。库存现金周转失衡比单独补货或清仓更上游。"
+    "ranking_rule": "排序时看哪个矛盾最能同时影响GMV、现金、库存和团队协作。库存现金周转失衡比单独补货或清仓更上游。",
+    "decisiveness": "决定性：库存现金周转不稳，GMV增长越快越可能占用现金并制造断货与积压。",
+    "leverage": "牵引性：SKU分层和现金周转规则建立后，补货、投放、清仓和财务取舍会同时变清楚。",
+    "stage_fit": "阶段性：当前60天的核心不是继续追GMV，而是把增长控制在现金和库存纪律内。",
+    "internal_changeable": [
+      "SKU分层、补货纪律和停止补货清单",
+      "投放预算与可售库存、安全库存和毛利联动",
+      "低动销库存的渠道分流和现金回收节奏"
+    ],
+    "external_conditions": [
+      "供应链补货周期约21到35天",
+      "平台流量窗口短，断货会浪费投放",
+      "价格体系和品牌形象限制一刀切清仓"
+    ],
+    "external_through_internal": "供应链周期和平台流量窗口会通过SKU分层、补货纪律和投放联动影响现金结果；内部经营规则越粗，外部波动越容易放大成现金压力。"
   },
   "visuals": {
     "summary": "这组图把热销断货、旧款积压和现金紧张连接到SKU分层和现金周转这条主线。",
@@ -79,13 +93,17 @@
   "resource_allocation": {
     "title": "经营资源倾斜",
     "unit": "%",
-    "note": "把资源从无差别补货和单纯追GMV，转向A类SKU保障、低动销处理和现金周转看板。",
+    "aggressiveness": "aggressive",
+    "main_focus_share": 65,
+    "secondary_cap_share": 20,
+    "monitoring_share": 15,
+    "note": "采用激进倾斜：把65%的经营注意力放到SKU分层、A类保障、低动销处理和现金周转，压缩无差别补货与单纯追GMV。",
     "items": [
-      {"label": "无差别补货", "current": 35, "recommended": 10},
-      {"label": "追GMV投放", "current": 30, "recommended": 18},
-      {"label": "A类保障", "current": 15, "recommended": 32},
-      {"label": "低动销处理", "current": 10, "recommended": 25},
-      {"label": "现金看板", "current": 10, "recommended": 15}
+      {"label": "无差别补货", "current": 35, "recommended": 5},
+      {"label": "追GMV投放", "current": 30, "recommended": 10},
+      {"label": "A类保障", "current": 15, "recommended": 35},
+      {"label": "低动销处理", "current": 10, "recommended": 30},
+      {"label": "现金看板", "current": 10, "recommended": 20}
     ]
   },
   "stage_transition": {
@@ -153,6 +171,7 @@
       "deadline": "7天",
       "resource": "近90天销售数据、库存表、毛利表",
       "metric": "形成SKU分层表和D类停止补货清单。",
+      "principal_aspect_shift": "先把库存现金周转失衡拆到SKU层，削弱无差别补货对局面的支配。",
       "completion_probability": 0.85,
       "estimated_uplift": 0.09,
       "dependency_discount": 0.9
@@ -163,6 +182,7 @@
       "deadline": "14天",
       "resource": "库存预警线、投放计划、供应商交期",
       "metric": "A类SKU断货率低于8%，投放预算不再打到断货SKU。",
+      "principal_aspect_shift": "把投放和补货绑定到A类库存纪律，增强增长侧对现金周转的约束。",
       "completion_probability": 0.72,
       "estimated_uplift": 0.15,
       "dependency_discount": 0.85
@@ -173,6 +193,7 @@
       "deadline": "30天",
       "resource": "低动销清单、渠道资源、促销权益",
       "metric": "低动销库存占比下降15%，库存周转天数下降20%。",
+      "principal_aspect_shift": "用分层处理释放现金，降低库存现金周转失衡的主导性。",
       "completion_probability": 0.68,
       "estimated_uplift": 0.18,
       "dependency_discount": 0.8

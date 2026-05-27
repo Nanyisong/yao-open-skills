@@ -1,7 +1,7 @@
 interface:
   display_name: "Yao Crux Skill"
   short_description: "通过追问识别主次矛盾、深层根因、图表化报告和行动建议"
-  default_prompt: "Use $yao-crux-skill to diagnose this situation: first ask only the key follow-up questions needed to understand the user's current state, then separate visible symptoms from hidden root variables, use Bayesian/Ockham checks where useful, identify the principal contradiction, secondary contradictions, principal aspect, action plan, probability projection, visual reasoning charts, and export synchronized Markdown, Word, HTML, and PDF reports."
+  default_prompt: "Use $yao-crux-skill to diagnose this situation: first ask only the key follow-up questions needed to understand the user's current state, then separate visible symptoms from hidden root variables, explain the principal contradiction through decisiveness/leverage/stage fit, separate internal changeable structures from external hard conditions, use Bayesian/Ockham checks where useful, identify the principal contradiction, secondary contradictions, principal aspect, aggressive resource allocation, action plan tied to the principal aspect, probability projection, visual reasoning charts, and export synchronized Markdown, Word, HTML, and PDF reports."
 compatibility:
   canonical_format: "agent-skills"
   adapter_targets:

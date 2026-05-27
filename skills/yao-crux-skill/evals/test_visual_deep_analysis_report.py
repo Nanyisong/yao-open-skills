@@ -64,6 +64,8 @@ def test_html_embeds_visual_charts_and_photo_iceberg() -> None:
     assert "hero-action" in html
     assert "summary-strip" in html
     assert "chart-legend-box" in html
+    assert "matrix-legend-panel" in html
+    assert "matrix-legend-list" in html
     assert "stage-card" in html
     assert "水面上" in html
     assert "水面下" in html

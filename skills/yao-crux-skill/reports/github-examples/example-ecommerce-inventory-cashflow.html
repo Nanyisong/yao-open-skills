@@ -388,6 +388,71 @@ pre {
   stroke: #e8e6dc;
 }
 
+.matrix-legend-panel {
+  margin: -2px 0 20px;
+  padding: 18px 22px 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #faf9f5;
+}
+
+.matrix-legend-title {
+  margin-bottom: 12px;
+  color: var(--brand);
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.matrix-legend-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.matrix-legend-item {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  min-width: 0;
+  color: var(--muted);
+}
+
+.matrix-legend-item-primary {
+  color: var(--ink);
+}
+
+.matrix-legend-number,
+.matrix-legend-number-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--muted);
+  background: #d6d1c3;
+  color: #fff;
+  font-size: 15px;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+.matrix-legend-number-primary {
+  border-color: var(--brand);
+  background: var(--brand);
+}
+
+.matrix-legend-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.45;
+}
+
 .chart-grid-line {
   fill: none;
   stroke: #e8e6dc;
@@ -618,6 +683,10 @@ pre {
     text-align: left;
   }
 
+  .matrix-legend-list {
+    grid-template-columns: 1fr;
+  }
+
   table {
     display: block;
     overflow-x: auto;
@@ -696,6 +765,15 @@ pre {
 
   .iceberg-card-principal p {
     font-size: 14px;
+  }
+
+  .matrix-legend-panel {
+    padding: 12px 14px;
+  }
+
+  .matrix-legend-list {
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
 
   .section {
@@ -808,7 +886,8 @@ pre {
         <p>奥卡姆剃刀：当两个候选解释力接近时，优先选择能解释更多表面问题、但额外假设更少的那个。</p>
         <table><thead><tr><th>候选矛盾</th><th>更新后可信度</th><th>解释力</th><th>简洁度</th></tr></thead><tbody><tr class="top-row"><td>订单增长 与 库存现金周转失衡的冲突</td><td>26.2%</td><td>97.0%</td><td>92.0%</td></tr><tr><td>热销款需求 与 补货周期滞后的冲突</td><td>21.6%</td><td>81.0%</td><td>92.0%</td></tr><tr><td>低动销库存 与 现金回收需求的冲突</td><td>20.0%</td><td>83.0%</td><td>84.0%</td></tr><tr><td>投放增长目标 与 可售库存约束的冲突</td><td>17.1%</td><td>75.0%</td><td>84.0%</td></tr><tr><td>新品上新节奏 与 历史库存消化的冲突</td><td>15.1%</td><td>63.0%</td><td>84.0%</td></tr></tbody></table>
         <h3>矛盾候选决策矩阵</h3>
-        <svg id="chart-decision-matrix" class="chart-svg chart-svg-tall" viewBox="0 0 960 520" role="img" aria-label="矛盾候选决策矩阵"><rect class="chart-plot-bg" x="88" y="86" width="570" height="310" rx="8" fill="#fffdf8" stroke="#e8e6dc"></rect><path class="chart-grid-line" d="M202.0 86 L202.0 396 M88 148.0 L658 148.0" fill="none" stroke="#e8e6dc" stroke-width="1"></path><path class="chart-grid-line" d="M316.0 86 L316.0 396 M88 210.0 L658 210.0" fill="none" stroke="#e8e6dc" stroke-width="1"></path><path class="chart-grid-line" d="M430.0 86 L430.0 396 M88 272.0 L658 272.0" fill="none" stroke="#e8e6dc" stroke-width="1"></path><path class="chart-grid-line" d="M544.0 86 L544.0 396 M88 334.0 L658 334.0" fill="none" stroke="#e8e6dc" stroke-width="1"></path><path class="chart-axis" d="M88 396 L658 396 M88 396 L88 86" fill="none" stroke="#1B365D" stroke-width="2"></path><text class="chart-note" x="654.0" y="438.0" text-anchor="end" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">因果牵引力</text><text class="chart-note" x="76.0" y="66.0" text-anchor="middle" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">目标影响力</text><circle class="matrix-dot-primary" cx="596.0" cy="114.0" r="28.0" fill="#1B365D" stroke="#1B365D" stroke-width="2"></circle><text class="chart-text-strong" x="596.0" y="119.0" text-anchor="middle" fill="#ffffff" font-size="17" font-family="Songti SC, STSong, Georgia, serif">1</text><circle class="matrix-dot" cx="532.4" cy="197.6" r="28.0" fill="#d6d1c3" stroke="#6b6a64" stroke-width="1"></circle><text class="chart-text" x="532.4" y="202.6" text-anchor="middle" fill="#141413" font-size="17" font-family="Songti SC, STSong, Georgia, serif">2</text><circle class="matrix-dot" cx="492.4" cy="203.6" r="25.2" fill="#d6d1c3" stroke="#6b6a64" stroke-width="1"></circle><text class="chart-text" x="492.4" y="208.6" text-anchor="middle" fill="#141413" font-size="17" font-family="Songti SC, STSong, Georgia, serif">3</text><circle class="matrix-dot" cx="422.8" cy="157.6" r="25.2" fill="#d6d1c3" stroke="#6b6a64" stroke-width="1"></circle><text class="chart-text" x="422.8" y="162.6" text-anchor="middle" fill="#141413" font-size="17" font-family="Songti SC, STSong, Georgia, serif">4</text><circle class="matrix-dot" cx="404.8" cy="235.2" r="25.2" fill="#d6d1c3" stroke="#6b6a64" stroke-width="1"></circle><text class="chart-text" x="404.8" y="240.2" text-anchor="middle" fill="#141413" font-size="17" font-family="Songti SC, STSong, Georgia, serif">5</text><rect class="chart-legend-box" x="696" y="86" width="214" height="310" rx="8" fill="#faf9f5" stroke="#e8e6dc"></rect><text class="chart-kicker" x="718.0" y="122.0" text-anchor="start" fill="#1B365D" font-size="15" font-family="Songti SC, STSong, Georgia, serif">候选矛盾</text><circle class="chart-legend-index-primary" cx="718" cy="148" r="11" fill="#1B365D" stroke="#1B365D"></circle><text class="chart-text-strong" x="718.0" y="152.0" text-anchor="middle" fill="#ffffff" font-size="17" font-family="Songti SC, STSong, Georgia, serif">1</text><text class="chart-note" x="742.0" y="144.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif"><tspan x="742.0" dy="0">订单增长 与 库存现金周转失</tspan><tspan x="742.0" dy="18">衡的冲突</tspan></text><circle class="chart-legend-index" cx="718" cy="196" r="11" fill="#d6d1c3" stroke="#6b6a64"></circle><text class="chart-text-strong" x="718.0" y="200.0" text-anchor="middle" fill="#ffffff" font-size="17" font-family="Songti SC, STSong, Georgia, serif">2</text><text class="chart-note" x="742.0" y="192.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif"><tspan x="742.0" dy="0">低动销库存 与 现金回收需求</tspan><tspan x="742.0" dy="18">的冲突</tspan></text><circle class="chart-legend-index" cx="718" cy="244" r="11" fill="#d6d1c3" stroke="#6b6a64"></circle><text class="chart-text-strong" x="718.0" y="248.0" text-anchor="middle" fill="#ffffff" font-size="17" font-family="Songti SC, STSong, Georgia, serif">3</text><text class="chart-note" x="742.0" y="240.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif"><tspan x="742.0" dy="0">热销款需求 与 补货周期滞后</tspan><tspan x="742.0" dy="18">的冲突</tspan></text><circle class="chart-legend-index" cx="718" cy="292" r="11" fill="#d6d1c3" stroke="#6b6a64"></circle><text class="chart-text-strong" x="718.0" y="296.0" text-anchor="middle" fill="#ffffff" font-size="17" font-family="Songti SC, STSong, Georgia, serif">4</text><text class="chart-note" x="742.0" y="288.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif"><tspan x="742.0" dy="0">投放增长目标 与 可售库存约</tspan><tspan x="742.0" dy="18">束的冲突</tspan></text><circle class="chart-legend-index" cx="718" cy="340" r="11" fill="#d6d1c3" stroke="#6b6a64"></circle><text class="chart-text-strong" x="718.0" y="344.0" text-anchor="middle" fill="#ffffff" font-size="17" font-family="Songti SC, STSong, Georgia, serif">5</text><text class="chart-note" x="742.0" y="336.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif"><tspan x="742.0" dy="0">新品上新节奏 与 历史库存消</tspan><tspan x="742.0" dy="18">化的冲突</tspan></text><text class="chart-note" x="480.0" y="462.0" text-anchor="middle" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">越靠右上，越应优先处理；圆越大，越消耗稀缺…</text></svg>
+        <svg id="chart-decision-matrix" class="chart-svg chart-svg-tall" viewBox="0 0 960 450" role="img" aria-label="矛盾候选决策矩阵"><rect class="chart-plot-bg" x="108" y="76" width="744" height="280" rx="8" fill="#fffdf8" stroke="#e8e6dc"></rect><path class="chart-grid-line" d="M256.8 76 L256.8 356 M108 132.0 L852 132.0" fill="none" stroke="#e8e6dc" stroke-width="1"></path><path class="chart-grid-line" d="M405.6 76 L405.6 356 M108 188.0 L852 188.0" fill="none" stroke="#e8e6dc" stroke-width="1"></path><path class="chart-grid-line" d="M554.4 76 L554.4 356 M108 244.0 L852 244.0" fill="none" stroke="#e8e6dc" stroke-width="1"></path><path class="chart-grid-line" d="M703.2 76 L703.2 356 M108 300.0 L852 300.0" fill="none" stroke="#e8e6dc" stroke-width="1"></path><path class="chart-axis" d="M108 356 L852 356 M108 356 L108 76" fill="none" stroke="#1B365D" stroke-width="2"></path><text class="chart-note" x="848.0" y="398.0" text-anchor="end" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">因果牵引力</text><text class="chart-note" x="96.0" y="56.0" text-anchor="middle" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">目标影响力</text><circle class="matrix-dot-primary" cx="790.0" cy="104.0" r="28.0" fill="#1B365D" stroke="#1B365D" stroke-width="2"></circle><text class="chart-text-strong" x="790.0" y="109.0" text-anchor="middle" fill="#ffffff" font-size="17" font-family="Songti SC, STSong, Georgia, serif">1</text><circle class="matrix-dot" cx="691.6" cy="181.6" r="28.0" fill="#d6d1c3" stroke="#6b6a64" stroke-width="1"></circle><text class="chart-text" x="691.6" y="186.6" text-anchor="middle" fill="#141413" font-size="17" font-family="Songti SC, STSong, Georgia, serif">2</text><circle class="matrix-dot" cx="651.6" cy="187.6" r="25.2" fill="#d6d1c3" stroke="#6b6a64" stroke-width="1"></circle><text class="chart-text" x="651.6" y="192.6" text-anchor="middle" fill="#141413" font-size="17" font-family="Songti SC, STSong, Georgia, serif">3</text><circle class="matrix-dot" cx="547.2" cy="141.6" r="25.2" fill="#d6d1c3" stroke="#6b6a64" stroke-width="1"></circle><text class="chart-text" x="547.2" y="146.6" text-anchor="middle" fill="#141413" font-size="17" font-family="Songti SC, STSong, Georgia, serif">4</text><circle class="matrix-dot" cx="529.2" cy="213.2" r="25.2" fill="#d6d1c3" stroke="#6b6a64" stroke-width="1"></circle><text class="chart-text" x="529.2" y="218.2" text-anchor="middle" fill="#141413" font-size="17" font-family="Songti SC, STSong, Georgia, serif">5</text><text class="chart-note" x="480.0" y="414.0" text-anchor="middle" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">越靠右上，越应优先处理；圆越大，越消耗稀缺…</text></svg>
+        <div class="chart-legend-box matrix-legend-panel"><div class="matrix-legend-title">候选矛盾</div><ol class="matrix-legend-list"><li class="matrix-legend-item matrix-legend-item-primary"><span class="matrix-legend-number-primary">1</span><span class="matrix-legend-text">订单增长 与 库存现金周转失衡的冲突</span></li><li class="matrix-legend-item"><span class="matrix-legend-number">2</span><span class="matrix-legend-text">低动销库存 与 现金回收需求的冲突</span></li><li class="matrix-legend-item"><span class="matrix-legend-number">3</span><span class="matrix-legend-text">热销款需求 与 补货周期滞后的冲突</span></li><li class="matrix-legend-item"><span class="matrix-legend-number">4</span><span class="matrix-legend-text">投放增长目标 与 可售库存约束的冲突</span></li><li class="matrix-legend-item"><span class="matrix-legend-number">5</span><span class="matrix-legend-text">新品上新节奏 与 历史库存消化的冲突</span></li></ol></div>
       </div>
     </section>
 
@@ -817,6 +896,8 @@ pre {
       <div class="panel">
         <p>这个案例不能只看GMV增长或库存积压，而要看哪一个矛盾同时解释断货、现金紧、清仓难和投放争议。</p>
         <div class="callout"><strong>第一性原理追问：</strong>如果只能改变一个经营机制，改变什么能让增长不再吞噬现金？</div>
+        <h3>先用三问判断是不是主要矛盾</h3>
+        <table><thead><tr><th>判断</th><th>结论</th></tr></thead><tbody><tr><td>决定性</td><td>决定性：库存现金周转不稳，GMV增长越快越可能占用现金并制造断货与积压。</td></tr><tr><td>牵引性</td><td>牵引性：SKU分层和现金周转规则建立后，补货、投放、清仓和财务取舍会同时变清楚。</td></tr><tr><td>阶段性</td><td>阶段性：当前60天的核心不是继续追GMV，而是把增长控制在现金和库存纪律内。</td></tr></tbody></table>
         <h3>看得见的问题</h3>
         <ul><li>看得见的问题：GMV增长，但现金流更紧。</li><li>看得见的问题：热销SKU断货，错过流量窗口。</li><li>看得见的问题：旧款和低动销尺码占用库存。</li><li>看得见的问题：采购、投放和财务互相拉扯。</li></ul>
         <h3>上升一层：找看不见的根部变量</h3>
@@ -824,6 +905,8 @@ pre {
         <ul><li>看不见的根部变量：SKU分层、补货纪律和现金周转没有成为统一决策规则。</li><li>看不见的根部变量：投放预算没有和可售库存、毛利和补货周期联动。</li><li>看不见的根部变量：清仓、补货和上新没有在同一张经营账上取舍。</li></ul>
         <h3>为什么不是先处理表面问题</h3>
         <p>如果只继续加投放，可能放大断货和现金压力；如果只清库存，可能牺牲热销增长。当前要先建立SKU分层和现金周转规则，让采购和投放都围绕同一套经营约束行动。</p>
+        <h3>内因、外因和可改变路径</h3>
+        <table><thead><tr><th>层级</th><th>内容</th></tr></thead><tbody><tr><td>内部可改变结构</td><td>SKU分层、补货纪律和停止补货清单；投放预算与可售库存、安全库存和毛利联动；低动销库存的渠道分流和现金回收节奏</td></tr><tr><td>外部硬条件</td><td>供应链补货周期约21到35天；平台流量窗口短，断货会浪费投放；价格体系和品牌形象限制一刀切清仓</td></tr><tr><td>外因如何通过内因起作用</td><td>供应链周期和平台流量窗口会通过SKU分层、补货纪律和投放联动影响现金结果；内部经营规则越粗，外部波动越容易放大成现金压力。</td></tr></tbody></table>
         <h3>候选矛盾怎么排序</h3>
         <p>排序时看哪个矛盾最能同时影响GMV、现金、库存和团队协作。库存现金周转失衡比单独补货或清仓更上游。</p>
         <table><thead><tr><th>排序</th><th>可能的卡点</th><th>大致类型</th><th>优先级</th><th>依据</th></tr></thead><tbody><tr class="top-row"><td>1</td><td>订单增长 与 库存现金周转失衡的冲突</td><td>资源卡住</td><td>4.85/5</td><td>GMV增长但现金更紧；热销断货和低动销积压同时存在；采购、投放和财务缺少SKU级共同规则</td></tr><tr><td>2</td><td>低动销库存 与 现金回收需求的冲突</td><td>资源卡住</td><td>4.15/5</td><td>旧款和低动销尺码占用现金；清仓不能过度伤害价格体系</td></tr><tr><td>3</td><td>热销款需求 与 补货周期滞后的冲突</td><td>流程/排序问题</td><td>4.05/5</td><td>热销款断货；补货周期21到35天；加急补货经常错过流量峰值</td></tr><tr><td>4</td><td>投放增长目标 与 可售库存约束的冲突</td><td>目标拉扯</td><td>3.75/5</td><td>投放团队希望继续加预算；热销SKU断货会浪费流量</td></tr><tr><td>5</td><td>新品上新节奏 与 历史库存消化的冲突</td><td>stage</td><td>3.15/5</td><td>上新会带来增长，但旧款占用现金；清仓过猛会伤害品牌</td></tr></tbody></table>
@@ -850,16 +933,17 @@ pre {
     <section class="section" id="allocation">
       <div class="section-title"><div class="section-kicker">Resource tilt</div><h2>时间、精力、资源应该怎么重新分配</h2></div>
       <div class="panel">
-        <p>把资源从无差别补货和单纯追GMV，转向A类SKU保障、低动销处理和现金周转看板。</p>
-        <svg id="chart-resource-allocation" class="chart-svg" viewBox="0 0 960 420" role="img" aria-label="资源倾斜图"><text class="chart-note" x="74.0" y="90.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">无差别补货</text><rect class="bar-current" x="250" y="70" width="300.0" height="18" rx="4" fill="#d6d1c3"></rect><rect class="bar-recommended" x="250" y="96" width="85.7" height="18" rx="4" fill="#1B365D"></rect><text class="chart-note" x="570.0" y="85.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前 35%</text><text class="chart-note" x="570.0" y="111.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议 10%</text><text class="chart-note" x="74.0" y="158.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">追GMV投放</text><rect class="bar-current" x="250" y="138" width="257.1" height="18" rx="4" fill="#d6d1c3"></rect><rect class="bar-recommended" x="250" y="164" width="154.3" height="18" rx="4" fill="#1B365D"></rect><text class="chart-note" x="570.0" y="153.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前 30%</text><text class="chart-note" x="570.0" y="179.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议 18%</text><text class="chart-note" x="74.0" y="226.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">A类保障</text><rect class="bar-current" x="250" y="206" width="128.6" height="18" rx="4" fill="#d6d1c3"></rect><rect class="bar-recommended" x="250" y="232" width="274.3" height="18" rx="4" fill="#1B365D"></rect><text class="chart-note" x="570.0" y="221.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前 15%</text><text class="chart-note" x="570.0" y="247.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议 32%</text><text class="chart-note" x="74.0" y="294.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">低动销处理</text><rect class="bar-current" x="250" y="274" width="85.7" height="18" rx="4" fill="#d6d1c3"></rect><rect class="bar-recommended" x="250" y="300" width="214.3" height="18" rx="4" fill="#1B365D"></rect><text class="chart-note" x="570.0" y="289.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前 10%</text><text class="chart-note" x="570.0" y="315.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议 25%</text><text class="chart-note" x="74.0" y="362.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">现金看板</text><rect class="bar-current" x="250" y="342" width="85.7" height="18" rx="4" fill="#d6d1c3"></rect><rect class="bar-recommended" x="250" y="368" width="128.6" height="18" rx="4" fill="#1B365D"></rect><text class="chart-note" x="570.0" y="357.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前 10%</text><text class="chart-note" x="570.0" y="383.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议 15%</text><rect class="bar-current" x="700" y="338" width="18" height="12" fill="#d6d1c3"></rect><text class="chart-note" x="746.0" y="349.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前</text><rect class="bar-recommended" x="700" y="362" width="18" height="12" fill="#1B365D"></rect><text class="chart-note" x="746.0" y="373.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议</text></svg>
-        <table><thead><tr><th>资源项</th><th>当前分配</th><th>建议分配</th><th>变化方向</th></tr></thead><tbody><tr><td>无差别补货</td><td>35%</td><td>10%</td><td>-25%</td></tr><tr><td>追GMV投放</td><td>30%</td><td>18%</td><td>-12%</td></tr><tr><td>A类保障</td><td>15%</td><td>32%</td><td>+17%</td></tr><tr><td>低动销处理</td><td>10%</td><td>25%</td><td>+15%</td></tr><tr><td>现金看板</td><td>10%</td><td>15%</td><td>+5%</td></tr></tbody></table>
+        <p>采用激进倾斜：把65%的经营注意力放到SKU分层、A类保障、低动销处理和现金周转，压缩无差别补货与单纯追GMV。</p>
+        <table><thead><tr><th>倾斜强度</th><th>主攻主要矛盾</th><th>压缩次要矛盾</th><th>证据与监控</th></tr></thead><tbody><tr><td>激进倾斜</td><td>65%</td><td>20%</td><td>15%</td></tr></tbody></table>
+        <svg id="chart-resource-allocation" class="chart-svg" viewBox="0 0 960 420" role="img" aria-label="资源倾斜图"><text class="chart-note" x="74.0" y="90.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">无差别补货</text><rect class="bar-current" x="250" y="70" width="300.0" height="18" rx="4" fill="#d6d1c3"></rect><rect class="bar-recommended" x="250" y="96" width="42.9" height="18" rx="4" fill="#1B365D"></rect><text class="chart-note" x="570.0" y="85.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前 35%</text><text class="chart-note" x="570.0" y="111.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议 5%</text><text class="chart-note" x="74.0" y="158.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">追GMV投放</text><rect class="bar-current" x="250" y="138" width="257.1" height="18" rx="4" fill="#d6d1c3"></rect><rect class="bar-recommended" x="250" y="164" width="85.7" height="18" rx="4" fill="#1B365D"></rect><text class="chart-note" x="570.0" y="153.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前 30%</text><text class="chart-note" x="570.0" y="179.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议 10%</text><text class="chart-note" x="74.0" y="226.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">A类保障</text><rect class="bar-current" x="250" y="206" width="128.6" height="18" rx="4" fill="#d6d1c3"></rect><rect class="bar-recommended" x="250" y="232" width="300.0" height="18" rx="4" fill="#1B365D"></rect><text class="chart-note" x="570.0" y="221.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前 15%</text><text class="chart-note" x="570.0" y="247.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议 35%</text><text class="chart-note" x="74.0" y="294.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">低动销处理</text><rect class="bar-current" x="250" y="274" width="85.7" height="18" rx="4" fill="#d6d1c3"></rect><rect class="bar-recommended" x="250" y="300" width="257.1" height="18" rx="4" fill="#1B365D"></rect><text class="chart-note" x="570.0" y="289.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前 10%</text><text class="chart-note" x="570.0" y="315.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议 30%</text><text class="chart-note" x="74.0" y="362.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">现金看板</text><rect class="bar-current" x="250" y="342" width="85.7" height="18" rx="4" fill="#d6d1c3"></rect><rect class="bar-recommended" x="250" y="368" width="171.4" height="18" rx="4" fill="#1B365D"></rect><text class="chart-note" x="570.0" y="357.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前 10%</text><text class="chart-note" x="570.0" y="383.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议 20%</text><rect class="bar-current" x="700" y="338" width="18" height="12" fill="#d6d1c3"></rect><text class="chart-note" x="746.0" y="349.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">当前</text><rect class="bar-recommended" x="700" y="362" width="18" height="12" fill="#1B365D"></rect><text class="chart-note" x="746.0" y="373.0" text-anchor="start" fill="#6b6a64" font-size="14" font-family="Songti SC, STSong, Georgia, serif">建议</text></svg>
+        <table><thead><tr><th>资源项</th><th>当前分配</th><th>建议分配</th><th>变化方向</th></tr></thead><tbody><tr><td>无差别补货</td><td>35%</td><td>5%</td><td>-30%</td></tr><tr><td>追GMV投放</td><td>30%</td><td>10%</td><td>-20%</td></tr><tr><td>A类保障</td><td>15%</td><td>35%</td><td>+20%</td></tr><tr><td>低动销处理</td><td>10%</td><td>30%</td><td>+20%</td></tr><tr><td>现金看板</td><td>10%</td><td>20%</td><td>+10%</td></tr></tbody></table>
       </div>
     </section>
 
     <section class="section" id="actions">
       <div class="section-title"><div class="section-kicker">Actions</div><h2>接下来怎么做</h2></div>
       <div class="panel">
-        <table><thead><tr><th>动作</th><th>谁来做</th><th>什么时候</th><th>要用什么</th><th>做到什么算完成</th><th>做成把握</th><th>预计帮助</th></tr></thead><tbody><tr><td>7天内按销售额、毛利、库存天数把SKU分成A/B/C/D四类，并暂停D类补货。</td><td>运营负责人 + 财务负责人</td><td>7天</td><td>近90天销售数据、库存表、毛利表</td><td>形成SKU分层表和D类停止补货清单。</td><td>85.0%</td><td>6.9%</td></tr><tr><td>14天内建立A类SKU补货和投放联动规则，库存低于安全线时自动调低投放。</td><td>采购负责人 + 投放负责人</td><td>14天</td><td>库存预警线、投放计划、供应商交期</td><td>A类SKU断货率低于8%，投放预算不再打到断货SKU。</td><td>72.0%</td><td>9.2%</td></tr><tr><td>30天内执行低动销库存分层处理：换购、渠道分流、组合包和小幅清仓，避免一刀切打折。</td><td>电商运营 + 财务</td><td>30天</td><td>低动销清单、渠道资源、促销权益</td><td>低动销库存占比下降15%，库存周转天数下降20%。</td><td>68.0%</td><td>9.8%</td></tr></tbody></table>
+        <table><thead><tr><th>动作</th><th>改变主要方面</th><th>谁来做</th><th>什么时候</th><th>要用什么</th><th>做到什么算完成</th><th>做成把握</th><th>预计帮助</th></tr></thead><tbody><tr><td>7天内按销售额、毛利、库存天数把SKU分成A/B/C/D四类，并暂停D类补货。</td><td>先把库存现金周转失衡拆到SKU层，削弱无差别补货对局面的支配。</td><td>运营负责人 + 财务负责人</td><td>7天</td><td>近90天销售数据、库存表、毛利表</td><td>形成SKU分层表和D类停止补货清单。</td><td>85.0%</td><td>6.9%</td></tr><tr><td>14天内建立A类SKU补货和投放联动规则，库存低于安全线时自动调低投放。</td><td>把投放和补货绑定到A类库存纪律，增强增长侧对现金周转的约束。</td><td>采购负责人 + 投放负责人</td><td>14天</td><td>库存预警线、投放计划、供应商交期</td><td>A类SKU断货率低于8%，投放预算不再打到断货SKU。</td><td>72.0%</td><td>9.2%</td></tr><tr><td>30天内执行低动销库存分层处理：换购、渠道分流、组合包和小幅清仓，避免一刀切打折。</td><td>用分层处理释放现金，降低库存现金周转失衡的主导性。</td><td>电商运营 + 财务</td><td>30天</td><td>低动销清单、渠道资源、促销权益</td><td>低动销库存占比下降15%，库存周转天数下降20%。</td><td>68.0%</td><td>9.8%</td></tr></tbody></table>
       </div>
     </section>
 

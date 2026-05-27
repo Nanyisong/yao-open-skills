@@ -379,6 +379,71 @@ pre {
   stroke: #e8e6dc;
 }
 
+.matrix-legend-panel {
+  margin: -2px 0 20px;
+  padding: 18px 22px 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #faf9f5;
+}
+
+.matrix-legend-title {
+  margin-bottom: 12px;
+  color: var(--brand);
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.matrix-legend-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.matrix-legend-item {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  min-width: 0;
+  color: var(--muted);
+}
+
+.matrix-legend-item-primary {
+  color: var(--ink);
+}
+
+.matrix-legend-number,
+.matrix-legend-number-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--muted);
+  background: #d6d1c3;
+  color: #fff;
+  font-size: 15px;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+.matrix-legend-number-primary {
+  border-color: var(--brand);
+  background: var(--brand);
+}
+
+.matrix-legend-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.45;
+}
+
 .chart-grid-line {
   fill: none;
   stroke: #e8e6dc;
@@ -609,6 +674,10 @@ pre {
     text-align: left;
   }
 
+  .matrix-legend-list {
+    grid-template-columns: 1fr;
+  }
+
   table {
     display: block;
     overflow-x: auto;
@@ -687,6 +756,15 @@ pre {
 
   .iceberg-card-principal p {
     font-size: 14px;
+  }
+
+  .matrix-legend-panel {
+    padding: 12px 14px;
+  }
+
+  .matrix-legend-list {
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
 
   .section {

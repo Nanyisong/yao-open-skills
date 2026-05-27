@@ -16,6 +16,8 @@ Each example includes:
 - `.pdf`
 - `.report.json`
 
+The examples demonstrate the current report structure, including the principal-contradiction three-question check, internal/external cause path, aggressive resource allocation, and actions tied to the principal aspect.
+
 ## Not Included
 
 Real user cases, private inputs, and local diagnostic drafts are intentionally excluded from this public repository.
