@@ -130,7 +130,7 @@ yao-open-skills/
 - 每个结论都带反转条件、复盘时间和下一阶段主要矛盾可能转移的信号
 - 报告包含分析流程图、照片式冰山模型、矛盾候选矩阵、资源倾斜图和动态阶段迁移图
 - 默认生成 `Markdown + HTML + DOCX + PDF + report JSON`
-- 公开仓库只包含三个虚构业务示例，真实案例和私有输入不进入仓库
+- 公开仓库包含三个虚构业务示例和可下载参考资料，真实案例和私有输入不进入仓库
 
 如果你想快速理解这个 Skill，建议按这个顺序看：
 
@@ -143,6 +143,7 @@ yao-open-skills/
 7. [主次矛盾判断模型](skills/yao-crux-skill/references/contradiction-model.md)
 8. [报告导出流程](skills/yao-crux-skill/references/report-export-pipeline.md)
 9. [虚构示例报告](skills/yao-crux-skill/reports/github-examples/README.md)
+10. [参考资料下载](skills/yao-crux-skill/reference-materials/README.md)
 
 ### Yao WeRead Skill
 

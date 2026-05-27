@@ -89,6 +89,7 @@ Use this skill to first clarify the user's current situation, then turn it into 
 - `references/report-export-pipeline.md`: four-format generation workflow and verification
 - `references/kami-layout-guide.md`: Kami-derived layout rules for the report bundle
 - `references/safety-and-boundaries.md`: high-risk and professional-boundary gates
+- `reference-materials/README.md`: downloadable background research and design materials for readers
 - `templates/crux-report.schema.json`: canonical input/report shape
 - `scripts/generate_report_bundle.py`: JSON to Markdown, HTML, DOCX, PDF, and report JSON
 - `scripts/current_state_clarity.py`: current-state clarity gate and follow-up question selector

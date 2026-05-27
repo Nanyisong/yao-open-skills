@@ -120,12 +120,22 @@ HTML/PDF 报告内置五类视觉模块：
 - `reports/github-examples/example-ecommerce-inventory-cashflow.*`
 - `reports/github-examples/example-customer-support-delivery.*`
 
-真实用户案例、私有输入和本地过程材料不进入公开仓库。
+真实用户案例和私有输入不进入公开仓库；公开参考资料会单独放在下载目录中。
+
+## 参考资料
+
+补充理论和设计资料已放在 [`reference-materials/`](reference-materials/README.md)，可直接下载：
+
+- `复杂问题主要矛盾识别方法论调研报告.docx`
+- `复杂问题主要矛盾识别方法论调研报告.html`
+- `矛盾论底层原理与应用场景研究.docx`
+- `矛盾论AI_Skill设计方案.docx`
 
 ## 目录结构
 
 - `SKILL.md`：触发规则和默认工作流
 - `references/`：理论锚点、追问规则、主次矛盾模型、报告契约和排版规则
+- `reference-materials/`：可下载的理论研究、方法论调研和 Skill 设计资料
 - `scripts/`：现状清晰度判断、报告生成和报告验证
 - `templates/`：结构化报告 schema 和 HTML/PDF 样式
 - `input/`：模板和虚构示例输入

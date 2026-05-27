@@ -123,7 +123,7 @@ python3 scripts/verify_report_bundle.py reports/github-examples
 
 - [reports/github-examples](../../skills/yao-crux-skill/reports/github-examples)
 
-真实用户案例、私有输入和本地过程材料不进入公开仓库。
+真实用户案例和私有输入不进入公开仓库；公开参考资料会单独放在下载目录中。
 
 ## 推荐阅读顺序
 
@@ -136,3 +136,4 @@ python3 scripts/verify_report_bundle.py reports/github-examples
 7. [报告结构契约](../../skills/yao-crux-skill/references/report-contract.md)
 8. [报告导出流程](../../skills/yao-crux-skill/references/report-export-pipeline.md)
 9. [虚构示例报告](../../skills/yao-crux-skill/reports/github-examples/README.md)
+10. [参考资料下载](../../skills/yao-crux-skill/reference-materials/README.md)

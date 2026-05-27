@@ -120,12 +120,22 @@ This public release includes three fictional business scenarios:
 - `reports/github-examples/example-ecommerce-inventory-cashflow.*`
 - `reports/github-examples/example-customer-support-delivery.*`
 
-Real user cases, private inputs, and local drafts are intentionally excluded from the public repository.
+Real user cases and private inputs are intentionally excluded from the public repository; public reference materials are kept in a separate download directory.
+
+## Reference Materials
+
+Additional theory and design references are available in [`reference-materials/`](reference-materials/README.md) for direct download:
+
+- `复杂问题主要矛盾识别方法论调研报告.docx`
+- `复杂问题主要矛盾识别方法论调研报告.html`
+- `矛盾论底层原理与应用场景研究.docx`
+- `矛盾论AI_Skill设计方案.docx`
 
 ## Source Layout
 
 - `SKILL.md`: routing rules and default workflow
 - `references/`: theory anchors, questioning rules, contradiction model, report contract, and layout guidance
+- `reference-materials/`: downloadable theory research, methodology report, and skill-design materials
 - `scripts/`: current-state clarity assessment, report generation, and report verification
 - `templates/`: canonical report schema and HTML/PDF theme
 - `input/`: template and fictional example inputs
