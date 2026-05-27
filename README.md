@@ -133,12 +133,13 @@ yao-open-skills/
 如果你想快速理解这个 Skill，建议按这个顺序看：
 
 1. [公开说明文档](docs/skills/yao-crux-skill.md)
-2. [目录说明](skills/yao-crux-skill/README.md)
-3. [Skill 入口](skills/yao-crux-skill/SKILL.md)
-4. [追问与现状清晰度](skills/yao-crux-skill/references/intake-and-questioning.md)
-5. [主次矛盾判断模型](skills/yao-crux-skill/references/contradiction-model.md)
-6. [报告导出流程](skills/yao-crux-skill/references/report-export-pipeline.md)
-7. [虚构示例报告](skills/yao-crux-skill/reports/github-examples/README.md)
+2. [中文目录说明](skills/yao-crux-skill/README.md)
+3. [English README](skills/yao-crux-skill/README.en.md)
+4. [Skill 入口](skills/yao-crux-skill/SKILL.md)
+5. [追问与现状清晰度](skills/yao-crux-skill/references/intake-and-questioning.md)
+6. [主次矛盾判断模型](skills/yao-crux-skill/references/contradiction-model.md)
+7. [报告导出流程](skills/yao-crux-skill/references/report-export-pipeline.md)
+8. [虚构示例报告](skills/yao-crux-skill/reports/github-examples/README.md)
 
 ### Yao WeRead Skill
 

@@ -2,6 +2,11 @@
 
 `yao-crux-skill` 是一个面向复杂现实问题的主次矛盾诊断 Skill。它的重点不是直接给结论，而是先把“当前现状”追问清楚，再判断当前阶段最该抓住的主要矛盾、需要盯住的次要矛盾，以及下一步行动的结果概率。
 
+GitHub 目录页默认使用简体中文说明：
+
+- [中文目录说明](../../skills/yao-crux-skill/README.md)
+- [English README](../../skills/yao-crux-skill/README.en.md)
+
 它适合这类问题：
 
 - 事情很多，但不知道先解决哪一个
@@ -115,9 +120,10 @@ python3 scripts/verify_report_bundle.py reports/github-examples
 ## 推荐阅读顺序
 
 1. [Skill 入口](../../skills/yao-crux-skill/SKILL.md)
-2. [目录说明](../../skills/yao-crux-skill/README.md)
-3. [追问与现状清晰度](../../skills/yao-crux-skill/references/intake-and-questioning.md)
-4. [主次矛盾判断模型](../../skills/yao-crux-skill/references/contradiction-model.md)
-5. [报告结构契约](../../skills/yao-crux-skill/references/report-contract.md)
-6. [报告导出流程](../../skills/yao-crux-skill/references/report-export-pipeline.md)
-7. [虚构示例报告](../../skills/yao-crux-skill/reports/github-examples/README.md)
+2. [中文目录说明](../../skills/yao-crux-skill/README.md)
+3. [English README](../../skills/yao-crux-skill/README.en.md)
+4. [追问与现状清晰度](../../skills/yao-crux-skill/references/intake-and-questioning.md)
+5. [主次矛盾判断模型](../../skills/yao-crux-skill/references/contradiction-model.md)
+6. [报告结构契约](../../skills/yao-crux-skill/references/report-contract.md)
+7. [报告导出流程](../../skills/yao-crux-skill/references/report-export-pipeline.md)
+8. [虚构示例报告](../../skills/yao-crux-skill/reports/github-examples/README.md)
