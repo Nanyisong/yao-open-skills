@@ -80,6 +80,15 @@ exports/
 
 每个案例都包含 `Markdown`、`HTML`、`Word` 和 `PDF` 导出文件。
 
+### 参考材料
+
+这个 Skill 的原始设计和理论研究文档也已收录在公开目录：
+
+- [industry_expert_skill_design.docx](../../skills/yao-expert-skill/reference-materials/industry_expert_skill_design.docx)
+- [industry_learning_deep_research_report.docx](../../skills/yao-expert-skill/reference-materials/industry_learning_deep_research_report.docx)
+
+它们是补充阅读材料，不是 Skill 运行时必须读取的规则文件。实际执行规则仍以 `SKILL.md`、`references/`、`templates/` 和 `scripts/` 为准。
+
 ### 重要边界
 
 不要把这个 Skill 用在：
@@ -118,3 +127,4 @@ Primary entry points:
 - [Exporter](../../skills/yao-expert-skill/scripts/export_expert_report.py)
 - [Validator](../../skills/yao-expert-skill/scripts/validate_artifacts.py)
 - [Examples](../../skills/yao-expert-skill/reports/examples/)
+- [Reference materials](../../skills/yao-expert-skill/reference-materials/)

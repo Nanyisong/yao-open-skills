@@ -54,6 +54,13 @@ Two public examples are included:
 
 Each example also includes exported `Markdown`, `DOCX`, `PDF`, and `HTML` files under its `exports/` directory.
 
+## Reference Materials
+
+The original design and research documents are available in [`reference-materials/`](reference-materials/):
+
+- [industry_expert_skill_design.docx](reference-materials/industry_expert_skill_design.docx)
+- [industry_learning_deep_research_report.docx](reference-materials/industry_learning_deep_research_report.docx)
+
 ## Main Files
 
 - [`SKILL.md`](SKILL.md): Skill entry point and workflow
@@ -64,6 +71,7 @@ Each example also includes exported `Markdown`, `DOCX`, `PDF`, and `HTML` files 
 - [`scripts/validate_artifacts.py`](scripts/validate_artifacts.py): artifact validator
 - [`templates/expert-report-template.md`](templates/expert-report-template.md): canonical report template
 - [`reports/examples/`](reports/examples/): public examples and exported artifacts
+- [`reference-materials/`](reference-materials/): source design and research documents
 
 ## Boundaries
 
