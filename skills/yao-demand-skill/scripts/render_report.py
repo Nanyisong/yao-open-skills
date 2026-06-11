@@ -1095,7 +1095,7 @@ def render_html(report: Dict[str, Any]) -> str:
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 18px;
-      align-items: start;
+      align-items: stretch;
     }}
     .chart-module {{
       border: 1px solid var(--border);
@@ -1103,6 +1103,10 @@ def render_html(report: Dict[str, Any]) -> str:
       border-radius: 0;
       padding: 16px;
       break-inside: avoid;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-width: 0;
     }}
     .chart-module-head {{
       display: flex;
@@ -1150,6 +1154,9 @@ def render_html(report: Dict[str, Any]) -> str:
       line-height: 1.52;
       overflow-wrap: anywhere;
     }}
+    .chart-insight {{
+      margin-top: auto;
+    }}
     a {{ color: var(--brand); overflow-wrap: anywhere; }}
     @page {{
       size: A4;
@@ -1187,7 +1194,7 @@ def render_html(report: Dict[str, Any]) -> str:
       .nav-title {{ max-width: none; margin-bottom: 8px; }}
       main {{ padding: 32px 18px 56px; }}
       .meta-grid, .score-grid, .fact-grid, .dimension-grid, .two-col, .chart-grid, .product-detail-grid {{
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
       }}
       h1 {{ font-size: 34px; }}
       h2 {{ font-size: 23px; }}

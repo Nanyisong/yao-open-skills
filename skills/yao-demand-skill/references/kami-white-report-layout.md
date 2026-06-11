@@ -74,6 +74,7 @@ Use anchors for:
 - top report header followed by score strip
 - visual diagnostics section appears before dense analysis
 - chart modules use a two-column editorial grid on desktop and one-column stack on mobile
+- desktop chart modules must stretch to equal height within the same grid row, so row starts and card bottoms align even when chart explanations differ in length
 - major sections separated by whitespace and a quiet top border
 - use cards only for true repeated objects or score blocks, not nested decorative surfaces
 - long tables must sit inside `.table-wrap { overflow-x: auto; }`
@@ -185,5 +186,6 @@ Word output is the editable review copy:
 - no placeholder text remains
 - all four outputs have the same title, date, scores, recommendations, and evidence list
 - HTML/PDF contain at least 10 `.chart-module` blocks for formal reports
+- desktop chart modules align by row height; mobile chart modules stack without forcing page-level horizontal overflow
 - every chart module has a visible insight and recommendation
 - forecast module states assumptions and confidence
