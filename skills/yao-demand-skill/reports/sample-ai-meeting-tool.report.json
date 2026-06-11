@@ -206,6 +206,317 @@
       "improvement_path": "优先补充权限、数据保留、隐私政策、企业安全说明、准确率边界和人工校对机制。"
     }
   },
+  "visual_diagnostics": [
+    {
+      "id": "total_score_gauge",
+      "title": "总分诊断：需求可疑但值得验证",
+      "chart_type": "score_gauge",
+      "priority": 1,
+      "data": {
+        "score": 4.99,
+        "max": 10,
+        "label": "需求总分",
+        "decision": "先补验证",
+        "bands": [
+          {"label": "弱", "from": 0, "to": 3.9},
+          {"label": "脆弱", "from": 4.0, "to": 5.4},
+          {"label": "可验证", "from": 5.5, "to": 6.7},
+          {"label": "较强", "from": 6.8, "to": 8.1},
+          {"label": "强", "from": 8.2, "to": 10}
+        ]
+      },
+      "insight": "总分处在脆弱到可验证的交界，说明这个方向有真实场景，但证据和采用能力还不足以支撑规模投入。",
+      "recommendation": "先把验证目标放在企业信任、准确率和集成，而不是直接扩大投放。",
+      "source_ids": ["S1", "S2"],
+      "confidence": 0.76
+    },
+    {
+      "id": "triangle_radar",
+      "title": "需求三角雷达：消费者能力拖后腿",
+      "chart_type": "radar",
+      "priority": 2,
+      "data": {
+        "items": [
+          {"label": "缺乏感", "value": 7.2},
+          {"label": "目标物", "value": 6.9},
+          {"label": "消费者能力", "value": 5.56}
+        ]
+      },
+      "insight": "缺乏感和目标物并不弱，真正限制需求成立的是用户能不能放心买、顺利用、长期留。",
+      "recommendation": "把短期迭代重心放在降低信任成本和组织采用成本。",
+      "source_ids": ["S1", "S2"],
+      "confidence": 0.78
+    },
+    {
+      "id": "dimension_short_board",
+      "title": "三大维度短板：能力成本最需要修",
+      "chart_type": "bar",
+      "priority": 3,
+      "data": {
+        "items": [
+          {"label": "缺乏感", "value": 7.2},
+          {"label": "目标物", "value": 6.9},
+          {"label": "消费者能力", "value": 5.56}
+        ],
+        "max": 10
+      },
+      "insight": "短板不在用户是否有会议纪要问题，而在采用这类工具带来的隐私、审批、准确率和流程改变成本。",
+      "recommendation": "先证明工具能安全进入现有会议和任务流程，再讨论规模化增长。",
+      "source_ids": ["S1", "S2"],
+      "confidence": 0.78
+    },
+    {
+      "id": "subscore_heatmap",
+      "title": "子项热力图：信任与风险成本是红区",
+      "chart_type": "heatmap",
+      "priority": 4,
+      "data": {
+        "items": [
+          {"group": "缺乏感", "label": "强度", "value": 8},
+          {"group": "缺乏感", "label": "频率", "value": 8},
+          {"group": "缺乏感", "label": "紧迫性", "value": 7},
+          {"group": "缺乏感", "label": "认知", "value": 7},
+          {"group": "缺乏感", "label": "趋势", "value": 7},
+          {"group": "缺乏感", "label": "付费意愿", "value": 6},
+          {"group": "目标物", "label": "JTBD匹配", "value": 8},
+          {"group": "目标物", "label": "清晰度", "value": 8},
+          {"group": "目标物", "label": "差异化", "value": 6},
+          {"group": "目标物", "label": "证明", "value": 5},
+          {"group": "目标物", "label": "品类认知", "value": 7},
+          {"group": "目标物", "label": "见效速度", "value": 7},
+          {"group": "消费者能力", "label": "价格", "value": 6},
+          {"group": "消费者能力", "label": "行动成本", "value": 6},
+          {"group": "消费者能力", "label": "学习成本", "value": 7},
+          {"group": "消费者能力", "label": "信任成本", "value": 4},
+          {"group": "消费者能力", "label": "风险成本", "value": 4},
+          {"group": "消费者能力", "label": "身份成本", "value": 7},
+          {"group": "消费者能力", "label": "可获得性", "value": 6}
+        ]
+      },
+      "insight": "低分集中在证明、信任成本和风险成本，说明产品不是概念难懂，而是用户不敢把会议资产交给它。",
+      "recommendation": "把安全、权限、准确率边界和失败回退写成产品核心卖点，而不是附录材料。",
+      "source_ids": ["S1", "S2"],
+      "confidence": 0.74
+    },
+    {
+      "id": "lack_detail_radar",
+      "title": "缺乏感细分：高频痛点存在",
+      "chart_type": "radar",
+      "priority": 5,
+      "data": {
+        "items": [
+          {"label": "强度", "value": 8},
+          {"label": "频率", "value": 8},
+          {"label": "紧迫性", "value": 7},
+          {"label": "认知", "value": 7},
+          {"label": "趋势", "value": 7},
+          {"label": "付费意愿", "value": 6}
+        ]
+      },
+      "insight": "会议后整理和行动项遗漏是高频问题，但付费意愿仍需要真实价格和竞品转化数据校准。",
+      "recommendation": "用访谈和落地页验证用户是否愿意为行动项同步而不是单纯纪要付费。",
+      "source_ids": ["S1"],
+      "confidence": 0.72
+    },
+    {
+      "id": "target_object_detail_radar",
+      "title": "目标物细分：价值清晰但证明不足",
+      "chart_type": "radar",
+      "priority": 6,
+      "data": {
+        "items": [
+          {"label": "JTBD匹配", "value": 8},
+          {"label": "清晰度", "value": 8},
+          {"label": "差异化", "value": 6},
+          {"label": "证明", "value": 5},
+          {"label": "品类认知", "value": 7},
+          {"label": "见效速度", "value": 7}
+        ]
+      },
+      "insight": "产品能被一句话理解，但缺少能压过会议软件自带能力和通用 AI 的证明材料。",
+      "recommendation": "把演示重点从“自动生成摘要”改成“准确识别责任人、截止时间和 CRM/任务同步”。",
+      "source_ids": ["S1", "S2"],
+      "confidence": 0.73
+    },
+    {
+      "id": "consumer_ability_detail_radar",
+      "title": "消费者能力细分：信任成本最低",
+      "chart_type": "radar",
+      "priority": 7,
+      "data": {
+        "items": [
+          {"label": "价格", "value": 6},
+          {"label": "行动成本", "value": 6},
+          {"label": "学习成本", "value": 7},
+          {"label": "信任成本", "value": 4},
+          {"label": "风险成本", "value": 4},
+          {"label": "身份成本", "value": 7},
+          {"label": "可获得性", "value": 6}
+        ]
+      },
+      "insight": "用户学习这个工具并不难，难点是组织是否允许录音、保存、转写和同步敏感会议内容。",
+      "recommendation": "先做企业级权限、数据保留、删除机制和安全说明，再做团队扩张。",
+      "source_ids": ["S1"],
+      "confidence": 0.74
+    },
+    {
+      "id": "segment_opportunity_matrix",
+      "title": "用户分群机会矩阵：先打销售团队",
+      "chart_type": "matrix",
+      "priority": 8,
+      "data": {
+        "x_axis": "采用能力",
+        "y_axis": "缺乏强度",
+        "items": [
+          {"label": "高会议密度销售团队", "x": 6.4, "y": 8.1, "size": 8},
+          {"label": "产品与项目负责人", "x": 5.8, "y": 7.4, "size": 7},
+          {"label": "管理运营团队", "x": 5.2, "y": 6.8, "size": 6}
+        ]
+      },
+      "insight": "销售团队的会议结果和客户承诺更直接关联收入，缺乏强度更高，也更容易形成 ROI 叙事。",
+      "recommendation": "首轮验证聚焦销售主管或 RevOps，而不是泛泛面向所有知识工作者。",
+      "source_ids": ["S1"],
+      "confidence": 0.7
+    },
+    {
+      "id": "jtbd_strength_bar",
+      "title": "JTBD 强度：行动项同步最值得主攻",
+      "chart_type": "bar",
+      "priority": 9,
+      "data": {
+        "items": [
+          {"label": "行动项追踪", "value": 8.2},
+          {"label": "客户承诺不遗漏", "value": 8.0},
+          {"label": "会议决策归档", "value": 7.3},
+          {"label": "缺席成员补上下文", "value": 6.5},
+          {"label": "普通摘要生成", "value": 5.8}
+        ],
+        "max": 10
+      },
+      "insight": "用户最强任务不是“生成一份好看的纪要”，而是让会议后的责任、承诺和下一步可追踪。",
+      "recommendation": "首页和 Demo 应优先展示行动项追踪闭环。",
+      "source_ids": ["S1"],
+      "confidence": 0.72
+    },
+    {
+      "id": "competitor_position_matrix",
+      "title": "竞品与替代方案定位：差异化必须避开泛摘要",
+      "chart_type": "matrix",
+      "priority": 10,
+      "data": {
+        "x_axis": "业务闭环能力",
+        "y_axis": "采用成本优势",
+        "items": [
+          {"label": "AI会议纪要工具", "x": 7.2, "y": 5.6, "size": 8},
+          {"label": "人工纪要", "x": 6.5, "y": 4.2, "size": 6},
+          {"label": "会议软件转写", "x": 5.2, "y": 7.3, "size": 7},
+          {"label": "通用文档AI", "x": 4.8, "y": 6.8, "size": 6},
+          {"label": "不购买", "x": 2.5, "y": 9.0, "size": 5}
+        ]
+      },
+      "insight": "如果只讲摘要和转写，会议软件和通用 AI 的采用成本更低；只有业务闭环能力能形成差异化。",
+      "recommendation": "把 CRM、任务系统和客户跟进闭环作为定位核心。",
+      "source_ids": ["S2"],
+      "confidence": 0.68
+    },
+    {
+      "id": "adoption_friction_funnel",
+      "title": "采用阻力漏斗：团队采购前流失最大",
+      "chart_type": "funnel",
+      "priority": 11,
+      "data": {
+        "items": [
+          {"label": "知道问题", "value": 100},
+          {"label": "愿意试用", "value": 64},
+          {"label": "上传真实会议", "value": 46},
+          {"label": "团队协作使用", "value": 30},
+          {"label": "进入采购审批", "value": 18},
+          {"label": "持续续费", "value": 12}
+        ]
+      },
+      "insight": "漏斗假设显示最大掉点发生在真实会议上传和团队采购之间，核心原因是信任与组织审批。",
+      "recommendation": "验证时必须记录从个人试用到团队审批的转化阻力。",
+      "source_ids": ["S1"],
+      "assumption_based": true,
+      "confidence": 0.62
+    },
+    {
+      "id": "evidence_quality_distribution",
+      "title": "证据质量分布：样例仍偏假设",
+      "chart_type": "stacked_bar",
+      "priority": 12,
+      "data": {
+        "segments": [
+          {"label": "A级用户输入", "value": 1},
+          {"label": "B级第三方证据", "value": 0},
+          {"label": "C级假设", "value": 1}
+        ]
+      },
+      "insight": "当前样例只有用户材料和假设，缺少第三方评论、真实竞品页、价格和转化证据。",
+      "recommendation": "正式报告必须补充真实来源，否则结论应定位为验证计划。",
+      "source_ids": ["S1", "S2"],
+      "confidence": 0.76
+    },
+    {
+      "id": "risk_matrix",
+      "title": "风险矩阵：隐私与证据风险最高",
+      "chart_type": "matrix",
+      "priority": 13,
+      "data": {
+        "x_axis": "发生概率",
+        "y_axis": "影响程度",
+        "items": [
+          {"label": "证据不足", "x": 8, "y": 8, "size": 8},
+          {"label": "隐私合规", "x": 7, "y": 9, "size": 9},
+          {"label": "集成不稳定", "x": 6, "y": 6, "size": 6},
+          {"label": "准确率误伤", "x": 6, "y": 7, "size": 7}
+        ]
+      },
+      "insight": "隐私合规和证据不足会直接阻断团队采用，而不是普通产品优化问题。",
+      "recommendation": "把风险治理作为需求成立的前置条件。",
+      "source_ids": ["S1", "S2"],
+      "confidence": 0.74
+    },
+    {
+      "id": "recommendation_priority_matrix",
+      "title": "建议优先级矩阵：先做信任材料和验证访谈",
+      "chart_type": "matrix",
+      "priority": 14,
+      "data": {
+        "x_axis": "实施难度",
+        "y_axis": "需求增益",
+        "items": [
+          {"label": "安全白皮书", "x": 5, "y": 8, "size": 8},
+          {"label": "行动项Demo", "x": 5, "y": 7, "size": 7},
+          {"label": "10-15个访谈", "x": 3, "y": 7, "size": 7},
+          {"label": "深度CRM集成", "x": 8, "y": 8, "size": 8}
+        ]
+      },
+      "insight": "低成本高增益的动作是访谈和信任材料；深度集成价值高但不适合一开始重投入。",
+      "recommendation": "先做安全白皮书、行动项 Demo 和目标客户访谈，再决定是否做深集成。",
+      "source_ids": ["S1", "S2"],
+      "confidence": 0.71
+    },
+    {
+      "id": "forecast_scenarios",
+      "title": "预测情景：修复短板后才可能进入可扩张区",
+      "chart_type": "forecast",
+      "priority": 15,
+      "data": {
+        "horizon": "90 days",
+        "scenarios": [
+          {"name": "不处理短板", "score_after": 5.0, "adoption_likelihood": "low"},
+          {"name": "修复信任和合规", "score_after": 6.6, "adoption_likelihood": "medium"},
+          {"name": "完成强证据验证", "score_after": 7.4, "adoption_likelihood": "medium-high"}
+        ]
+      },
+      "insight": "如果不修复信任与证明短板，需求总分大概率停留在验证边缘；完成强证据验证后才可能进入可扩张区。",
+      "recommendation": "用 90 天作为复盘窗口，先验证企业信任和高会议密度销售团队的付费意愿。",
+      "source_ids": ["S1", "S2"],
+      "assumption_based": true,
+      "confidence": 0.7
+    }
+  ],
   "recommendations": [
     {
       "priority": "P0",
@@ -279,6 +590,65 @@
       ]
     }
   ],
+  "forecast": {
+    "horizon": "90 days",
+    "scenarios": [
+      {
+        "name": "不处理短板",
+        "score_after": 5.0,
+        "adoption_likelihood": "low",
+        "assumptions": [
+          "继续只强调自动摘要和转写。",
+          "没有新增安全、准确率和组织审批证据。"
+        ]
+      },
+      {
+        "name": "修复信任和合规短板",
+        "score_after": 6.6,
+        "adoption_likelihood": "medium",
+        "assumptions": [
+          "补充权限、数据保留、安全说明和授权流程。",
+          "完成真实会议 Demo 并展示行动项准确率边界。"
+        ]
+      },
+      {
+        "name": "完成强证据验证",
+        "score_after": 7.4,
+        "adoption_likelihood": "medium-high",
+        "assumptions": [
+          "10-15 个目标客户访谈中至少 5 个愿意试用。",
+          "落地页目标客群试用转化率超过 8%。",
+          "增强 Demo 显著提升企业试用申请率。"
+        ]
+      }
+    ],
+    "confidence": 0.7,
+    "recheck_trigger": "如果 10 个目标客户访谈中少于 3 个愿意试用，或增强 Demo 没有提升企业试用申请率，需要重新判断缺乏感和目标物。"
+  },
+  "final_plan": {
+    "final_judgment": "这是一个有真实场景但尚未证明组织采用能力的需求方向，当前不宜直接规模化，应先补验证和信任短板。",
+    "strategy": "聚焦高会议密度销售团队，把产品从泛纪要工具收窄为客户会议行动项闭环工具，用安全信任材料和真实 Demo 证明可被组织采用。",
+    "next_30_days": [
+      "完成 10-15 个高会议密度销售团队访谈。",
+      "制作行动项识别、责任人、截止时间和 CRM/任务同步 Demo。",
+      "补齐隐私、授权、数据保留、删除机制和安全说明。"
+    ],
+    "next_60_days": [
+      "用落地页和 Demo 验证预约试用转化率。",
+      "对比普通摘要定位和行动项闭环定位的转化差异。",
+      "选择一个主流工具链完成轻量集成验证。"
+    ],
+    "next_90_days": [
+      "复盘企业试用申请率、会议上传率和团队协作使用率。",
+      "根据真实使用数据重算需求三角分数。",
+      "若进入 6.8 分以上区间，再评估渠道和销售扩张。"
+    ],
+    "decision_rules": [
+      "如果目标客群访客预约试用转化率超过 8%，继续推进团队版验证。",
+      "如果增强 Demo 不能提升企业试用申请率，优先重查采用阻力。",
+      "如果访谈中付费意愿低于 30%，重新定位目标用户或暂停规模投入。"
+    ]
+  },
   "evidence": [
     {
       "id": "S1",

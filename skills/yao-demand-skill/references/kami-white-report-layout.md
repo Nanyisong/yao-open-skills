@@ -71,11 +71,50 @@ Use anchors for:
 - `max-width: 1120px` on screen
 - main content centered with `24-40px` responsive padding
 - top report header followed by score strip
+- visual diagnostics section appears before dense analysis
+- chart modules use a two-column editorial grid on desktop and one-column stack on mobile
 - major sections separated by whitespace and a quiet top border
 - use cards only for true repeated objects or score blocks, not nested decorative surfaces
 - long tables must sit inside `.table-wrap { overflow-x: auto; }`
 - long URLs and source titles must use `overflow-wrap: anywhere`
 - code and raw evidence blocks must wrap and not overflow
+
+## Visual Diagnostic Modules
+
+Reports should include 10+ chart modules. Treat them as diagnostic figures, not decoration.
+
+Each chart module needs:
+
+- title
+- chart
+- one or two sentence insight
+- one sentence recommendation
+- confidence
+- source IDs or an assumption label
+
+Supported chart types:
+
+| Type | Use |
+|---|---|
+| `score_gauge` | Overall score, decision band, and scale readiness. |
+| `radar` | Demand triangle and subscore balance. |
+| `bar` | Dimension comparison, JTBD strength, and short-board ranking. |
+| `heatmap` | Dense subscore weakness scan. |
+| `matrix` | Segment, competitor, risk, and recommendation prioritization. |
+| `funnel` | Adoption friction from awareness to renewal. |
+| `stacked_bar` | Evidence quality or source mix. |
+| `forecast` | Scenario-based future state, never deterministic prediction. |
+
+Chart rules:
+
+- inline SVG in HTML/PDF
+- pure white chart background
+- no gradients, decorative shadows, blobs, glass effects, or purple-blue palettes
+- ink-blue for main signal, muted green/amber/red only for status
+- text labels must not be clipped in A4 print
+- long labels should wrap or truncate with accompanying table text
+- every chart must remain readable at `375px` mobile width through responsive scaling or horizontal scroll
+- dense chart data should also be represented in nearby text or tables for accessibility
 
 ## Tables
 
@@ -94,6 +133,7 @@ Required diagrams:
 
 - process flow: `输入 -> 解析 -> 检索 -> 分析 -> 评分 -> 输出`
 - demand triangle: `缺乏感 + 目标物 + 消费者能力`, with the center statement that demand depends on motivation clarity, acceptable cost, and scene trigger
+- visual diagnostics: score gauge, radar, bar, heatmap, matrix, funnel, stacked bar, and forecast SVGs
 
 Diagram rules:
 
@@ -127,6 +167,9 @@ PDF must not show browser UI, sticky nav, broken anchor menu, clipped tables, or
 Word output is the editable review copy:
 
 - preserve the same section order as Markdown and HTML
+- include visual diagnostic modules before dense analysis
+- insert chart PNGs when `python-docx` and SVG-to-PNG conversion are available
+- fall back to chart-equivalent tables and insight text when image conversion is unavailable
 - use heading levels, not manually bolded paragraphs
 - use simple tables for scores, competitors, sources, risks, and experiments
 - keep borders light and avoid dense nested tables
@@ -140,3 +183,6 @@ Word output is the editable review copy:
 - citations remain readable and do not interrupt the core narrative
 - no placeholder text remains
 - all four outputs have the same title, date, scores, recommendations, and evidence list
+- HTML/PDF contain at least 10 `.chart-module` blocks for formal reports
+- every chart module has a visible insight and recommendation
+- forecast module states assumptions and confidence

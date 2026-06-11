@@ -17,7 +17,7 @@ Evidence-backed demand assessment for products, services, apps, SaaS, AI tools, 
 - assessing whether a product has a solid demand foundation before building, investing, launching, or scaling
 - diagnosing weak conversion, weak retention, vague positioning, pricing friction, trust friction, or adoption barriers
 - comparing direct competitors, indirect substitutes, current user workarounds, and the option of not buying
-- producing a demand triangle report with citations, scores, red flags, experiments, and four final formats
+- producing a visual demand diagnosis report with citations, scores, red flags, 10+ chart modules, experiments, forecasts, and four final formats
 
 ## Do Not Route Here
 
@@ -36,18 +36,22 @@ Evidence-backed demand assessment for products, services, apps, SaaS, AI tools, 
 5. Segment users by JTBD, trigger scenario, buying role, current alternatives, and adoption blockers.
 6. Analyze the three demand triangle dimensions: `lack`, `target_object`, and `consumer_ability`. Include evidence, counter-evidence, assumptions, and improvement paths.
 7. Score each dimension from `0` to `10`, then calculate total score with the geometric short-board formula and confidence adjustment.
-8. Produce recommendations: positioning, product, pricing, onboarding, trust, channel, and validation experiments.
-9. Run QA: citation coverage, time consistency, evidence diversity, at least three counter-signals, score explainability, ethics, and layout readiness.
-10. Write a structured report JSON, then use `scripts/render_report.py` to create Markdown, HTML, Word, and PDF outputs.
+8. Produce visual diagnostics: at least 10 chart modules, each with one or two insight sentences, one recommendation, confidence, and evidence or assumption binding.
+9. Produce recommendations, forecast scenarios, and a final 30/60/90 day action plan: positioning, product, pricing, onboarding, trust, channel, and validation experiments.
+10. Run QA: citation coverage, time consistency, evidence diversity, at least three counter-signals, score explainability, chart completeness, ethics, and layout readiness.
+11. Write a structured report JSON, then use `scripts/render_report.py` to create Markdown, HTML, Word, and PDF outputs.
 
 ## Output Contract
 
 - Always produce the final report in four formats: `.md`, `.html`, `.docx`, and `.pdf`.
 - Use one canonical `report.json` as the rendering source when possible, so the four outputs remain consistent.
 - HTML must include a top sticky menu bar with quiet anchor navigation.
+- Formal reports must follow a `summary -> visual diagnostics -> deep analysis -> final plan` structure.
+- Formal reports must include at least 10 chart modules. HTML/PDF render them as inline SVG. Markdown and Word must include chart-equivalent tables or images.
 - All report backgrounds are pure white. Borrow Kami's editorial hierarchy, ink-blue accent, table discipline, typography, spacing, and production checks, but override Kami's parchment background.
 - Every key factual claim must either cite a source ID or be labeled as an assumption.
 - Every score must include evidence, reasoning, uncertainty, and a concrete improvement path.
+- Forecasts must be scenario-based and labeled with assumptions and confidence. Do not present uncertain adoption outcomes as deterministic predictions.
 
 ## Reference Map
 

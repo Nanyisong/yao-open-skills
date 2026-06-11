@@ -1,14 +1,14 @@
 {
   "name": "yao-demand-skill",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "mode": "production",
   "created_at": "2026-06-09",
-  "updated_at": "2026-06-09",
+  "updated_at": "2026-06-11",
   "owner": "Yao Team",
-  "status": "draft",
+  "status": "active",
   "maturity_tier": "production-light",
   "review_cadence": "after first 3 real product assessments or before team-wide reuse",
-  "description": "Evidence-backed product demand assessment using the demand triangle model.",
+  "description": "Evidence-backed visual product demand assessment using the demand triangle model, 10+ chart diagnostics, scenario forecasts, and multi-format reports.",
   "inputs": [
     "product_url",
     "product_description",

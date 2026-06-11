@@ -1,7 +1,7 @@
 interface:
   display_name: "Yao Demand Skill"
-  short_description: "Evaluate product demand with the demand triangle model"
-  default_prompt: "Use $yao-demand-skill to assess this product's demand foundation and produce Markdown, HTML, Word, and PDF reports."
+  short_description: "Evaluate product demand with a visual demand-triangle diagnostic report"
+  default_prompt: "Use $yao-demand-skill to assess this product's demand foundation and produce a visual diagnosis with 10+ chart modules plus Markdown, HTML, Word, and PDF reports."
 compatibility:
   canonical_format: "agent-skills"
   adapter_targets:

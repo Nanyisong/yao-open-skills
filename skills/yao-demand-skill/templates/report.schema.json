@@ -8,8 +8,11 @@
     "product_canvas",
     "segments",
     "triangle_analysis",
+    "visual_diagnostics",
     "recommendations",
     "risks",
+    "forecast",
+    "final_plan",
     "evidence"
   ],
   "properties": {
@@ -107,6 +110,11 @@
         "consumer_ability": {"$ref": "#/$defs/dimension"}
       }
     },
+    "visual_diagnostics": {
+      "type": "array",
+      "minItems": 10,
+      "items": {"$ref": "#/$defs/chart_module"}
+    },
     "recommendations": {
       "type": "array",
       "items": {
@@ -150,6 +158,41 @@
         }
       }
     },
+    "forecast": {
+      "type": "object",
+      "required": ["horizon", "scenarios", "confidence", "recheck_trigger"],
+      "properties": {
+        "horizon": {"type": "string"},
+        "scenarios": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["name", "score_after", "adoption_likelihood", "assumptions"],
+            "properties": {
+              "name": {"type": "string"},
+              "score_after": {"type": "number", "minimum": 0, "maximum": 10},
+              "adoption_likelihood": {"type": "string"},
+              "assumptions": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        },
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "recheck_trigger": {"type": "string"}
+      }
+    },
+    "final_plan": {
+      "type": "object",
+      "required": ["final_judgment", "strategy", "next_30_days", "next_60_days", "next_90_days", "decision_rules"],
+      "properties": {
+        "final_judgment": {"type": "string"},
+        "strategy": {"type": "string"},
+        "next_30_days": {"type": "array", "items": {"type": "string"}},
+        "next_60_days": {"type": "array", "items": {"type": "string"}},
+        "next_90_days": {"type": "array", "items": {"type": "string"}},
+        "decision_rules": {"type": "array", "items": {"type": "string"}}
+      }
+    },
     "evidence": {
       "type": "array",
       "items": {
@@ -171,6 +214,25 @@
     "open_questions": {"type": "array", "items": {"type": "string"}}
   },
   "$defs": {
+    "chart_module": {
+      "type": "object",
+      "required": ["id", "title", "chart_type", "priority", "data", "insight", "recommendation", "confidence"],
+      "properties": {
+        "id": {"type": "string"},
+        "title": {"type": "string"},
+        "chart_type": {
+          "type": "string",
+          "enum": ["score_gauge", "radar", "bar", "heatmap", "matrix", "funnel", "stacked_bar", "forecast"]
+        },
+        "priority": {"type": "integer", "minimum": 1},
+        "data": {"type": "object"},
+        "insight": {"type": "string"},
+        "recommendation": {"type": "string"},
+        "source_ids": {"type": "array", "items": {"type": "string"}},
+        "assumption_based": {"type": "boolean"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
     "dimension": {
       "type": "object",
       "required": ["score", "subscores", "evidence", "counter_evidence", "reasoning", "improvement_path"],

@@ -3,7 +3,9 @@
 
 import argparse
 import html
+import io
 import json
+import math
 import re
 import sys
 import zipfile
@@ -15,14 +17,17 @@ from validate_report import validate_report
 
 SECTION_NAV = [
     ("summary", "摘要"),
+    ("visuals", "图表"),
     ("product", "产品"),
-    ("method", "方法"),
     ("users", "用户"),
     ("competitors", "竞品"),
     ("triangle", "三角"),
-    ("scores", "评分"),
+    ("evidence", "证据"),
     ("recommendations", "建议"),
+    ("forecast", "预测"),
     ("risks", "风险"),
+    ("final", "方案"),
+    ("method", "方法"),
     ("appendix", "附录"),
 ]
 
@@ -128,6 +133,17 @@ def score_band(value: Any) -> str:
     return "weak"
 
 
+def weakest_dimension(report: Dict[str, Any]) -> str:
+    summary = report.get("executive_summary", {})
+    candidates = [
+        ("缺乏感", summary.get("lack_score")),
+        ("目标物", summary.get("target_object_score")),
+        ("消费者能力", summary.get("consumer_ability_score")),
+    ]
+    values = [(label, clamp(value)) for label, value in candidates]
+    return min(values, key=lambda item: item[1])[0] if values else "-"
+
+
 def render_process_svg() -> str:
     steps = [
         ("输入", ["链接", "介绍", "文档"]),
@@ -190,6 +206,337 @@ def render_triangle_svg(report: Dict[str, Any]) -> str:
   <text x="450" y="636" text-anchor="middle" class="svg-caption">任一维度明显缺失，需求成立概率都会下降。</text>
 </svg>
 """
+
+
+def clamp(value: Any, low: float = 0.0, high: float = 10.0) -> float:
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return low
+    return max(low, min(high, number))
+
+
+def chart_modules(report: Dict[str, Any]) -> List[Dict[str, Any]]:
+    modules = [item for item in as_list(report.get("visual_diagnostics")) if isinstance(item, dict)]
+    modules.sort(key=lambda item: (int(item.get("priority", 999)), text(item.get("id"))))
+    return modules
+
+
+def chart_items(module: Dict[str, Any], key: str = "items") -> List[Dict[str, Any]]:
+    data = module.get("data", {})
+    if not isinstance(data, dict):
+        return []
+    return [item for item in as_list(data.get(key)) if isinstance(item, dict)]
+
+
+def chart_meta(module: Dict[str, Any]) -> str:
+    source_ids = [text(item) for item in as_list(module.get("source_ids")) if text(item).strip()]
+    source_text = " ".join(source_ids) if source_ids else "基于假设"
+    return f"置信度 {float(module.get('confidence', 0)):.2f} | {source_text}"
+
+
+def label_short(value: Any, limit: int = 10) -> str:
+    raw = text(value).strip()
+    if len(raw) <= limit:
+        return raw
+    return raw[: max(1, limit - 1)] + "…"
+
+
+def value_color(value: Any, reverse: bool = False) -> str:
+    number = clamp(value)
+    if reverse:
+        number = 10 - number
+    if number >= 7:
+        return "#2f6f4e"
+    if number >= 5:
+        return "#8a641f"
+    return "#9b3a32"
+
+
+def render_score_gauge_svg(module: Dict[str, Any]) -> str:
+    data = module.get("data", {}) if isinstance(module.get("data"), dict) else {}
+    score_value = clamp(data.get("score", 0))
+    decision = h(data.get("decision", ""))
+    label = h(data.get("label", "总分"))
+    marker_x = 70 + (score_value / 10) * 680
+    bands = [
+        ("弱", 0, 3.9, "#f4e5e2"),
+        ("脆弱", 4.0, 5.4, "#f2ead9"),
+        ("可验证", 5.5, 6.7, "#eef2f7"),
+        ("较强", 6.8, 8.1, "#e7f0ea"),
+        ("强", 8.2, 10, "#dfece5"),
+    ]
+    parts = [
+        '<svg viewBox="0 0 840 270" role="img" aria-label="总分诊断图表">',
+        '<rect x="0" y="0" width="840" height="270" fill="#ffffff"/>',
+        f'<text x="70" y="54" font-size="24" fill="#141413" font-family="serif">{label}</text>',
+        f'<text x="770" y="54" text-anchor="end" font-size="34" fill="#1B365D" font-family="serif">{score_value:.1f}</text>',
+    ]
+    for band_label, start, end, color in bands:
+        x = 70 + (start / 10) * 680
+        width = ((end - start) / 10) * 680
+        parts.append(f'<rect x="{x:.1f}" y="104" width="{width:.1f}" height="42" fill="{color}" stroke="#ffffff"/>')
+        parts.append(f'<text x="{x + width / 2:.1f}" y="172" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">{band_label}</text>')
+    parts.append('<line x1="70" y1="146" x2="750" y2="146" stroke="#141413" stroke-width="1"/>')
+    parts.append(f'<line x1="{marker_x:.1f}" y1="82" x2="{marker_x:.1f}" y2="158" stroke="#141413" stroke-width="3"/>')
+    parts.append(f'<circle cx="{marker_x:.1f}" cy="82" r="7" fill="#1B365D"/>')
+    parts.append(f'<text x="70" y="222" font-size="18" fill="#141413" font-family="serif">建议动作：{decision}</text>')
+    parts.append("</svg>")
+    return "".join(parts)
+
+
+def render_radar_svg(module: Dict[str, Any]) -> str:
+    items = chart_items(module)
+    if len(items) < 3:
+        return render_bar_svg(module)
+    cx, cy, radius = 420, 235, 142
+    max_value = 10.0
+    points = []
+    axis_parts = []
+    count = len(items)
+    for index, item in enumerate(items):
+        angle = -math.pi / 2 + index * 2 * math.pi / count
+        outer_x = cx + math.cos(angle) * radius
+        outer_y = cy + math.sin(angle) * radius
+        value = clamp(item.get("value")) / max_value
+        point_x = cx + math.cos(angle) * radius * value
+        point_y = cy + math.sin(angle) * radius * value
+        points.append(f"{point_x:.1f},{point_y:.1f}")
+        label_x = cx + math.cos(angle) * (radius + 56)
+        label_y = cy + math.sin(angle) * (radius + 42)
+        anchor = "middle"
+        if label_x < cx - 20:
+            anchor = "end"
+        elif label_x > cx + 20:
+            anchor = "start"
+        axis_parts.append(f'<line x1="{cx}" y1="{cy}" x2="{outer_x:.1f}" y2="{outer_y:.1f}" stroke="#e8e6dc" stroke-width="1"/>')
+        axis_parts.append(f'<text x="{label_x:.1f}" y="{label_y:.1f}" text-anchor="{anchor}" font-size="15" fill="#3d3d3a" font-family="serif">{h(label_short(item.get("label"), 9))}</text>')
+        axis_parts.append(f'<text x="{label_x:.1f}" y="{label_y + 18:.1f}" text-anchor="{anchor}" font-size="13" fill="#1B365D" font-family="serif">{score(item.get("value"))}</text>')
+    rings = []
+    for factor in [0.25, 0.5, 0.75, 1.0]:
+        ring_points = []
+        for index in range(count):
+            angle = -math.pi / 2 + index * 2 * math.pi / count
+            ring_points.append(f"{cx + math.cos(angle) * radius * factor:.1f},{cy + math.sin(angle) * radius * factor:.1f}")
+        rings.append(f'<polygon points="{" ".join(ring_points)}" fill="none" stroke="#efeee8" stroke-width="1"/>')
+    return (
+        '<svg viewBox="0 0 840 470" role="img" aria-label="雷达图">'
+        '<rect x="0" y="0" width="840" height="470" fill="#ffffff"/>'
+        + "".join(rings)
+        + "".join(axis_parts)
+        + f'<polygon points="{" ".join(points)}" fill="#EEF2F7" fill-opacity="0.82" stroke="#1B365D" stroke-width="3"/>'
+        + f'<circle cx="{cx}" cy="{cy}" r="3" fill="#141413"/>'
+        + "</svg>"
+    )
+
+
+def render_bar_svg(module: Dict[str, Any]) -> str:
+    items = chart_items(module)
+    data = module.get("data", {}) if isinstance(module.get("data"), dict) else {}
+    max_value = max(1.0, float(data.get("max", 10) or 10))
+    height = max(230, 68 + len(items) * 42)
+    parts = [
+        f'<svg viewBox="0 0 840 {height}" role="img" aria-label="条形图">',
+        f'<rect x="0" y="0" width="840" height="{height}" fill="#ffffff"/>',
+    ]
+    for index, item in enumerate(items):
+        y = 40 + index * 42
+        value = clamp(item.get("value"), 0, max_value)
+        width = (value / max_value) * 530
+        parts.append(f'<text x="42" y="{y + 17}" font-size="15" fill="#141413" font-family="serif">{h(label_short(item.get("label"), 15))}</text>')
+        parts.append(f'<rect x="220" y="{y}" width="540" height="20" fill="#f7f7f4" stroke="#efeee8"/>')
+        parts.append(f'<rect x="220" y="{y}" width="{width:.1f}" height="20" fill="#1B365D"/>')
+        parts.append(f'<text x="778" y="{y + 17}" text-anchor="end" font-size="15" fill="{value_color(value)}" font-family="serif">{value:.1f}</text>')
+    parts.append("</svg>")
+    return "".join(parts)
+
+
+def render_heatmap_svg(module: Dict[str, Any]) -> str:
+    items = chart_items(module)
+    groups: Dict[str, List[Dict[str, Any]]] = {}
+    for item in items:
+        groups.setdefault(text(item.get("group", "其他")), []).append(item)
+    cell_w, cell_h = 96, 56
+    left, top = 132, 42
+    max_cols = max((len(values) for values in groups.values()), default=1)
+    height = top + len(groups) * (cell_h + 26) + 30
+    width = max(840, left + max_cols * cell_w + 50)
+    parts = [
+        f'<svg viewBox="0 0 {width} {height}" role="img" aria-label="热力图">',
+        f'<rect x="0" y="0" width="{width}" height="{height}" fill="#ffffff"/>',
+    ]
+    for row_index, (group, values) in enumerate(groups.items()):
+        y = top + row_index * (cell_h + 26)
+        parts.append(f'<text x="36" y="{y + 32}" font-size="16" fill="#141413" font-family="serif">{h(group)}</text>')
+        for col_index, item in enumerate(values):
+            x = left + col_index * cell_w
+            value = clamp(item.get("value"))
+            fill = "#e7f0ea" if value >= 7 else "#f2ead9" if value >= 5 else "#f4e5e2"
+            parts.append(f'<rect x="{x}" y="{y}" width="{cell_w - 8}" height="{cell_h}" rx="5" fill="{fill}" stroke="#e8e6dc"/>')
+            parts.append(f'<text x="{x + (cell_w - 8) / 2}" y="{y + 22}" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">{h(label_short(item.get("label"), 6))}</text>')
+            parts.append(f'<text x="{x + (cell_w - 8) / 2}" y="{y + 44}" text-anchor="middle" font-size="18" fill="{value_color(value)}" font-family="serif">{value:.0f}</text>')
+    parts.append("</svg>")
+    return "".join(parts)
+
+
+def render_matrix_svg(module: Dict[str, Any]) -> str:
+    data = module.get("data", {}) if isinstance(module.get("data"), dict) else {}
+    items = chart_items(module)
+    x_axis = h(data.get("x_axis", "横轴"))
+    y_axis = h(data.get("y_axis", "纵轴"))
+    left, top, width, height = 90, 44, 640, 310
+    parts = [
+        '<svg viewBox="0 0 840 430" role="img" aria-label="矩阵图">',
+        '<rect x="0" y="0" width="840" height="430" fill="#ffffff"/>',
+        f'<rect x="{left}" y="{top}" width="{width}" height="{height}" fill="#ffffff" stroke="#141413" stroke-width="1.5"/>',
+        f'<line x1="{left + width / 2}" y1="{top}" x2="{left + width / 2}" y2="{top + height}" stroke="#efeee8" stroke-width="2"/>',
+        f'<line x1="{left}" y1="{top + height / 2}" x2="{left + width}" y2="{top + height / 2}" stroke="#efeee8" stroke-width="2"/>',
+        f'<text x="{left + width / 2}" y="398" text-anchor="middle" font-size="16" fill="#3d3d3a" font-family="serif">{x_axis}</text>',
+        f'<text x="24" y="{top + height / 2}" transform="rotate(-90 24 {top + height / 2})" text-anchor="middle" font-size="16" fill="#3d3d3a" font-family="serif">{y_axis}</text>',
+    ]
+    for item in items:
+        x = left + (clamp(item.get("x")) / 10) * width
+        y = top + height - (clamp(item.get("y")) / 10) * height
+        r = 6 + clamp(item.get("size", 5), 0, 10) * 1.2
+        parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}" fill="#EEF2F7" stroke="#1B365D" stroke-width="2"/>')
+        parts.append(f'<text x="{x + r + 5:.1f}" y="{y + 4:.1f}" font-size="13" fill="#141413" font-family="serif">{h(label_short(item.get("label"), 13))}</text>')
+    parts.append("</svg>")
+    return "".join(parts)
+
+
+def render_funnel_svg(module: Dict[str, Any]) -> str:
+    items = chart_items(module)
+    max_value = max([clamp(item.get("value"), 0, 100) for item in items] or [100])
+    height = max(250, 54 + len(items) * 48)
+    parts = [
+        f'<svg viewBox="0 0 840 {height}" role="img" aria-label="漏斗图">',
+        f'<rect x="0" y="0" width="840" height="{height}" fill="#ffffff"/>',
+    ]
+    for index, item in enumerate(items):
+        value = clamp(item.get("value"), 0, max_value)
+        bar_w = 560 * (value / max_value)
+        x = 250 + (560 - bar_w) / 2
+        y = 34 + index * 46
+        parts.append(f'<text x="42" y="{y + 25}" font-size="15" fill="#141413" font-family="serif">{h(label_short(item.get("label"), 14))}</text>')
+        parts.append(f'<rect x="{x:.1f}" y="{y}" width="{bar_w:.1f}" height="28" rx="4" fill="#1B365D" fill-opacity="{0.95 - index * 0.055:.2f}"/>')
+        parts.append(f'<text x="770" y="{y + 21}" text-anchor="end" font-size="15" fill="#3d3d3a" font-family="serif">{value:.0f}</text>')
+    parts.append("</svg>")
+    return "".join(parts)
+
+
+def render_stacked_bar_svg(module: Dict[str, Any]) -> str:
+    data = module.get("data", {}) if isinstance(module.get("data"), dict) else {}
+    segments = [item for item in as_list(data.get("segments")) if isinstance(item, dict)]
+    total = sum(max(0, float(item.get("value", 0) or 0)) for item in segments) or 1
+    colors = ["#1B365D", "#7A8CA5", "#C7D0DB", "#e8e6dc", "#8a641f"]
+    x = 70
+    parts = [
+        '<svg viewBox="0 0 840 260" role="img" aria-label="堆叠条形图">',
+        '<rect x="0" y="0" width="840" height="260" fill="#ffffff"/>',
+        '<rect x="70" y="84" width="700" height="44" fill="#f7f7f4" stroke="#efeee8"/>',
+    ]
+    for index, item in enumerate(segments):
+        value = max(0, float(item.get("value", 0) or 0))
+        width = 700 * value / total
+        parts.append(f'<rect x="{x:.1f}" y="84" width="{width:.1f}" height="44" fill="{colors[index % len(colors)]}"/>')
+        if width > 70:
+            parts.append(f'<text x="{x + width / 2:.1f}" y="112" text-anchor="middle" font-size="14" fill="#ffffff" font-family="serif">{h(label_short(item.get("label"), 8))}</text>')
+        x += width
+    legend_x = 70
+    for index, item in enumerate(segments):
+        y = 164 + (index // 3) * 32
+        lx = legend_x + (index % 3) * 230
+        parts.append(f'<rect x="{lx}" y="{y}" width="12" height="12" fill="{colors[index % len(colors)]}"/>')
+        parts.append(f'<text x="{lx + 18}" y="{y + 12}" font-size="14" fill="#141413" font-family="serif">{h(label_short(item.get("label"), 12))} {text(item.get("value"))}</text>')
+    parts.append("</svg>")
+    return "".join(parts)
+
+
+def render_forecast_svg(module: Dict[str, Any]) -> str:
+    data = module.get("data", {}) if isinstance(module.get("data"), dict) else {}
+    scenarios = [item for item in as_list(data.get("scenarios")) if isinstance(item, dict)]
+    if not scenarios:
+        scenarios = chart_items(module)
+    left, top, width, height = 90, 48, 650, 280
+    parts = [
+        '<svg viewBox="0 0 840 430" role="img" aria-label="预测情景图">',
+        '<rect x="0" y="0" width="840" height="430" fill="#ffffff"/>',
+        f'<line x1="{left}" y1="{top + height}" x2="{left + width}" y2="{top + height}" stroke="#141413" stroke-width="1.5"/>',
+        f'<line x1="{left}" y1="{top}" x2="{left}" y2="{top + height}" stroke="#141413" stroke-width="1.5"/>',
+    ]
+    points = []
+    count = max(1, len(scenarios) - 1)
+    for index, scenario in enumerate(scenarios):
+        x = left + (index / count) * width if count else left
+        y = top + height - (clamp(scenario.get("score_after")) / 10) * height
+        points.append(f"{x:.1f},{y:.1f}")
+        parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="8" fill="#1B365D"/>')
+        parts.append(f'<text x="{x:.1f}" y="{y - 14:.1f}" text-anchor="middle" font-size="15" fill="#141413" font-family="serif">{score(scenario.get("score_after"))}</text>')
+        parts.append(f'<text x="{x:.1f}" y="370" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">{h(label_short(scenario.get("name"), 10))}</text>')
+        parts.append(f'<text x="{x:.1f}" y="390" text-anchor="middle" font-size="12" fill="#6b6a64" font-family="serif">{h(scenario.get("adoption_likelihood", ""))}</text>')
+    if len(points) > 1:
+        parts.append(f'<polyline points="{" ".join(points)}" fill="none" stroke="#1B365D" stroke-width="3"/>')
+    parts.append('<text x="40" y="52" font-size="13" fill="#6b6a64" font-family="serif">10</text>')
+    parts.append('<text x="48" y="330" font-size="13" fill="#6b6a64" font-family="serif">0</text>')
+    parts.append("</svg>")
+    return "".join(parts)
+
+
+def render_chart_svg(module: Dict[str, Any]) -> str:
+    chart_type = module.get("chart_type")
+    if chart_type == "score_gauge":
+        return render_score_gauge_svg(module)
+    if chart_type == "radar":
+        return render_radar_svg(module)
+    if chart_type == "bar":
+        return render_bar_svg(module)
+    if chart_type == "heatmap":
+        return render_heatmap_svg(module)
+    if chart_type == "matrix":
+        return render_matrix_svg(module)
+    if chart_type == "funnel":
+        return render_funnel_svg(module)
+    if chart_type == "stacked_bar":
+        return render_stacked_bar_svg(module)
+    if chart_type == "forecast":
+        return render_forecast_svg(module)
+    return render_bar_svg(module)
+
+
+def chart_data_rows(module: Dict[str, Any]) -> List[List[Any]]:
+    data = module.get("data", {}) if isinstance(module.get("data"), dict) else {}
+    if "items" in data:
+        rows = []
+        for item in chart_items(module):
+            if "value" in item:
+                rows.append([item.get("group", ""), item.get("label", ""), score(item.get("value")), ""])
+            else:
+                rows.append(["", item.get("label", ""), score(item.get("x")), score(item.get("y"))])
+        return rows
+    if "segments" in data:
+        return [["", item.get("label", ""), item.get("value", ""), ""] for item in as_list(data.get("segments")) if isinstance(item, dict)]
+    if "scenarios" in data:
+        return [["", item.get("name", ""), score(item.get("score_after")), item.get("adoption_likelihood", "")] for item in as_list(data.get("scenarios")) if isinstance(item, dict)]
+    if "score" in data:
+        return [["", data.get("label", "分数"), score(data.get("score")), data.get("decision", "")]]
+    return [["", "数据", text(data)]]
+
+
+def render_chart_module_html(module: Dict[str, Any]) -> str:
+    return f"""
+    <article class="chart-module" id="chart-{h(module.get('id'))}">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">{h(module.get('chart_type'))}</span>
+          <h3>{h(module.get('title'))}</h3>
+        </div>
+        <span class="chart-confidence">{h(chart_meta(module))}</span>
+      </div>
+      <div class="chart-svg-wrap">{render_chart_svg(module)}</div>
+      <p class="chart-insight"><strong>解读：</strong>{h(module.get('insight'))}</p>
+      <p class="chart-recommendation"><strong>建议：</strong>{h(module.get('recommendation'))}</p>
+    </article>
+    """
 
 
 def score_rows(report: Dict[str, Any]) -> List[List[Any]]:
@@ -308,6 +655,16 @@ def render_markdown(report: Dict[str, Any]) -> str:
         ["最大风险", summary.get("biggest_risk", "")],
     ]))
 
+    lines.append("## 可视化诊断\n")
+    lines.append("以下图表模块用于快速定位需求强弱、短板、证据质量、采用阻力和下一步优先级。Markdown 版本提供图表等价表格，HTML/PDF 会渲染为静态 SVG 图表。\n")
+    for module in chart_modules(report):
+        lines.append(f"### {text(module.get('title'))}\n")
+        lines.append(f"- 图表类型：`{text(module.get('chart_type'))}`")
+        lines.append(f"- {chart_meta(module)}")
+        lines.append(f"- 解读：{text(module.get('insight'))}")
+        lines.append(f"- 建议：{text(module.get('recommendation'))}\n")
+        lines.append(md_table(["分组", "指标/情景", "数值/X", "Y/说明"], chart_data_rows(module)))
+
     lines.append("## 产品概览\n")
     lines.append(f"**产品定义：** {text(canvas.get('definition'))}\n")
     lines.append(f"**价值主张：** {text(canvas.get('value_proposition'))}\n")
@@ -362,6 +719,33 @@ def render_markdown(report: Dict[str, Any]) -> str:
     lines.append("## 风险与伦理\n")
     lines.append(md_table(["严重度", "类型", "风险", "缓释", "来源"], risk_rows(report)))
 
+    forecast = report.get("forecast", {})
+    lines.append("## 预测情景\n")
+    lines.append(f"- 预测窗口：{text(forecast.get('horizon', '未提供'))}")
+    lines.append(f"- 置信度：{text(forecast.get('confidence', '未提供'))}")
+    lines.append(f"- 复盘触发：{text(forecast.get('recheck_trigger', '未提供'))}\n")
+    lines.append(md_table(
+        ["情景", "预测分数", "采用可能性", "关键假设"],
+        [
+            [
+                item.get("name", ""),
+                score(item.get("score_after")),
+                item.get("adoption_likelihood", ""),
+                "；".join(as_list(item.get("assumptions"))),
+            ]
+            for item in as_list(forecast.get("scenarios"))
+            if isinstance(item, dict)
+        ],
+    ))
+
+    final_plan = report.get("final_plan", {})
+    lines.append("## 最终方案\n")
+    lines.append(f"**最终判断：** {text(final_plan.get('final_judgment'))}\n")
+    lines.append(f"**总体策略：** {text(final_plan.get('strategy'))}\n")
+    for key, label in [("next_30_days", "未来 30 天"), ("next_60_days", "未来 60 天"), ("next_90_days", "未来 90 天"), ("decision_rules", "决策规则")]:
+        lines.append(f"### {label}\n")
+        lines.append(md_list(as_list(final_plan.get(key))))
+
     lines.append("## 附录\n")
     lines.append("### 未解问题\n")
     lines.append(md_list(as_list(report.get("open_questions"))))
@@ -373,9 +757,13 @@ def render_html(report: Dict[str, Any]) -> str:
     summary = report.get("executive_summary", {})
     canvas = report.get("product_canvas", {})
     triangle = report.get("triangle_analysis", {})
+    visual_modules = chart_modules(report)
+    forecast = report.get("forecast", {})
+    final_plan = report.get("final_plan", {})
     title = meta.get("title") or meta.get("product_name") or "需求评估报告"
     band = score_band(summary.get("total_score"))
     nav_links = "".join(f"<a href=\"#{anchor}\">{label}</a>" for anchor, label in SECTION_NAV)
+    chart_html = "\n".join(render_chart_module_html(module) for module in visual_modules)
 
     dimension_cards = []
     for key, label in [("lack", "缺乏感"), ("target_object", "目标物"), ("consumer_ability", "消费者能力")]:
@@ -431,7 +819,7 @@ def render_html(report: Dict[str, Any]) -> str:
       --mono: "JetBrains Mono", "SF Mono", Consolas, "TsangerJinKai02", "Source Han Serif SC", monospace;
     }}
     * {{ box-sizing: border-box; }}
-    html {{ scroll-behavior: smooth; background: var(--paper); }}
+    html {{ scroll-behavior: smooth; background: var(--paper); overflow-x: hidden; }}
     body {{
       margin: 0;
       background: var(--paper);
@@ -440,6 +828,7 @@ def render_html(report: Dict[str, Any]) -> str:
       font-size: 16px;
       line-height: 1.58;
       letter-spacing: 0;
+      overflow-x: hidden;
     }}
     .top-nav {{
       position: sticky;
@@ -640,6 +1029,7 @@ def render_html(report: Dict[str, Any]) -> str:
     }}
     .table-wrap {{
       width: 100%;
+      max-width: 100%;
       overflow-x: auto;
       margin: 14px 0 22px;
       border: 1px solid var(--border-soft);
@@ -681,6 +1071,65 @@ def render_html(report: Dict[str, Any]) -> str:
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 16px;
     }}
+    .chart-grid {{
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      align-items: start;
+    }}
+    .chart-module {{
+      border: 1px solid var(--border);
+      background: var(--paper);
+      border-radius: 8px;
+      padding: 16px;
+      break-inside: avoid;
+    }}
+    .chart-module-head {{
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      border-bottom: 1px solid var(--border-soft);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }}
+    .chart-kicker {{
+      display: inline-block;
+      color: var(--brand);
+      font-size: 12px;
+      line-height: 1;
+      margin-bottom: 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }}
+    .chart-confidence {{
+      flex: 0 0 auto;
+      max-width: 190px;
+      color: var(--stone);
+      font-size: 12px;
+      line-height: 1.35;
+      text-align: right;
+      overflow-wrap: anywhere;
+    }}
+    .chart-svg-wrap {{
+      width: 100%;
+      overflow-x: auto;
+      margin: 8px 0 12px;
+    }}
+    .chart-svg-wrap svg {{
+      display: block;
+      width: 100%;
+      min-width: 520px;
+      height: auto;
+      background: #ffffff;
+    }}
+    .chart-insight, .chart-recommendation {{
+      margin: 8px 0 0;
+      color: var(--dark-warm);
+      font-size: 14px;
+      line-height: 1.52;
+      overflow-wrap: anywhere;
+    }}
     a {{ color: var(--brand); overflow-wrap: anywhere; }}
     @page {{
       size: A4;
@@ -695,6 +1144,18 @@ def render_html(report: Dict[str, Any]) -> str:
       .dimension-grid, .meta-grid, .score-grid, .fact-grid, .two-col {{
         display: block;
       }}
+      .chart-grid {{
+        display: block;
+      }}
+      .chart-module {{
+        margin-bottom: 11pt;
+      }}
+      .chart-svg-wrap {{
+        overflow: visible;
+      }}
+      .chart-svg-wrap svg {{
+        min-width: 0;
+      }}
       .dimension-card, .score-card, .meta-item, .fact-box {{
         margin-bottom: 10pt;
       }}
@@ -705,7 +1166,7 @@ def render_html(report: Dict[str, Any]) -> str:
       .nav-inner {{ padding: 10px 18px; display: block; }}
       .nav-title {{ max-width: none; margin-bottom: 8px; }}
       main {{ padding: 32px 18px 56px; }}
-      .meta-grid, .score-grid, .fact-grid, .dimension-grid, .two-col {{
+      .meta-grid, .score-grid, .fact-grid, .dimension-grid, .two-col, .chart-grid {{
         grid-template-columns: 1fr;
       }}
       h1 {{ font-size: 34px; }}
@@ -745,6 +1206,15 @@ def render_html(report: Dict[str, Any]) -> str:
         <div class="fact-box"><h3>最大机会</h3><p>{h(summary.get('biggest_opportunity'))}</p></div>
         <div class="fact-box"><h3>最大风险</h3><p>{h(summary.get('biggest_risk'))}</p></div>
       </div>
+      <div class="note"><strong>最短板：</strong>{h(weakest_dimension(report))}<br><strong>下一步：</strong>{h(final_plan.get('strategy') or summary.get('biggest_risk'))}</div>
+    </section>
+
+    <section id="visuals">
+      <h2>可视化诊断</h2>
+      <p class="lede">这些图表把需求强弱、短板、证据、风险和行动优先级压缩成可扫描的诊断模块。每个模块都包含解读和建议，避免只有图表没有判断。</p>
+      <div class="chart-grid">
+        {chart_html}
+      </div>
     </section>
 
     <section id="product">
@@ -761,13 +1231,9 @@ def render_html(report: Dict[str, Any]) -> str:
       {html_list(as_list(canvas.get('pricing')))}
     </section>
 
-    <section id="method">
-      <h2>研究方法与来源</h2>
+    <section id="evidence">
+      <h2>证据质量与来源</h2>
       <p>{h(meta.get('source_boundary', '本报告区分事实、假设、证据和建议。'))}</p>
-      <figure class="diagram-block">
-        {render_process_svg()}
-        <figcaption class="figure-caption">图 1：需求评估分析流程。检索只接受可追溯来源，不确定信息进入假设区。</figcaption>
-      </figure>
       {html_table(['来源', '等级', '类型', '标题', '链接', '日期'], evidence_rows(report), compact=True)}
     </section>
 
@@ -802,9 +1268,41 @@ def render_html(report: Dict[str, Any]) -> str:
       {html_table(['假设', '分群', '方法', '指标', '阈值', '决策规则'], experiment_rows(report))}
     </section>
 
+    <section id="forecast">
+      <h2>预测情景</h2>
+      <p>{h(forecast.get('recheck_trigger', '预测只作为情景推演，必须定期复盘。'))}</p>
+      {html_table(['情景', '预测分数', '采用可能性', '关键假设'], [
+        [item.get('name', ''), score(item.get('score_after')), item.get('adoption_likelihood', ''), '；'.join(as_list(item.get('assumptions')))]
+        for item in as_list(forecast.get('scenarios')) if isinstance(item, dict)
+      ])}
+    </section>
+
     <section id="risks">
       <h2>风险与伦理</h2>
       {html_table(['严重度', '类型', '风险', '缓释', '来源'], risk_rows(report))}
+    </section>
+
+    <section id="final">
+      <h2>最终方案</h2>
+      <p class="lede">{h(final_plan.get('final_judgment', '未提供最终判断'))}</p>
+      <div class="note"><strong>总体策略</strong><br>{h(final_plan.get('strategy', '未提供'))}</div>
+      <div class="three-phase">
+        {html_table(['阶段', '动作'], [
+          ['未来 30 天', '；'.join(as_list(final_plan.get('next_30_days')))],
+          ['未来 60 天', '；'.join(as_list(final_plan.get('next_60_days')))],
+          ['未来 90 天', '；'.join(as_list(final_plan.get('next_90_days')))],
+          ['决策规则', '；'.join(as_list(final_plan.get('decision_rules')))],
+        ])}
+      </div>
+    </section>
+
+    <section id="method">
+      <h2>方法与模型</h2>
+      <figure class="diagram-block">
+        {render_process_svg()}
+        <figcaption class="figure-caption">图：需求评估分析流程。检索只接受可追溯来源，不确定信息进入假设区。</figcaption>
+      </figure>
+      <p>评分采用需求三角的几何短板逻辑：缺乏感、目标物和消费者能力必须同时成立，单一高分不能完全补偿另一条边塌陷。</p>
     </section>
 
     <section id="appendix">
@@ -841,6 +1339,32 @@ def add_docx_bullets(document: Any, items: Sequence[Any]) -> None:
         return
     for item in values:
         document.add_paragraph(item, style="List Bullet")
+
+
+def add_docx_chart_module(document: Any, module: Dict[str, Any]) -> None:
+    document.add_heading(text(module.get("title")), 2)
+    inserted_image = False
+    try:
+        import cairosvg
+        from docx.shared import Inches
+
+        png_stream = io.BytesIO()
+        cairosvg.svg2png(
+            bytestring=render_chart_svg(module).encode("utf-8"),
+            write_to=png_stream,
+            output_width=900,
+        )
+        png_stream.seek(0)
+        document.add_picture(png_stream, width=Inches(6.4))
+        inserted_image = True
+    except Exception:
+        inserted_image = False
+    if not inserted_image:
+        document.add_paragraph("图表等价数据：")
+        add_docx_table(document, ["分组", "指标/情景", "数值/X", "Y/说明"], chart_data_rows(module))
+    document.add_paragraph(f"解读：{text(module.get('insight'))}")
+    document.add_paragraph(f"建议：{text(module.get('recommendation'))}")
+    document.add_paragraph(chart_meta(module))
 
 
 def xml_text(value: Any) -> str:
@@ -924,6 +1448,8 @@ def render_docx_fallback(report: Dict[str, Any], output_path: Path) -> None:
     summary = report.get("executive_summary", {})
     canvas = report.get("product_canvas", {})
     triangle = report.get("triangle_analysis", {})
+    forecast = report.get("forecast", {})
+    final_plan = report.get("final_plan", {})
     body: List[str] = []
 
     body.append(ooxml_paragraph(meta.get("title") or meta.get("product_name") or "需求评估报告", "Title"))
@@ -939,6 +1465,14 @@ def render_docx_fallback(report: Dict[str, Any], output_path: Path) -> None:
         ["消费者能力", score(summary.get("consumer_ability_score"))],
         ["证据信心", summary.get("evidence_confidence", "")],
     ]))
+
+    body.append(ooxml_paragraph("可视化诊断", "Heading1"))
+    for module in chart_modules(report):
+        body.append(ooxml_paragraph(module.get("title"), "Heading2"))
+        body.append(ooxml_table(["分组", "指标/情景", "数值/X", "Y/说明"], chart_data_rows(module)))
+        body.append(ooxml_paragraph(f"解读：{text(module.get('insight'))}"))
+        body.append(ooxml_paragraph(f"建议：{text(module.get('recommendation'))}"))
+        body.append(ooxml_paragraph(chart_meta(module)))
 
     body.append(ooxml_paragraph("产品概览", "Heading1"))
     body.append(ooxml_paragraph(f"产品定义：{text(canvas.get('definition'))}"))
@@ -995,6 +1529,34 @@ def render_docx_fallback(report: Dict[str, Any], output_path: Path) -> None:
 
     body.append(ooxml_paragraph("风险与伦理", "Heading1"))
     body.append(ooxml_table(["严重度", "类型", "风险", "缓释", "来源"], risk_rows(report)))
+
+    body.append(ooxml_paragraph("预测情景", "Heading1"))
+    body.append(ooxml_paragraph(f"预测窗口：{text(forecast.get('horizon'))}；置信度：{text(forecast.get('confidence'))}"))
+    body.append(ooxml_paragraph(f"复盘触发：{text(forecast.get('recheck_trigger'))}"))
+    body.append(ooxml_table(
+        ["情景", "预测分数", "采用可能性", "关键假设"],
+        [
+            [
+                item.get("name", ""),
+                score(item.get("score_after")),
+                item.get("adoption_likelihood", ""),
+                "；".join(as_list(item.get("assumptions"))),
+            ]
+            for item in as_list(forecast.get("scenarios"))
+            if isinstance(item, dict)
+        ],
+    ))
+
+    body.append(ooxml_paragraph("最终方案", "Heading1"))
+    body.append(ooxml_paragraph(f"最终判断：{text(final_plan.get('final_judgment'))}"))
+    body.append(ooxml_paragraph(f"总体策略：{text(final_plan.get('strategy'))}"))
+    body.append(ooxml_table(["阶段", "动作"], [
+        ["未来 30 天", "；".join(as_list(final_plan.get("next_30_days")))],
+        ["未来 60 天", "；".join(as_list(final_plan.get("next_60_days")))],
+        ["未来 90 天", "；".join(as_list(final_plan.get("next_90_days")))],
+        ["决策规则", "；".join(as_list(final_plan.get("decision_rules")))],
+    ]))
+
     body.append(ooxml_paragraph("附录", "Heading1"))
     body.append(ooxml_paragraph("未解问题", "Heading2"))
     body.append(ooxml_bullets(as_list(report.get("open_questions"))))
@@ -1017,6 +1579,8 @@ def render_docx(report: Dict[str, Any], output_path: Path) -> None:
     summary = report.get("executive_summary", {})
     canvas = report.get("product_canvas", {})
     triangle = report.get("triangle_analysis", {})
+    forecast = report.get("forecast", {})
+    final_plan = report.get("final_plan", {})
     document = Document()
     styles = document.styles
     styles["Normal"].font.name = "Songti SC"
@@ -1035,6 +1599,10 @@ def render_docx(report: Dict[str, Any], output_path: Path) -> None:
         ["消费者能力", score(summary.get("consumer_ability_score"))],
         ["证据信心", summary.get("evidence_confidence", "")],
     ])
+
+    document.add_heading("可视化诊断", 1)
+    for module in chart_modules(report):
+        add_docx_chart_module(document, module)
 
     document.add_heading("产品概览", 1)
     document.add_paragraph(f"产品定义：{text(canvas.get('definition'))}")
@@ -1091,6 +1659,34 @@ def render_docx(report: Dict[str, Any], output_path: Path) -> None:
 
     document.add_heading("风险与伦理", 1)
     add_docx_table(document, ["严重度", "类型", "风险", "缓释", "来源"], risk_rows(report))
+
+    document.add_heading("预测情景", 1)
+    document.add_paragraph(f"预测窗口：{text(forecast.get('horizon'))}；置信度：{text(forecast.get('confidence'))}")
+    document.add_paragraph(f"复盘触发：{text(forecast.get('recheck_trigger'))}")
+    add_docx_table(
+        document,
+        ["情景", "预测分数", "采用可能性", "关键假设"],
+        [
+            [
+                item.get("name", ""),
+                score(item.get("score_after")),
+                item.get("adoption_likelihood", ""),
+                "；".join(as_list(item.get("assumptions"))),
+            ]
+            for item in as_list(forecast.get("scenarios"))
+            if isinstance(item, dict)
+        ],
+    )
+
+    document.add_heading("最终方案", 1)
+    document.add_paragraph(f"最终判断：{text(final_plan.get('final_judgment'))}")
+    document.add_paragraph(f"总体策略：{text(final_plan.get('strategy'))}")
+    add_docx_table(document, ["阶段", "动作"], [
+        ["未来 30 天", "；".join(as_list(final_plan.get("next_30_days")))],
+        ["未来 60 天", "；".join(as_list(final_plan.get("next_60_days")))],
+        ["未来 90 天", "；".join(as_list(final_plan.get("next_90_days")))],
+        ["决策规则", "；".join(as_list(final_plan.get("decision_rules")))],
+    ])
 
     document.add_heading("附录", 1)
     document.add_heading("未解问题", 2)

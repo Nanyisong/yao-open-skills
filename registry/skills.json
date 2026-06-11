@@ -1,6 +1,6 @@
 {
   "repo_name": "yao-open-skills",
-  "updated_at": "2026-06-09",
+  "updated_at": "2026-06-11",
   "skills": [
     {
       "slug": "learning-builder",
@@ -120,7 +120,7 @@
     {
       "slug": "yao-demand-skill",
       "title": "Yao Demand Skill",
-      "summary": "Evaluate product demand with the demand triangle model, evidence grading, short-board scoring, recommendations, validation experiments, and Markdown/HTML/DOCX/PDF exports.",
+      "summary": "Evaluate product demand with the demand triangle model, evidence grading, short-board scoring, 10+ visual diagnostic chart modules, scenario forecasts, final action plans, and Markdown/HTML/DOCX/PDF exports.",
       "source_local_path": "/Users/laoyao/AI Coding/03-Development/Skills/yao-demand-skill",
       "collection_path": "skills/yao-demand-skill",
       "lifecycle": "active",
@@ -133,14 +133,16 @@
         "demand-analysis",
         "product",
         "validation",
-        "reporting",
+        "visual-reporting",
+        "charts",
+        "forecast",
         "docx",
         "pdf",
         "html",
         "evidence"
       ],
-      "last_synced_at": "2026-06-09",
-      "updated_at": "2026-06-09"
+      "last_synced_at": "2026-06-11",
+      "updated_at": "2026-06-11"
     },
     {
       "slug": "yao-expert-skill",

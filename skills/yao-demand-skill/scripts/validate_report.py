@@ -21,6 +21,16 @@ REQUIRED_TOP_LEVEL = [
 ]
 
 REQUIRED_DIMENSIONS = ["lack", "target_object", "consumer_ability"]
+ALLOWED_CHART_TYPES = {
+    "score_gauge",
+    "radar",
+    "bar",
+    "heatmap",
+    "matrix",
+    "funnel",
+    "stacked_bar",
+    "forecast",
+}
 SOURCE_ID_RE = re.compile(r"\bS\d+\b")
 
 
@@ -112,6 +122,80 @@ def validate_report(report: Dict[str, Any]) -> Dict[str, Any]:
     missing_ids = sorted(mentioned_ids - evidence_ids)
     if missing_ids:
         warnings.append(f"mentioned source IDs not found in evidence list: {', '.join(missing_ids)}")
+
+    visual_modules = report.get("visual_diagnostics")
+    if visual_modules is None:
+        warnings.append("visual_diagnostics is missing; formal reports should include at least 10 chart modules")
+    elif not isinstance(visual_modules, list):
+        errors.append("visual_diagnostics must be an array")
+    else:
+        if len(visual_modules) < 10:
+            errors.append("visual_diagnostics must include at least 10 chart modules")
+        seen_chart_ids: Set[str] = set()
+        for index, module in enumerate(visual_modules, start=1):
+            if not isinstance(module, dict):
+                errors.append(f"visual_diagnostics[{index}] must be an object")
+                continue
+            chart_id = str(module.get("id") or f"index-{index}")
+            if chart_id in seen_chart_ids:
+                errors.append(f"duplicate visual_diagnostics id: {chart_id}")
+            seen_chart_ids.add(chart_id)
+            for key in ["id", "title", "chart_type", "priority", "data", "insight", "recommendation", "confidence"]:
+                if key not in module or module.get(key) in ("", None, []):
+                    errors.append(f"visual_diagnostics[{chart_id}].{key} is required")
+            if module.get("chart_type") not in ALLOWED_CHART_TYPES:
+                errors.append(f"visual_diagnostics[{chart_id}].chart_type is invalid")
+            if not isinstance(module.get("data"), dict) or not module.get("data"):
+                errors.append(f"visual_diagnostics[{chart_id}].data must be a non-empty object")
+            try:
+                confidence = float(module.get("confidence"))
+                if not 0 <= confidence <= 1:
+                    errors.append(f"visual_diagnostics[{chart_id}].confidence must be 0-1")
+            except (TypeError, ValueError):
+                errors.append(f"visual_diagnostics[{chart_id}].confidence must be numeric")
+            source_ids = [str(item) for item in module.get("source_ids", []) or [] if str(item).strip()]
+            if not source_ids and not module.get("assumption_based"):
+                errors.append(f"visual_diagnostics[{chart_id}] must include source_ids or assumption_based=true")
+            for source_id in source_ids:
+                if evidence_ids and source_id not in evidence_ids:
+                    warnings.append(f"visual_diagnostics[{chart_id}] references unknown evidence id: {source_id}")
+
+    forecast = report.get("forecast")
+    if forecast is None:
+        warnings.append("forecast is missing; formal reports should include scenario-based forecast")
+    elif not isinstance(forecast, dict):
+        errors.append("forecast must be an object")
+    else:
+        scenarios = forecast.get("scenarios", [])
+        if not isinstance(scenarios, list) or len(scenarios) < 3:
+            errors.append("forecast.scenarios must include at least 3 scenarios")
+        for index, scenario in enumerate(scenarios if isinstance(scenarios, list) else [], start=1):
+            if not isinstance(scenario, dict):
+                errors.append(f"forecast.scenarios[{index}] must be an object")
+                continue
+            for key in ["name", "score_after", "adoption_likelihood", "assumptions"]:
+                if key not in scenario or scenario.get(key) in ("", None, []):
+                    errors.append(f"forecast.scenarios[{index}].{key} is required")
+            if "score_after" in scenario and not score_in_range(scenario.get("score_after")):
+                errors.append(f"forecast.scenarios[{index}].score_after must be 0-10")
+        try:
+            forecast_confidence = float(forecast.get("confidence"))
+            if not 0 <= forecast_confidence <= 1:
+                errors.append("forecast.confidence must be 0-1")
+        except (TypeError, ValueError):
+            errors.append("forecast.confidence must be numeric")
+        if not forecast.get("recheck_trigger"):
+            errors.append("forecast.recheck_trigger is required")
+
+    final_plan = report.get("final_plan")
+    if final_plan is None:
+        warnings.append("final_plan is missing; formal reports should include final judgment and 30/60/90 plan")
+    elif not isinstance(final_plan, dict):
+        errors.append("final_plan must be an object")
+    else:
+        for key in ["final_judgment", "strategy", "next_30_days", "next_60_days", "next_90_days", "decision_rules"]:
+            if key not in final_plan or final_plan.get(key) in ("", None, []):
+                errors.append(f"final_plan.{key} is required")
 
     if len(report.get("recommendations", []) or []) == 0:
         errors.append("at least one recommendation is required")
