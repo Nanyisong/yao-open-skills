@@ -13,7 +13,7 @@ The artifact should read like a decision memo with evidence and model-backed rea
 - text: warm near-black and warm graphite
 - typography: serif-led Chinese document hierarchy
 - layout: centered long document, bounded width, quiet section rhythm
-- navigation: HTML-only sticky top menu
+- navigation: HTML-only fixed top follow menu
 - diagrams: inline SVG for workflow, demand triangle, and visual diagnostic charts
 - tables: restrained borders, horizontal overflow on screen, compact print styling
 
@@ -40,7 +40,7 @@ HTML and PDF render diagrams as static SVG. Markdown gets table/text equivalents
 ## QA Focus
 
 - white background in HTML and PDF
-- sticky top menu visible in HTML and hidden in PDF
+- fixed top follow menu visible in HTML and hidden in PDF
 - no nested cards or decorative visual noise
 - no clipped diagram text
 - at least 10 chart modules in formal HTML/PDF reports

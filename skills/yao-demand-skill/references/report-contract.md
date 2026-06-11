@@ -32,7 +32,7 @@ Reports use a `summary -> visual diagnostics -> deep analysis -> final plan` str
 
 ## Required Visual Diagnostic Modules
 
-Formal reports should include at least 10 of these modules. The canonical sample includes 15.
+Formal reports should include at least 10 of these modules. The canonical sample includes 14 after removing the lower-signal JTBD strength chart.
 
 | Module | Chart Type | Diagnostic Purpose |
 |---|---|---|
@@ -44,7 +44,6 @@ Formal reports should include at least 10 of these modules. The canonical sample
 | Target object detail | `radar` | Diagnose whether the product is a credible solution. |
 | Consumer ability detail | `radar` | Diagnose whether users can buy, trust, learn, and keep using it. |
 | Segment opportunity matrix | `matrix` | Prioritize the first user segment to validate. |
-| JTBD strength | `bar` | Identify which user jobs deserve primary positioning. |
 | Competitor/substitute position | `matrix` | Compare the product against real alternatives and non-consumption. |
 | Adoption friction funnel | `funnel` | Show where adoption drops from awareness to renewal. |
 | Evidence quality distribution | `stacked_bar` | Show whether the conclusion rests on facts, weak signals, or assumptions. |
@@ -253,7 +252,7 @@ Use `templates/report.schema.json` as the target. The minimum useful shape:
 All four report outputs must render from the same JSON:
 
 - Markdown: audit-friendly, easy to edit.
-- HTML: white editorial report with sticky top menu.
+- HTML: white editorial report with a fixed top follow menu.
 - Word: editable team review and archive version.
 - PDF: print/send version generated from the same HTML where possible.
 

@@ -20,7 +20,7 @@
 - Run `scripts/validate_report.py <report.json> --strict` before rendering formal reports.
 - Run `scripts/score_triangle.py <report.json> --write` when subscores are present.
 - Run `scripts/render_report.py <report.json>` and verify all four files exist.
-- Inspect HTML/PDF for white background, sticky menu behavior, 10+ chart modules, table overflow, and diagram legibility.
+- Inspect HTML/PDF for white background, fixed follow menu behavior, 10+ chart modules, table overflow, and diagram legibility.
 - Check DOCX contains chart images or chart-equivalent tables.
 
 ## Reviewer Notes

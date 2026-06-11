@@ -1,9 +1,9 @@
 {
   "name": "yao-demand-skill",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "mode": "production",
   "created_at": "2026-06-09",
-  "updated_at": "2026-06-11",
+  "updated_at": "2026-06-12",
   "owner": "Yao Team",
   "status": "active",
   "maturity_tier": "production-light",

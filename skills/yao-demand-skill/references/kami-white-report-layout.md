@@ -41,17 +41,18 @@ Print scale:
 
 Screen scale should remain readable on mobile; body text should not fall below `15px`.
 
-## HTML Top Sticky Menu
+## HTML Top Follow Menu
 
-HTML reports must include a top sticky menu:
+HTML reports must include a top follow menu:
 
-- `position: sticky; top: 0; z-index: 30`
+- current renderer uses `position: fixed; top: 0; left: 0; right: 0; z-index: 100`
 - white background with subtle bottom border
+- subtle shadow so the menu remains visible while scrolling
 - product/report title on the left
 - anchor links to major sections on the right
 - horizontal overflow allowed on narrow screens
 - no JS required for navigation
-- hide the sticky menu in print/PDF
+- hide the follow menu in print/PDF
 
 Use anchors for:
 
@@ -98,7 +99,7 @@ Supported chart types:
 |---|---|
 | `score_gauge` | Overall score, decision band, and scale readiness. |
 | `radar` | Demand triangle and subscore balance. |
-| `bar` | Dimension comparison, JTBD strength, and short-board ranking. |
+| `bar` | Dimension comparison, subscore ranking, and short-board ranking. |
 | `heatmap` | Dense subscore weakness scan. |
 | `matrix` | Segment, competitor, risk, and recommendation prioritization. |
 | `funnel` | Adoption friction from awareness to renewal. |
@@ -160,7 +161,7 @@ Use the same HTML as PDF source when possible:
 }
 ```
 
-PDF must not show browser UI, sticky nav, broken anchor menu, clipped tables, or low-contrast text.
+PDF must not show browser UI, fixed nav, broken anchor menu, clipped tables, or low-contrast text.
 
 ## Word Rules
 
@@ -178,7 +179,7 @@ Word output is the editable review copy:
 ## QA Checklist
 
 - white background visible in HTML and PDF
-- sticky top menu works in HTML and is hidden in PDF
+- fixed top follow menu works in HTML and is hidden in PDF
 - long competitor/source/evidence tables scroll on mobile and do not overflow print pages
 - citations remain readable and do not interrupt the core narrative
 - no placeholder text remains

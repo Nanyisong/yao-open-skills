@@ -15,7 +15,7 @@
 4. Evidence is central: official sources first, third-party/user feedback second, social signals only as weak evidence.
 5. Scoring must use geometric mean so a strong dimension cannot hide a collapsed short board.
 6. Final outputs must be four formats: Markdown, HTML, Word, and PDF.
-7. HTML needs top sticky navigation, while print/PDF hides that navigation.
+7. HTML needs fixed top follow navigation, while print/PDF hides that navigation.
 8. User explicitly requires pure white report backgrounds. Kami's parchment invariant is overridden, but its editorial hierarchy, spacing, table discipline, and production checks are retained.
 9. The original HTML/PDF visual references include two important diagrams: the workflow strip and the triangle model. The new skill renders these as portable inline SVG or text equivalents, not base64 images.
 

@@ -45,7 +45,7 @@ Evidence-backed demand assessment for products, services, apps, SaaS, AI tools, 
 
 - Always produce the final report in four formats: `.md`, `.html`, `.docx`, and `.pdf`.
 - Use one canonical `report.json` as the rendering source when possible, so the four outputs remain consistent.
-- HTML must include a top sticky menu bar with quiet anchor navigation.
+- HTML must include a top follow menu bar that stays pinned while the page scrolls, with quiet anchor navigation.
 - Formal reports must follow a `summary -> visual diagnostics -> deep analysis -> final plan` structure.
 - Formal reports must include at least 10 chart modules. HTML/PDF render them as inline SVG. Markdown and Word must include chart-equivalent tables or images.
 - All report backgrounds are pure white. Borrow Kami's editorial hierarchy, ink-blue accent, table discipline, typography, spacing, and production checks, but override Kami's parchment background.

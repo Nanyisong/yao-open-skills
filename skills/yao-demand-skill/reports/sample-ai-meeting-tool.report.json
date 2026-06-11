@@ -379,30 +379,10 @@
       "confidence": 0.7
     },
     {
-      "id": "jtbd_strength_bar",
-      "title": "JTBD 强度：行动项同步最值得主攻",
-      "chart_type": "bar",
-      "priority": 9,
-      "data": {
-        "items": [
-          {"label": "行动项追踪", "value": 8.2},
-          {"label": "客户承诺不遗漏", "value": 8.0},
-          {"label": "会议决策归档", "value": 7.3},
-          {"label": "缺席成员补上下文", "value": 6.5},
-          {"label": "普通摘要生成", "value": 5.8}
-        ],
-        "max": 10
-      },
-      "insight": "用户最强任务不是“生成一份好看的纪要”，而是让会议后的责任、承诺和下一步可追踪。",
-      "recommendation": "首页和 Demo 应优先展示行动项追踪闭环。",
-      "source_ids": ["S1"],
-      "confidence": 0.72
-    },
-    {
       "id": "competitor_position_matrix",
       "title": "竞品与替代方案定位：差异化必须避开泛摘要",
       "chart_type": "matrix",
-      "priority": 10,
+      "priority": 9,
       "data": {
         "x_axis": "业务闭环能力",
         "y_axis": "采用成本优势",
@@ -423,7 +403,7 @@
       "id": "adoption_friction_funnel",
       "title": "采用阻力漏斗：团队采购前流失最大",
       "chart_type": "funnel",
-      "priority": 11,
+      "priority": 10,
       "data": {
         "items": [
           {"label": "知道问题", "value": 100},
@@ -444,7 +424,7 @@
       "id": "evidence_quality_distribution",
       "title": "证据质量分布：样例仍偏假设",
       "chart_type": "stacked_bar",
-      "priority": 12,
+      "priority": 11,
       "data": {
         "segments": [
           {"label": "A级用户输入", "value": 1},
@@ -461,7 +441,7 @@
       "id": "risk_matrix",
       "title": "风险矩阵：隐私与证据风险最高",
       "chart_type": "matrix",
-      "priority": 13,
+      "priority": 12,
       "data": {
         "x_axis": "发生概率",
         "y_axis": "影响程度",
@@ -481,7 +461,7 @@
       "id": "recommendation_priority_matrix",
       "title": "建议优先级矩阵：先做信任材料和验证访谈",
       "chart_type": "matrix",
-      "priority": 14,
+      "priority": 13,
       "data": {
         "x_axis": "实施难度",
         "y_axis": "需求增益",
@@ -501,7 +481,7 @@
       "id": "forecast_scenarios",
       "title": "预测情景：修复短板后才可能进入可扩张区",
       "chart_type": "forecast",
-      "priority": 15,
+      "priority": 14,
       "data": {
         "horizon": "90 days",
         "scenarios": [

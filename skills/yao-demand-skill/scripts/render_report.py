@@ -183,27 +183,20 @@ def render_triangle_svg(report: Dict[str, Any]) -> str:
     ability = score(summary.get("consumer_ability_score"))
     total = score(summary.get("total_score"))
     return f"""
-<svg class="triangle-svg" viewBox="0 0 900 650" role="img" aria-label="需求三角模型分析结构">
-  <rect x="0" y="0" width="900" height="650" fill="#ffffff"/>
-  <polygon points="450,88 158,520 742,520" fill="#ffffff" stroke="#1B365D" stroke-width="5" stroke-linejoin="round"/>
-  <circle cx="450" cy="394" r="156" fill="#ffffff" stroke="#141413" stroke-width="2.5"/>
-  <line x1="374" y1="230" x2="272" y2="455" stroke="#141413" stroke-width="2.5"/>
-  <path d="M 272 455 l 0 -12 l 10 6 z" fill="#141413"/>
-  <line x1="526" y1="230" x2="628" y2="455" stroke="#141413" stroke-width="2.5"/>
-  <path d="M 628 455 l -10 -6 l 10 -6 z" fill="#141413"/>
-  <rect x="345" y="20" width="210" height="58" rx="9" fill="#ffffff" stroke="#141413" stroke-width="2"/>
-  <text x="450" y="45" text-anchor="middle" class="svg-title">缺乏感</text>
-  <text x="450" y="66" text-anchor="middle" class="svg-small">理想与现实的差距 | {lack}</text>
-  <rect x="20" y="548" width="240" height="66" rx="9" fill="#ffffff" stroke="#141413" stroke-width="2"/>
-  <text x="140" y="578" text-anchor="middle" class="svg-title">目标物</text>
-  <text x="140" y="600" text-anchor="middle" class="svg-small">填补差距的具体方案 | {target}</text>
-  <rect x="640" y="548" width="240" height="66" rx="9" fill="#ffffff" stroke="#141413" stroke-width="2"/>
-  <text x="760" y="578" text-anchor="middle" class="svg-title">消费者能力</text>
-  <text x="760" y="600" text-anchor="middle" class="svg-small">行动所需成本承受力 | {ability}</text>
-  <text x="450" y="375" text-anchor="middle" class="svg-title">需求成立</text>
-  <text x="450" y="403" text-anchor="middle" class="svg-body">动机清晰 + 成本可承受 + 场景触发</text>
-  <text x="450" y="438" text-anchor="middle" class="svg-score">总分 {total}</text>
-  <text x="450" y="636" text-anchor="middle" class="svg-caption">任一维度明显缺失，需求成立概率都会下降。</text>
+<svg class="triangle-svg" viewBox="0 0 760 430" role="img" aria-label="需求三角模型分析结构">
+  <rect x="0" y="0" width="760" height="430" fill="#ffffff"/>
+  <polygon points="380,70 168,324 592,324" fill="#ffffff" stroke="#1B365D" stroke-width="4" stroke-linejoin="round"/>
+  <circle cx="380" cy="262" r="88" fill="#ffffff" stroke="#141413" stroke-width="2"/>
+  <text x="380" y="32" text-anchor="middle" class="svg-title">缺乏感</text>
+  <text x="380" y="54" text-anchor="middle" class="svg-small">理想与现实的差距 | {lack}</text>
+  <text x="116" y="368" text-anchor="middle" class="svg-title">目标物</text>
+  <text x="116" y="390" text-anchor="middle" class="svg-small">填补差距的方案 | {target}</text>
+  <text x="644" y="368" text-anchor="middle" class="svg-title">消费者能力</text>
+  <text x="644" y="390" text-anchor="middle" class="svg-small">成本承受力 | {ability}</text>
+  <text x="380" y="246" text-anchor="middle" class="svg-title">需求成立</text>
+  <text x="380" y="273" text-anchor="middle" class="svg-body">动机清晰 + 成本可承受 + 场景触发</text>
+  <text x="380" y="306" text-anchor="middle" class="svg-score">总分 {total}</text>
+  <text x="380" y="420" text-anchor="middle" class="svg-caption">任一维度明显缺失，需求成立概率都会下降。</text>
 </svg>
 """
 
@@ -819,9 +812,10 @@ def render_html(report: Dict[str, Any]) -> str:
       --mono: "JetBrains Mono", "SF Mono", Consolas, "TsangerJinKai02", "Source Han Serif SC", monospace;
     }}
     * {{ box-sizing: border-box; }}
-    html {{ scroll-behavior: smooth; background: var(--paper); overflow-x: hidden; }}
+    html {{ scroll-behavior: smooth; scroll-padding-top: 78px; background: var(--paper); overflow-x: hidden; }}
     body {{
       margin: 0;
+      padding-top: 57px;
       background: var(--paper);
       color: var(--near-black);
       font-family: var(--serif);
@@ -831,16 +825,19 @@ def render_html(report: Dict[str, Any]) -> str:
       overflow-x: hidden;
     }}
     .top-nav {{
-      position: sticky;
+      position: fixed;
       top: 0;
-      z-index: 30;
-      background: var(--paper);
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: #ffffff;
       border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 14px rgba(20, 20, 19, 0.06);
     }}
     .nav-inner {{
       max-width: 1120px;
       margin: 0 auto;
-      padding: 12px 28px;
+      padding: 10px 28px;
       display: flex;
       align-items: center;
       gap: 24px;
@@ -851,6 +848,7 @@ def render_html(report: Dict[str, Any]) -> str:
       color: var(--near-black);
       font-size: 15px;
       line-height: 1.25;
+      font-weight: 500;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -866,8 +864,8 @@ def render_html(report: Dict[str, Any]) -> str:
       color: var(--brand);
       text-decoration: none;
       font-size: 14px;
-      padding: 4px 0;
-      border-bottom: 1px solid transparent;
+      padding: 5px 0 7px;
+      border-bottom: 2px solid transparent;
     }}
     .nav-links a:hover {{ border-bottom-color: var(--brand); }}
     main {{
@@ -914,9 +912,12 @@ def render_html(report: Dict[str, Any]) -> str:
       font-weight: 500;
     }}
     section {{
-      padding: 34px 0;
+      padding: 46px 0;
       border-top: 1px solid var(--border-soft);
       scroll-margin-top: 74px;
+    }}
+    section + section {{
+      margin-top: 8px;
     }}
     .lede {{
       max-width: 820px;
@@ -929,11 +930,12 @@ def render_html(report: Dict[str, Any]) -> str:
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 12px;
       margin-top: 22px;
+      align-items: start;
     }}
     .meta-item, .score-card, .fact-box, .dimension-card, .note {{
       border: 1px solid var(--border);
       background: var(--paper);
-      border-radius: 8px;
+      border-radius: 0;
       padding: 16px;
     }}
     .meta-item span, .score-card span {{
@@ -953,7 +955,7 @@ def render_html(report: Dict[str, Any]) -> str:
       display: inline-block;
       color: var(--brand);
       background: var(--brand-soft);
-      border-radius: 4px;
+      border-radius: 0;
       padding: 2px 8px;
       font-size: 14px;
     }}
@@ -978,6 +980,14 @@ def render_html(report: Dict[str, Any]) -> str:
       min-width: 720px;
       height: auto;
       display: block;
+    }}
+    .triangle-figure {{
+      text-align: center;
+    }}
+    .triangle-figure svg {{
+      max-width: 760px;
+      min-width: 0;
+      margin: 0 auto;
     }}
     .figure-caption {{
       margin-top: 8px;
@@ -1033,7 +1043,7 @@ def render_html(report: Dict[str, Any]) -> str:
       overflow-x: auto;
       margin: 14px 0 22px;
       border: 1px solid var(--border-soft);
-      border-radius: 8px;
+      border-radius: 0;
     }}
     table {{
       width: 100%;
@@ -1071,6 +1081,16 @@ def render_html(report: Dict[str, Any]) -> str:
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 16px;
     }}
+    .product-detail-grid {{
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+      margin-top: 22px;
+      align-items: start;
+    }}
+    .product-detail-grid h3 {{
+      margin-bottom: 10px;
+    }}
     .chart-grid {{
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1080,7 +1100,7 @@ def render_html(report: Dict[str, Any]) -> str:
     .chart-module {{
       border: 1px solid var(--border);
       background: var(--paper);
-      border-radius: 8px;
+      border-radius: 0;
       padding: 16px;
       break-inside: avoid;
     }}
@@ -1137,11 +1157,11 @@ def render_html(report: Dict[str, Any]) -> str:
       background: #ffffff;
     }}
     @media print {{
-      body {{ font-size: 10pt; line-height: 1.52; }}
+      body {{ padding-top: 0; font-size: 10pt; line-height: 1.52; }}
       .top-nav {{ display: none; }}
       main {{ max-width: none; padding: 0; }}
       section, .score-card, .fact-box, .risk-item {{ break-inside: avoid; }}
-      .dimension-grid, .meta-grid, .score-grid, .fact-grid, .two-col {{
+      .dimension-grid, .meta-grid, .score-grid, .fact-grid, .two-col, .product-detail-grid {{
         display: block;
       }}
       .chart-grid {{
@@ -1166,7 +1186,7 @@ def render_html(report: Dict[str, Any]) -> str:
       .nav-inner {{ padding: 10px 18px; display: block; }}
       .nav-title {{ max-width: none; margin-bottom: 8px; }}
       main {{ padding: 32px 18px 56px; }}
-      .meta-grid, .score-grid, .fact-grid, .dimension-grid, .two-col, .chart-grid {{
+      .meta-grid, .score-grid, .fact-grid, .dimension-grid, .two-col, .chart-grid, .product-detail-grid {{
         grid-template-columns: 1fr;
       }}
       h1 {{ font-size: 34px; }}
@@ -1225,10 +1245,10 @@ def render_html(report: Dict[str, Any]) -> str:
         <div class="fact-box"><h3>商业模式</h3><p>{h(canvas.get('business_model'))}</p></div>
         <div class="fact-box"><h3>假设</h3>{html_list(as_list(canvas.get('assumptions')))}</div>
       </div>
-      <h3>核心功能</h3>
-      {html_list(as_list(canvas.get('features')))}
-      <h3>定价信息</h3>
-      {html_list(as_list(canvas.get('pricing')))}
+      <div class="product-detail-grid">
+        <div class="fact-box"><h3>核心功能</h3>{html_list(as_list(canvas.get('features')))}</div>
+        <div class="fact-box"><h3>定价信息</h3>{html_list(as_list(canvas.get('pricing')))}</div>
+      </div>
     </section>
 
     <section id="evidence">
@@ -1249,7 +1269,7 @@ def render_html(report: Dict[str, Any]) -> str:
 
     <section id="triangle">
       <h2>需求三角分析</h2>
-      <figure class="diagram-block">
+      <figure class="diagram-block triangle-figure">
         {render_triangle_svg(report)}
         <figcaption class="figure-caption">图 2：需求三角模型。缺乏感、目标物和消费者能力共同决定需求成立概率。</figcaption>
       </figure>
