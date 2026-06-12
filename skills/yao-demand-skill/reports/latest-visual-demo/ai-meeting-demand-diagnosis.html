@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 会议纪要工具需求评估报告</title>
+  <meta name="generator" content="Yao Demand Skill">
+  <style>
+    :root {
+      --paper: #ffffff;
+      --near-black: #141413;
+      --dark-warm: #3d3d3a;
+      --olive: #504e49;
+      --stone: #6b6a64;
+      --border: #e8e6dc;
+      --border-soft: #efeee8;
+      --brand: #1B365D;
+      --brand-soft: #EEF2F7;
+      --green: #2f6f4e;
+      --amber: #8a641f;
+      --red: #9b3a32;
+      --serif: "TsangerJinKai02", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "STSong", Georgia, serif;
+      --mono: "JetBrains Mono", "SF Mono", Consolas, "TsangerJinKai02", "Source Han Serif SC", monospace;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 78px; background: var(--paper); overflow-x: hidden; }
+    body {
+      margin: 0;
+      padding-top: 57px;
+      background: var(--paper);
+      color: var(--near-black);
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.58;
+      letter-spacing: 0;
+      overflow-x: hidden;
+    }
+    .top-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 14px rgba(20, 20, 19, 0.06);
+    }
+    .nav-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 10px 28px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .nav-title {
+      min-width: 180px;
+      max-width: 320px;
+      color: var(--near-black);
+      font-size: 15px;
+      line-height: 1.25;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .nav-links {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      white-space: nowrap;
+    }
+    .nav-links a {
+      color: var(--brand);
+      text-decoration: none;
+      font-size: 14px;
+      padding: 5px 0 7px;
+      border-bottom: 2px solid transparent;
+    }
+    .nav-links a:hover { border-bottom-color: var(--brand); }
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 48px 28px 72px;
+    }
+    header.report-header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 28px;
+      margin-bottom: 28px;
+    }
+    .eyebrow {
+      color: var(--brand);
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(32px, 5vw, 54px);
+      line-height: 1.12;
+      font-weight: 500;
+    }
+    h2 {
+      margin: 0 0 16px;
+      font-size: 26px;
+      line-height: 1.25;
+      font-weight: 500;
+      border-left: 4px solid var(--brand);
+      padding-left: 12px;
+    }
+    h3 {
+      margin: 0 0 8px;
+      font-size: 19px;
+      line-height: 1.3;
+      font-weight: 500;
+    }
+    h4 {
+      margin: 18px 0 8px;
+      font-size: 15px;
+      line-height: 1.35;
+      color: var(--dark-warm);
+      font-weight: 500;
+    }
+    section {
+      padding: 46px 0;
+      border-top: 1px solid var(--border-soft);
+      scroll-margin-top: 74px;
+    }
+    section + section {
+      margin-top: 8px;
+    }
+    .lede {
+      max-width: 820px;
+      color: var(--dark-warm);
+      font-size: 18px;
+      line-height: 1.62;
+    }
+    .meta-grid, .score-grid, .fact-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 22px;
+      align-items: start;
+    }
+    .meta-item, .score-card, .fact-box, .dimension-card, .note {
+      border: 1px solid var(--border);
+      background: var(--paper);
+      border-radius: 0;
+      padding: 16px;
+    }
+    .meta-item span, .score-card span {
+      display: block;
+      color: var(--stone);
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+    .score-card strong {
+      display: block;
+      font-size: 28px;
+      line-height: 1.1;
+      font-weight: 500;
+      color: var(--brand);
+    }
+    .decision {
+      display: inline-block;
+      color: var(--brand);
+      background: var(--brand-soft);
+      border-radius: 0;
+      padding: 2px 8px;
+      font-size: 14px;
+    }
+    .total-score {
+      border-top: 4px solid var(--brand);
+    }
+    .band-strong strong, .band-good strong { color: var(--green); }
+    .band-uncertain strong { color: var(--amber); }
+    .band-fragile strong, .band-weak strong { color: var(--red); }
+    .dimension-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .diagram-block {
+      margin: 18px 0 26px;
+      padding: 0;
+      overflow-x: auto;
+    }
+    .diagram-block svg {
+      width: 100%;
+      min-width: 720px;
+      height: auto;
+      display: block;
+    }
+    .triangle-figure {
+      text-align: center;
+    }
+    .triangle-figure svg {
+      max-width: 760px;
+      min-width: 0;
+      margin: 0 auto;
+    }
+    .figure-caption {
+      margin-top: 8px;
+      color: var(--stone);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    .svg-title {
+      font-family: var(--serif);
+      font-size: 19px;
+      font-weight: 500;
+      fill: #141413;
+    }
+    .svg-body {
+      font-family: var(--serif);
+      font-size: 17px;
+      fill: #141413;
+    }
+    .svg-small {
+      font-family: var(--serif);
+      font-size: 13px;
+      fill: #3d3d3a;
+    }
+    .svg-score {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 500;
+      fill: #1B365D;
+    }
+    .svg-caption {
+      font-family: var(--serif);
+      font-size: 15px;
+      font-weight: 500;
+      fill: #141413;
+    }
+    .dimension-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-soft);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+    .dimension-head span {
+      color: var(--brand);
+      font-size: 28px;
+      line-height: 1;
+    }
+    .table-wrap {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      margin: 14px 0 22px;
+      border: 1px solid var(--border-soft);
+      border-radius: 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    table.compact { font-size: 13px; }
+    th {
+      text-align: left;
+      color: var(--dark-warm);
+      font-weight: 500;
+      background: #fbfbfa;
+      border-bottom: 1px solid var(--border);
+      padding: 10px 12px;
+    }
+    td {
+      vertical-align: top;
+      border-bottom: 1px solid var(--border-soft);
+      padding: 9px 12px;
+      overflow-wrap: anywhere;
+    }
+    tr:last-child td { border-bottom: 0; }
+    ul { margin: 8px 0 0 20px; padding: 0; }
+    li { margin: 4px 0; }
+    .muted { color: var(--stone); }
+    .note {
+      margin-top: 14px;
+      background: #fbfbfa;
+      overflow-wrap: anywhere;
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+    }
+    .product-detail-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+      margin-top: 22px;
+      align-items: start;
+    }
+    .product-detail-grid h3 {
+      margin-bottom: 10px;
+    }
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      align-items: stretch;
+    }
+    .chart-module {
+      border: 1px solid var(--border);
+      background: var(--paper);
+      border-radius: 0;
+      padding: 16px;
+      break-inside: avoid;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-width: 0;
+    }
+    .chart-module-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      border-bottom: 1px solid var(--border-soft);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+    .chart-kicker {
+      display: inline-block;
+      color: var(--brand);
+      font-size: 12px;
+      line-height: 1;
+      margin-bottom: 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .chart-confidence {
+      flex: 0 0 auto;
+      max-width: 190px;
+      color: var(--stone);
+      font-size: 12px;
+      line-height: 1.35;
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+    .chart-svg-wrap {
+      width: 100%;
+      overflow-x: auto;
+      margin: 8px 0 12px;
+    }
+    .chart-svg-wrap svg {
+      display: block;
+      width: 100%;
+      min-width: 520px;
+      height: auto;
+      background: #ffffff;
+    }
+    .chart-insight, .chart-recommendation {
+      margin: 8px 0 0;
+      color: var(--dark-warm);
+      font-size: 14px;
+      line-height: 1.52;
+      overflow-wrap: anywhere;
+    }
+    .chart-insight {
+      margin-top: auto;
+    }
+    a { color: var(--brand); overflow-wrap: anywhere; }
+    @page {
+      size: A4;
+      margin: 18mm 20mm 20mm 20mm;
+      background: #ffffff;
+    }
+    @media print {
+      body { padding-top: 0; font-size: 10pt; line-height: 1.52; }
+      .top-nav { display: none; }
+      main { max-width: none; padding: 0; }
+      section, .score-card, .fact-box, .risk-item { break-inside: avoid; }
+      .dimension-grid, .meta-grid, .score-grid, .fact-grid, .two-col, .product-detail-grid {
+        display: block;
+      }
+      .chart-grid {
+        display: block;
+      }
+      .chart-module {
+        margin-bottom: 11pt;
+      }
+      .chart-svg-wrap {
+        overflow: visible;
+      }
+      .chart-svg-wrap svg {
+        min-width: 0;
+      }
+      .dimension-card, .score-card, .meta-item, .fact-box {
+        margin-bottom: 10pt;
+      }
+      table { min-width: 0; font-size: 8.5pt; }
+      .table-wrap { overflow: visible; border: 0; }
+    }
+    @media (max-width: 820px) {
+      .nav-inner { padding: 10px 18px; display: block; }
+      .nav-title { max-width: none; margin-bottom: 8px; }
+      main { padding: 32px 18px 56px; }
+      .meta-grid, .score-grid, .fact-grid, .dimension-grid, .two-col, .chart-grid, .product-detail-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      h1 { font-size: 34px; }
+      h2 { font-size: 23px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="nav-inner">
+      <div class="nav-title">AI 会议纪要工具</div>
+      <div class="nav-links"><a href="#summary">摘要</a><a href="#visuals">图表</a><a href="#product">产品</a><a href="#users">用户</a><a href="#competitors">竞品</a><a href="#triangle">三角</a><a href="#evidence">证据</a><a href="#recommendations">建议</a><a href="#forecast">预测</a><a href="#risks">风险</a><a href="#final">方案</a><a href="#method">方法</a><a href="#appendix">附录</a></div>
+    </div>
+  </nav>
+  <main>
+    <header class="report-header">
+      <div class="eyebrow">需求三角评估报告</div>
+      <h1>AI 会议纪要工具需求评估报告</h1>
+      <p class="lede">AI 会议纪要工具的缺乏感较强，但需求能否成立主要取决于隐私合规、会议软件集成和准确率信任能否被快速证明。</p>
+      <div class="meta-grid">
+        <div class="meta-item"><span>产品</span>AI 会议纪要工具</div>
+        <div class="meta-item"><span>日期</span>2026-06-09</div>
+        <div class="meta-item"><span>目标市场</span>中国与海外通用的知识工作团队</div>
+        <div class="meta-item"><span>建议决策</span><span class="decision">先补验证</span></div>
+      </div>
+      <div class="score-grid">
+        <div class="score-card total-score band-fragile"><span>总分</span><strong>5.0</strong></div>
+        <div class="score-card"><span>缺乏感</span><strong>7.2</strong></div>
+        <div class="score-card"><span>目标物</span><strong>6.9</strong></div>
+        <div class="score-card"><span>消费者能力</span><strong>5.6</strong></div>
+      </div>
+    </header>
+
+    <section id="summary">
+      <h2>执行摘要</h2>
+      <div class="two-col">
+        <div class="fact-box"><h3>最大机会</h3><p>高会议密度团队普遍存在会后信息丢失、行动项不清和复盘成本高的问题。</p></div>
+        <div class="fact-box"><h3>最大风险</h3><p>如果隐私、准确率和组织审批证据不足，用户会停留在试用或个人使用阶段。</p></div>
+      </div>
+      <div class="note"><strong>最短板：</strong>消费者能力<br><strong>下一步：</strong>聚焦高会议密度销售团队，把产品从泛纪要工具收窄为客户会议行动项闭环工具，用安全信任材料和真实 Demo 证明可被组织采用。</div>
+    </section>
+
+    <section id="visuals">
+      <h2>可视化诊断</h2>
+      <p class="lede">这些图表把需求强弱、短板、证据、风险和行动优先级压缩成可扫描的诊断模块。每个模块都包含解读和建议，避免只有图表没有判断。</p>
+      <div class="chart-grid">
+
+    <article class="chart-module" id="chart-total_score_gauge">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">score_gauge</span>
+          <h3>总分诊断：需求可疑但值得验证</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.76 | S1 S2</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 840 270" role="img" aria-label="总分诊断图表"><rect x="0" y="0" width="840" height="270" fill="#ffffff"/><text x="70" y="54" font-size="24" fill="#141413" font-family="serif">需求总分</text><text x="770" y="54" text-anchor="end" font-size="34" fill="#1B365D" font-family="serif">5.0</text><rect x="70.0" y="104" width="265.2" height="42" fill="#f4e5e2" stroke="#ffffff"/><text x="202.6" y="172" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">弱</text><rect x="342.0" y="104" width="95.2" height="42" fill="#f2ead9" stroke="#ffffff"/><text x="389.6" y="172" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">脆弱</text><rect x="444.0" y="104" width="81.6" height="42" fill="#eef2f7" stroke="#ffffff"/><text x="484.8" y="172" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">可验证</text><rect x="532.4" y="104" width="88.4" height="42" fill="#e7f0ea" stroke="#ffffff"/><text x="576.6" y="172" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">较强</text><rect x="627.6" y="104" width="122.4" height="42" fill="#dfece5" stroke="#ffffff"/><text x="688.8" y="172" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">强</text><line x1="70" y1="146" x2="750" y2="146" stroke="#141413" stroke-width="1"/><line x1="409.3" y1="82" x2="409.3" y2="158" stroke="#141413" stroke-width="3"/><circle cx="409.3" cy="82" r="7" fill="#1B365D"/><text x="70" y="222" font-size="18" fill="#141413" font-family="serif">建议动作：先补验证</text></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>总分处在脆弱到可验证的交界，说明这个方向有真实场景，但证据和采用能力还不足以支撑规模投入。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>先把验证目标放在企业信任、准确率和集成，而不是直接扩大投放。</p>
+    </article>
+
+
+    <article class="chart-module" id="chart-triangle_radar">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">radar</span>
+          <h3>需求三角雷达：消费者能力拖后腿</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.78 | S1 S2</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 840 470" role="img" aria-label="雷达图"><rect x="0" y="0" width="840" height="470" fill="#ffffff"/><polygon points="420.0,199.5 450.7,252.8 389.3,252.8" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="420.0,164.0 481.5,270.5 358.5,270.5" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="420.0,128.5 512.2,288.2 327.8,288.2" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="420.0,93.0 543.0,306.0 297.0,306.0" fill="none" stroke="#efeee8" stroke-width="1"/><line x1="420" y1="235" x2="420.0" y2="93.0" stroke="#e8e6dc" stroke-width="1"/><text x="420.0" y="51.0" text-anchor="middle" font-size="15" fill="#3d3d3a" font-family="serif">缺乏感</text><text x="420.0" y="69.0" text-anchor="middle" font-size="13" fill="#1B365D" font-family="serif">7.2</text><line x1="420" y1="235" x2="543.0" y2="306.0" stroke="#e8e6dc" stroke-width="1"/><text x="591.5" y="327.0" text-anchor="start" font-size="15" fill="#3d3d3a" font-family="serif">目标物</text><text x="591.5" y="345.0" text-anchor="start" font-size="13" fill="#1B365D" font-family="serif">6.9</text><line x1="420" y1="235" x2="297.0" y2="306.0" stroke="#e8e6dc" stroke-width="1"/><text x="248.5" y="327.0" text-anchor="end" font-size="15" fill="#3d3d3a" font-family="serif">消费者能力</text><text x="248.5" y="345.0" text-anchor="end" font-size="13" fill="#1B365D" font-family="serif">5.6</text><polygon points="420.0,132.8 504.9,284.0 351.6,274.5" fill="#EEF2F7" fill-opacity="0.82" stroke="#1B365D" stroke-width="3"/><circle cx="420" cy="235" r="3" fill="#141413"/></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>缺乏感和目标物并不弱，真正限制需求成立的是用户能不能放心买、顺利用、长期留。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>把短期迭代重心放在降低信任成本和组织采用成本。</p>
+    </article>
+
+
+    <article class="chart-module" id="chart-dimension_short_board">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">bar</span>
+          <h3>三大维度短板：能力成本最需要修</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.78 | S1 S2</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 840 230" role="img" aria-label="条形图"><rect x="0" y="0" width="840" height="230" fill="#ffffff"/><text x="42" y="57" font-size="15" fill="#141413" font-family="serif">缺乏感</text><rect x="220" y="40" width="540" height="20" fill="#f7f7f4" stroke="#efeee8"/><rect x="220" y="40" width="381.6" height="20" fill="#1B365D"/><text x="778" y="57" text-anchor="end" font-size="15" fill="#2f6f4e" font-family="serif">7.2</text><text x="42" y="99" font-size="15" fill="#141413" font-family="serif">目标物</text><rect x="220" y="82" width="540" height="20" fill="#f7f7f4" stroke="#efeee8"/><rect x="220" y="82" width="365.7" height="20" fill="#1B365D"/><text x="778" y="99" text-anchor="end" font-size="15" fill="#8a641f" font-family="serif">6.9</text><text x="42" y="141" font-size="15" fill="#141413" font-family="serif">消费者能力</text><rect x="220" y="124" width="540" height="20" fill="#f7f7f4" stroke="#efeee8"/><rect x="220" y="124" width="294.7" height="20" fill="#1B365D"/><text x="778" y="141" text-anchor="end" font-size="15" fill="#8a641f" font-family="serif">5.6</text></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>短板不在用户是否有会议纪要问题，而在采用这类工具带来的隐私、审批、准确率和流程改变成本。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>先证明工具能安全进入现有会议和任务流程，再讨论规模化增长。</p>
+    </article>
+
+
+    <article class="chart-module" id="chart-subscore_heatmap">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">heatmap</span>
+          <h3>子项热力图：信任与风险成本是红区</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.74 | S1 S2</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 854 318" role="img" aria-label="热力图"><rect x="0" y="0" width="854" height="318" fill="#ffffff"/><text x="36" y="74" font-size="16" fill="#141413" font-family="serif">缺乏感</text><rect x="132" y="42" width="88" height="56" rx="5" fill="#e7f0ea" stroke="#e8e6dc"/><text x="176.0" y="64" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">强度</text><text x="176.0" y="86" text-anchor="middle" font-size="18" fill="#2f6f4e" font-family="serif">8</text><rect x="228" y="42" width="88" height="56" rx="5" fill="#e7f0ea" stroke="#e8e6dc"/><text x="272.0" y="64" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">频率</text><text x="272.0" y="86" text-anchor="middle" font-size="18" fill="#2f6f4e" font-family="serif">8</text><rect x="324" y="42" width="88" height="56" rx="5" fill="#e7f0ea" stroke="#e8e6dc"/><text x="368.0" y="64" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">紧迫性</text><text x="368.0" y="86" text-anchor="middle" font-size="18" fill="#2f6f4e" font-family="serif">7</text><rect x="420" y="42" width="88" height="56" rx="5" fill="#e7f0ea" stroke="#e8e6dc"/><text x="464.0" y="64" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">认知</text><text x="464.0" y="86" text-anchor="middle" font-size="18" fill="#2f6f4e" font-family="serif">7</text><rect x="516" y="42" width="88" height="56" rx="5" fill="#e7f0ea" stroke="#e8e6dc"/><text x="560.0" y="64" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">趋势</text><text x="560.0" y="86" text-anchor="middle" font-size="18" fill="#2f6f4e" font-family="serif">7</text><rect x="612" y="42" width="88" height="56" rx="5" fill="#f2ead9" stroke="#e8e6dc"/><text x="656.0" y="64" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">付费意愿</text><text x="656.0" y="86" text-anchor="middle" font-size="18" fill="#8a641f" font-family="serif">6</text><text x="36" y="156" font-size="16" fill="#141413" font-family="serif">目标物</text><rect x="132" y="124" width="88" height="56" rx="5" fill="#e7f0ea" stroke="#e8e6dc"/><text x="176.0" y="146" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">JTBD匹配</text><text x="176.0" y="168" text-anchor="middle" font-size="18" fill="#2f6f4e" font-family="serif">8</text><rect x="228" y="124" width="88" height="56" rx="5" fill="#e7f0ea" stroke="#e8e6dc"/><text x="272.0" y="146" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">清晰度</text><text x="272.0" y="168" text-anchor="middle" font-size="18" fill="#2f6f4e" font-family="serif">8</text><rect x="324" y="124" width="88" height="56" rx="5" fill="#f2ead9" stroke="#e8e6dc"/><text x="368.0" y="146" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">差异化</text><text x="368.0" y="168" text-anchor="middle" font-size="18" fill="#8a641f" font-family="serif">6</text><rect x="420" y="124" width="88" height="56" rx="5" fill="#f2ead9" stroke="#e8e6dc"/><text x="464.0" y="146" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">证明</text><text x="464.0" y="168" text-anchor="middle" font-size="18" fill="#8a641f" font-family="serif">5</text><rect x="516" y="124" width="88" height="56" rx="5" fill="#e7f0ea" stroke="#e8e6dc"/><text x="560.0" y="146" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">品类认知</text><text x="560.0" y="168" text-anchor="middle" font-size="18" fill="#2f6f4e" font-family="serif">7</text><rect x="612" y="124" width="88" height="56" rx="5" fill="#e7f0ea" stroke="#e8e6dc"/><text x="656.0" y="146" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">见效速度</text><text x="656.0" y="168" text-anchor="middle" font-size="18" fill="#2f6f4e" font-family="serif">7</text><text x="36" y="238" font-size="16" fill="#141413" font-family="serif">消费者能力</text><rect x="132" y="206" width="88" height="56" rx="5" fill="#f2ead9" stroke="#e8e6dc"/><text x="176.0" y="228" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">价格</text><text x="176.0" y="250" text-anchor="middle" font-size="18" fill="#8a641f" font-family="serif">6</text><rect x="228" y="206" width="88" height="56" rx="5" fill="#f2ead9" stroke="#e8e6dc"/><text x="272.0" y="228" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">行动成本</text><text x="272.0" y="250" text-anchor="middle" font-size="18" fill="#8a641f" font-family="serif">6</text><rect x="324" y="206" width="88" height="56" rx="5" fill="#e7f0ea" stroke="#e8e6dc"/><text x="368.0" y="228" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">学习成本</text><text x="368.0" y="250" text-anchor="middle" font-size="18" fill="#2f6f4e" font-family="serif">7</text><rect x="420" y="206" width="88" height="56" rx="5" fill="#f4e5e2" stroke="#e8e6dc"/><text x="464.0" y="228" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">信任成本</text><text x="464.0" y="250" text-anchor="middle" font-size="18" fill="#9b3a32" font-family="serif">4</text><rect x="516" y="206" width="88" height="56" rx="5" fill="#f4e5e2" stroke="#e8e6dc"/><text x="560.0" y="228" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">风险成本</text><text x="560.0" y="250" text-anchor="middle" font-size="18" fill="#9b3a32" font-family="serif">4</text><rect x="612" y="206" width="88" height="56" rx="5" fill="#e7f0ea" stroke="#e8e6dc"/><text x="656.0" y="228" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">身份成本</text><text x="656.0" y="250" text-anchor="middle" font-size="18" fill="#2f6f4e" font-family="serif">7</text><rect x="708" y="206" width="88" height="56" rx="5" fill="#f2ead9" stroke="#e8e6dc"/><text x="752.0" y="228" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">可获得性</text><text x="752.0" y="250" text-anchor="middle" font-size="18" fill="#8a641f" font-family="serif">6</text></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>低分集中在证明、信任成本和风险成本，说明产品不是概念难懂，而是用户不敢把会议资产交给它。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>把安全、权限、准确率边界和失败回退写成产品核心卖点，而不是附录材料。</p>
+    </article>
+
+
+    <article class="chart-module" id="chart-lack_detail_radar">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">radar</span>
+          <h3>缺乏感细分：高频痛点存在</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.72 | S1</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 840 470" role="img" aria-label="雷达图"><rect x="0" y="0" width="840" height="470" fill="#ffffff"/><polygon points="420.0,199.5 450.7,217.2 450.7,252.8 420.0,270.5 389.3,252.8 389.3,217.2" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="420.0,164.0 481.5,199.5 481.5,270.5 420.0,306.0 358.5,270.5 358.5,199.5" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="420.0,128.5 512.2,181.8 512.2,288.2 420.0,341.5 327.8,288.2 327.8,181.8" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="420.0,93.0 543.0,164.0 543.0,306.0 420.0,377.0 297.0,306.0 297.0,164.0" fill="none" stroke="#efeee8" stroke-width="1"/><line x1="420" y1="235" x2="420.0" y2="93.0" stroke="#e8e6dc" stroke-width="1"/><text x="420.0" y="51.0" text-anchor="middle" font-size="15" fill="#3d3d3a" font-family="serif">强度</text><text x="420.0" y="69.0" text-anchor="middle" font-size="13" fill="#1B365D" font-family="serif">8.0</text><line x1="420" y1="235" x2="543.0" y2="164.0" stroke="#e8e6dc" stroke-width="1"/><text x="591.5" y="143.0" text-anchor="start" font-size="15" fill="#3d3d3a" font-family="serif">频率</text><text x="591.5" y="161.0" text-anchor="start" font-size="13" fill="#1B365D" font-family="serif">8.0</text><line x1="420" y1="235" x2="543.0" y2="306.0" stroke="#e8e6dc" stroke-width="1"/><text x="591.5" y="327.0" text-anchor="start" font-size="15" fill="#3d3d3a" font-family="serif">紧迫性</text><text x="591.5" y="345.0" text-anchor="start" font-size="13" fill="#1B365D" font-family="serif">7.0</text><line x1="420" y1="235" x2="420.0" y2="377.0" stroke="#e8e6dc" stroke-width="1"/><text x="420.0" y="419.0" text-anchor="middle" font-size="15" fill="#3d3d3a" font-family="serif">认知</text><text x="420.0" y="437.0" text-anchor="middle" font-size="13" fill="#1B365D" font-family="serif">7.0</text><line x1="420" y1="235" x2="297.0" y2="306.0" stroke="#e8e6dc" stroke-width="1"/><text x="248.5" y="327.0" text-anchor="end" font-size="15" fill="#3d3d3a" font-family="serif">趋势</text><text x="248.5" y="345.0" text-anchor="end" font-size="13" fill="#1B365D" font-family="serif">7.0</text><line x1="420" y1="235" x2="297.0" y2="164.0" stroke="#e8e6dc" stroke-width="1"/><text x="248.5" y="143.0" text-anchor="end" font-size="15" fill="#3d3d3a" font-family="serif">付费意愿</text><text x="248.5" y="161.0" text-anchor="end" font-size="13" fill="#1B365D" font-family="serif">6.0</text><polygon points="420.0,121.4 518.4,178.2 506.1,284.7 420.0,334.4 333.9,284.7 346.2,192.4" fill="#EEF2F7" fill-opacity="0.82" stroke="#1B365D" stroke-width="3"/><circle cx="420" cy="235" r="3" fill="#141413"/></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>会议后整理和行动项遗漏是高频问题，但付费意愿仍需要真实价格和竞品转化数据校准。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>用访谈和落地页验证用户是否愿意为行动项同步而不是单纯纪要付费。</p>
+    </article>
+
+
+    <article class="chart-module" id="chart-target_object_detail_radar">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">radar</span>
+          <h3>目标物细分：价值清晰但证明不足</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.73 | S1 S2</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 840 470" role="img" aria-label="雷达图"><rect x="0" y="0" width="840" height="470" fill="#ffffff"/><polygon points="420.0,199.5 450.7,217.2 450.7,252.8 420.0,270.5 389.3,252.8 389.3,217.2" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="420.0,164.0 481.5,199.5 481.5,270.5 420.0,306.0 358.5,270.5 358.5,199.5" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="420.0,128.5 512.2,181.8 512.2,288.2 420.0,341.5 327.8,288.2 327.8,181.8" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="420.0,93.0 543.0,164.0 543.0,306.0 420.0,377.0 297.0,306.0 297.0,164.0" fill="none" stroke="#efeee8" stroke-width="1"/><line x1="420" y1="235" x2="420.0" y2="93.0" stroke="#e8e6dc" stroke-width="1"/><text x="420.0" y="51.0" text-anchor="middle" font-size="15" fill="#3d3d3a" font-family="serif">JTBD匹配</text><text x="420.0" y="69.0" text-anchor="middle" font-size="13" fill="#1B365D" font-family="serif">8.0</text><line x1="420" y1="235" x2="543.0" y2="164.0" stroke="#e8e6dc" stroke-width="1"/><text x="591.5" y="143.0" text-anchor="start" font-size="15" fill="#3d3d3a" font-family="serif">清晰度</text><text x="591.5" y="161.0" text-anchor="start" font-size="13" fill="#1B365D" font-family="serif">8.0</text><line x1="420" y1="235" x2="543.0" y2="306.0" stroke="#e8e6dc" stroke-width="1"/><text x="591.5" y="327.0" text-anchor="start" font-size="15" fill="#3d3d3a" font-family="serif">差异化</text><text x="591.5" y="345.0" text-anchor="start" font-size="13" fill="#1B365D" font-family="serif">6.0</text><line x1="420" y1="235" x2="420.0" y2="377.0" stroke="#e8e6dc" stroke-width="1"/><text x="420.0" y="419.0" text-anchor="middle" font-size="15" fill="#3d3d3a" font-family="serif">证明</text><text x="420.0" y="437.0" text-anchor="middle" font-size="13" fill="#1B365D" font-family="serif">5.0</text><line x1="420" y1="235" x2="297.0" y2="306.0" stroke="#e8e6dc" stroke-width="1"/><text x="248.5" y="327.0" text-anchor="end" font-size="15" fill="#3d3d3a" font-family="serif">品类认知</text><text x="248.5" y="345.0" text-anchor="end" font-size="13" fill="#1B365D" font-family="serif">7.0</text><line x1="420" y1="235" x2="297.0" y2="164.0" stroke="#e8e6dc" stroke-width="1"/><text x="248.5" y="143.0" text-anchor="end" font-size="15" fill="#3d3d3a" font-family="serif">见效速度</text><text x="248.5" y="161.0" text-anchor="end" font-size="13" fill="#1B365D" font-family="serif">7.0</text><polygon points="420.0,121.4 518.4,178.2 493.8,277.6 420.0,306.0 333.9,284.7 333.9,185.3" fill="#EEF2F7" fill-opacity="0.82" stroke="#1B365D" stroke-width="3"/><circle cx="420" cy="235" r="3" fill="#141413"/></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>产品能被一句话理解，但缺少能压过会议软件自带能力和通用 AI 的证明材料。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>把演示重点从“自动生成摘要”改成“准确识别责任人、截止时间和 CRM/任务同步”。</p>
+    </article>
+
+
+    <article class="chart-module" id="chart-consumer_ability_detail_radar">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">radar</span>
+          <h3>消费者能力细分：信任成本最低</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.74 | S1</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 840 470" role="img" aria-label="雷达图"><rect x="0" y="0" width="840" height="470" fill="#ffffff"/><polygon points="420.0,199.5 447.8,212.9 454.6,242.9 435.4,267.0 404.6,267.0 385.4,242.9 392.2,212.9" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="420.0,164.0 475.5,190.7 489.2,250.8 450.8,299.0 389.2,299.0 350.8,250.8 364.5,190.7" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="420.0,128.5 503.3,168.6 523.8,258.7 466.2,331.0 373.8,331.0 316.2,258.7 336.7,168.6" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="420.0,93.0 531.0,146.5 558.4,266.6 481.6,362.9 358.4,362.9 281.6,266.6 309.0,146.5" fill="none" stroke="#efeee8" stroke-width="1"/><line x1="420" y1="235" x2="420.0" y2="93.0" stroke="#e8e6dc" stroke-width="1"/><text x="420.0" y="51.0" text-anchor="middle" font-size="15" fill="#3d3d3a" font-family="serif">价格</text><text x="420.0" y="69.0" text-anchor="middle" font-size="13" fill="#1B365D" font-family="serif">6.0</text><line x1="420" y1="235" x2="531.0" y2="146.5" stroke="#e8e6dc" stroke-width="1"/><text x="574.8" y="120.3" text-anchor="start" font-size="15" fill="#3d3d3a" font-family="serif">行动成本</text><text x="574.8" y="138.3" text-anchor="start" font-size="13" fill="#1B365D" font-family="serif">6.0</text><line x1="420" y1="235" x2="558.4" y2="266.6" stroke="#e8e6dc" stroke-width="1"/><text x="613.0" y="275.9" text-anchor="start" font-size="15" fill="#3d3d3a" font-family="serif">学习成本</text><text x="613.0" y="293.9" text-anchor="start" font-size="13" fill="#1B365D" font-family="serif">7.0</text><line x1="420" y1="235" x2="481.6" y2="362.9" stroke="#e8e6dc" stroke-width="1"/><text x="505.9" y="400.8" text-anchor="start" font-size="15" fill="#3d3d3a" font-family="serif">信任成本</text><text x="505.9" y="418.8" text-anchor="start" font-size="13" fill="#1B365D" font-family="serif">4.0</text><line x1="420" y1="235" x2="358.4" y2="362.9" stroke="#e8e6dc" stroke-width="1"/><text x="334.1" y="400.8" text-anchor="end" font-size="15" fill="#3d3d3a" font-family="serif">风险成本</text><text x="334.1" y="418.8" text-anchor="end" font-size="13" fill="#1B365D" font-family="serif">4.0</text><line x1="420" y1="235" x2="281.6" y2="266.6" stroke="#e8e6dc" stroke-width="1"/><text x="227.0" y="275.9" text-anchor="end" font-size="15" fill="#3d3d3a" font-family="serif">身份成本</text><text x="227.0" y="293.9" text-anchor="end" font-size="13" fill="#1B365D" font-family="serif">7.0</text><line x1="420" y1="235" x2="309.0" y2="146.5" stroke="#e8e6dc" stroke-width="1"/><text x="265.2" y="120.3" text-anchor="end" font-size="15" fill="#3d3d3a" font-family="serif">可获得性</text><text x="265.2" y="138.3" text-anchor="end" font-size="13" fill="#1B365D" font-family="serif">6.0</text><polygon points="420.0,149.8 486.6,181.9 516.9,257.1 444.6,286.2 395.4,286.2 323.1,257.1 353.4,181.9" fill="#EEF2F7" fill-opacity="0.82" stroke="#1B365D" stroke-width="3"/><circle cx="420" cy="235" r="3" fill="#141413"/></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>用户学习这个工具并不难，难点是组织是否允许录音、保存、转写和同步敏感会议内容。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>先做企业级权限、数据保留、删除机制和安全说明，再做团队扩张。</p>
+    </article>
+
+
+    <article class="chart-module" id="chart-segment_opportunity_matrix">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">matrix</span>
+          <h3>用户分群机会矩阵：先打销售团队</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.70 | S1</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 840 430" role="img" aria-label="矩阵图"><rect x="0" y="0" width="840" height="430" fill="#ffffff"/><rect x="90" y="44" width="640" height="310" fill="#ffffff" stroke="#141413" stroke-width="1.5"/><line x1="410.0" y1="44" x2="410.0" y2="354" stroke="#efeee8" stroke-width="2"/><line x1="90" y1="199.0" x2="730" y2="199.0" stroke="#efeee8" stroke-width="2"/><text x="410.0" y="398" text-anchor="middle" font-size="16" fill="#3d3d3a" font-family="serif">采用能力</text><text x="24" y="199.0" transform="rotate(-90 24 199.0)" text-anchor="middle" font-size="16" fill="#3d3d3a" font-family="serif">缺乏强度</text><circle cx="499.6" cy="102.9" r="15.6" fill="#EEF2F7" stroke="#1B365D" stroke-width="2"/><text x="520.2" y="106.9" font-size="13" fill="#141413" font-family="serif">高会议密度销售团队</text><circle cx="461.2" cy="124.6" r="14.4" fill="#EEF2F7" stroke="#1B365D" stroke-width="2"/><text x="480.6" y="128.6" font-size="13" fill="#141413" font-family="serif">产品与项目负责人</text><circle cx="422.8" cy="143.2" r="13.2" fill="#EEF2F7" stroke="#1B365D" stroke-width="2"/><text x="441.0" y="147.2" font-size="13" fill="#141413" font-family="serif">管理运营团队</text></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>销售团队的会议结果和客户承诺更直接关联收入，缺乏强度更高，也更容易形成 ROI 叙事。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>首轮验证聚焦销售主管或 RevOps，而不是泛泛面向所有知识工作者。</p>
+    </article>
+
+
+    <article class="chart-module" id="chart-competitor_position_matrix">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">matrix</span>
+          <h3>竞品与替代方案定位：差异化必须避开泛摘要</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.68 | S2</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 840 430" role="img" aria-label="矩阵图"><rect x="0" y="0" width="840" height="430" fill="#ffffff"/><rect x="90" y="44" width="640" height="310" fill="#ffffff" stroke="#141413" stroke-width="1.5"/><line x1="410.0" y1="44" x2="410.0" y2="354" stroke="#efeee8" stroke-width="2"/><line x1="90" y1="199.0" x2="730" y2="199.0" stroke="#efeee8" stroke-width="2"/><text x="410.0" y="398" text-anchor="middle" font-size="16" fill="#3d3d3a" font-family="serif">业务闭环能力</text><text x="24" y="199.0" transform="rotate(-90 24 199.0)" text-anchor="middle" font-size="16" fill="#3d3d3a" font-family="serif">采用成本优势</text><circle cx="550.8" cy="180.4" r="15.6" fill="#EEF2F7" stroke="#1B365D" stroke-width="2"/><text x="571.4" y="184.4" font-size="13" fill="#141413" font-family="serif">AI会议纪要工具</text><circle cx="506.0" cy="223.8" r="13.2" fill="#EEF2F7" stroke="#1B365D" stroke-width="2"/><text x="524.2" y="227.8" font-size="13" fill="#141413" font-family="serif">人工纪要</text><circle cx="422.8" cy="127.7" r="14.4" fill="#EEF2F7" stroke="#1B365D" stroke-width="2"/><text x="442.2" y="131.7" font-size="13" fill="#141413" font-family="serif">会议软件转写</text><circle cx="397.2" cy="143.2" r="13.2" fill="#EEF2F7" stroke="#1B365D" stroke-width="2"/><text x="415.4" y="147.2" font-size="13" fill="#141413" font-family="serif">通用文档AI</text><circle cx="250.0" cy="75.0" r="12.0" fill="#EEF2F7" stroke="#1B365D" stroke-width="2"/><text x="267.0" y="79.0" font-size="13" fill="#141413" font-family="serif">不购买</text></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>如果只讲摘要和转写，会议软件和通用 AI 的采用成本更低；只有业务闭环能力能形成差异化。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>把 CRM、任务系统和客户跟进闭环作为定位核心。</p>
+    </article>
+
+
+    <article class="chart-module" id="chart-adoption_friction_funnel">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">funnel</span>
+          <h3>采用阻力漏斗：团队采购前流失最大</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.62 | S1</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 840 342" role="img" aria-label="漏斗图"><rect x="0" y="0" width="840" height="342" fill="#ffffff"/><text x="42" y="59" font-size="15" fill="#141413" font-family="serif">知道问题</text><rect x="250.0" y="34" width="560.0" height="28" rx="4" fill="#1B365D" fill-opacity="0.95"/><text x="770" y="55" text-anchor="end" font-size="15" fill="#3d3d3a" font-family="serif">100</text><text x="42" y="105" font-size="15" fill="#141413" font-family="serif">愿意试用</text><rect x="350.8" y="80" width="358.4" height="28" rx="4" fill="#1B365D" fill-opacity="0.89"/><text x="770" y="101" text-anchor="end" font-size="15" fill="#3d3d3a" font-family="serif">64</text><text x="42" y="151" font-size="15" fill="#141413" font-family="serif">上传真实会议</text><rect x="401.2" y="126" width="257.6" height="28" rx="4" fill="#1B365D" fill-opacity="0.84"/><text x="770" y="147" text-anchor="end" font-size="15" fill="#3d3d3a" font-family="serif">46</text><text x="42" y="197" font-size="15" fill="#141413" font-family="serif">团队协作使用</text><rect x="446.0" y="172" width="168.0" height="28" rx="4" fill="#1B365D" fill-opacity="0.78"/><text x="770" y="193" text-anchor="end" font-size="15" fill="#3d3d3a" font-family="serif">30</text><text x="42" y="243" font-size="15" fill="#141413" font-family="serif">进入采购审批</text><rect x="479.6" y="218" width="100.8" height="28" rx="4" fill="#1B365D" fill-opacity="0.73"/><text x="770" y="239" text-anchor="end" font-size="15" fill="#3d3d3a" font-family="serif">18</text><text x="42" y="289" font-size="15" fill="#141413" font-family="serif">持续续费</text><rect x="496.4" y="264" width="67.2" height="28" rx="4" fill="#1B365D" fill-opacity="0.67"/><text x="770" y="285" text-anchor="end" font-size="15" fill="#3d3d3a" font-family="serif">12</text></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>漏斗假设显示最大掉点发生在真实会议上传和团队采购之间，核心原因是信任与组织审批。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>验证时必须记录从个人试用到团队审批的转化阻力。</p>
+    </article>
+
+
+    <article class="chart-module" id="chart-evidence_quality_distribution">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">stacked_bar</span>
+          <h3>证据质量分布：样例仍偏假设</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.76 | S1 S2</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 840 260" role="img" aria-label="堆叠条形图"><rect x="0" y="0" width="840" height="260" fill="#ffffff"/><rect x="70" y="84" width="700" height="44" fill="#f7f7f4" stroke="#efeee8"/><rect x="70.0" y="84" width="350.0" height="44" fill="#1B365D"/><text x="245.0" y="112" text-anchor="middle" font-size="14" fill="#ffffff" font-family="serif">A级用户输入</text><rect x="420.0" y="84" width="0.0" height="44" fill="#7A8CA5"/><rect x="420.0" y="84" width="350.0" height="44" fill="#C7D0DB"/><text x="595.0" y="112" text-anchor="middle" font-size="14" fill="#ffffff" font-family="serif">C级假设</text><rect x="70" y="164" width="12" height="12" fill="#1B365D"/><text x="88" y="176" font-size="14" fill="#141413" font-family="serif">A级用户输入 1</text><rect x="300" y="164" width="12" height="12" fill="#7A8CA5"/><text x="318" y="176" font-size="14" fill="#141413" font-family="serif">B级第三方证据 0</text><rect x="530" y="164" width="12" height="12" fill="#C7D0DB"/><text x="548" y="176" font-size="14" fill="#141413" font-family="serif">C级假设 1</text></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>当前样例只有用户材料和假设，缺少第三方评论、真实竞品页、价格和转化证据。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>正式报告必须补充真实来源，否则结论应定位为验证计划。</p>
+    </article>
+
+
+    <article class="chart-module" id="chart-risk_matrix">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">matrix</span>
+          <h3>风险矩阵：隐私与证据风险最高</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.74 | S1 S2</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 840 430" role="img" aria-label="矩阵图"><rect x="0" y="0" width="840" height="430" fill="#ffffff"/><rect x="90" y="44" width="640" height="310" fill="#ffffff" stroke="#141413" stroke-width="1.5"/><line x1="410.0" y1="44" x2="410.0" y2="354" stroke="#efeee8" stroke-width="2"/><line x1="90" y1="199.0" x2="730" y2="199.0" stroke="#efeee8" stroke-width="2"/><text x="410.0" y="398" text-anchor="middle" font-size="16" fill="#3d3d3a" font-family="serif">发生概率</text><text x="24" y="199.0" transform="rotate(-90 24 199.0)" text-anchor="middle" font-size="16" fill="#3d3d3a" font-family="serif">影响程度</text><circle cx="602.0" cy="106.0" r="15.6" fill="#EEF2F7" stroke="#1B365D" stroke-width="2"/><text x="622.6" y="110.0" font-size="13" fill="#141413" font-family="serif">证据不足</text><circle cx="538.0" cy="75.0" r="16.8" fill="#EEF2F7" stroke="#1B365D" stroke-width="2"/><text x="559.8" y="79.0" font-size="13" fill="#141413" font-family="serif">隐私合规</text><circle cx="474.0" cy="168.0" r="13.2" fill="#EEF2F7" stroke="#1B365D" stroke-width="2"/><text x="492.2" y="172.0" font-size="13" fill="#141413" font-family="serif">集成不稳定</text><circle cx="474.0" cy="137.0" r="14.4" fill="#EEF2F7" stroke="#1B365D" stroke-width="2"/><text x="493.4" y="141.0" font-size="13" fill="#141413" font-family="serif">准确率误伤</text></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>隐私合规和证据不足会直接阻断团队采用，而不是普通产品优化问题。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>把风险治理作为需求成立的前置条件。</p>
+    </article>
+
+
+    <article class="chart-module" id="chart-recommendation_priority_matrix">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">matrix</span>
+          <h3>建议优先级矩阵：先做信任材料和验证访谈</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.71 | S1 S2</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 840 430" role="img" aria-label="矩阵图"><rect x="0" y="0" width="840" height="430" fill="#ffffff"/><rect x="90" y="44" width="640" height="310" fill="#ffffff" stroke="#141413" stroke-width="1.5"/><line x1="410.0" y1="44" x2="410.0" y2="354" stroke="#efeee8" stroke-width="2"/><line x1="90" y1="199.0" x2="730" y2="199.0" stroke="#efeee8" stroke-width="2"/><text x="410.0" y="398" text-anchor="middle" font-size="16" fill="#3d3d3a" font-family="serif">实施难度</text><text x="24" y="199.0" transform="rotate(-90 24 199.0)" text-anchor="middle" font-size="16" fill="#3d3d3a" font-family="serif">需求增益</text><circle cx="410.0" cy="106.0" r="15.6" fill="#EEF2F7" stroke="#1B365D" stroke-width="2"/><text x="430.6" y="110.0" font-size="13" fill="#141413" font-family="serif">安全白皮书</text><circle cx="410.0" cy="137.0" r="14.4" fill="#EEF2F7" stroke="#1B365D" stroke-width="2"/><text x="429.4" y="141.0" font-size="13" fill="#141413" font-family="serif">行动项Demo</text><circle cx="282.0" cy="137.0" r="14.4" fill="#EEF2F7" stroke="#1B365D" stroke-width="2"/><text x="301.4" y="141.0" font-size="13" fill="#141413" font-family="serif">10-15个访谈</text><circle cx="602.0" cy="106.0" r="15.6" fill="#EEF2F7" stroke="#1B365D" stroke-width="2"/><text x="622.6" y="110.0" font-size="13" fill="#141413" font-family="serif">深度CRM集成</text></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>低成本高增益的动作是访谈和信任材料；深度集成价值高但不适合一开始重投入。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>先做安全白皮书、行动项 Demo 和目标客户访谈，再决定是否做深集成。</p>
+    </article>
+
+
+    <article class="chart-module" id="chart-forecast_scenarios">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">forecast</span>
+          <h3>预测情景：修复短板后才可能进入可扩张区</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.70 | S1 S2</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 840 430" role="img" aria-label="预测情景图"><rect x="0" y="0" width="840" height="430" fill="#ffffff"/><line x1="90" y1="328" x2="740" y2="328" stroke="#141413" stroke-width="1.5"/><line x1="90" y1="48" x2="90" y2="328" stroke="#141413" stroke-width="1.5"/><circle cx="90.0" cy="188.0" r="8" fill="#1B365D"/><text x="90.0" y="174.0" text-anchor="middle" font-size="15" fill="#141413" font-family="serif">5.0</text><text x="90.0" y="370" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">不处理短板</text><text x="90.0" y="390" text-anchor="middle" font-size="12" fill="#6b6a64" font-family="serif">low</text><circle cx="415.0" cy="143.2" r="8" fill="#1B365D"/><text x="415.0" y="129.2" text-anchor="middle" font-size="15" fill="#141413" font-family="serif">6.6</text><text x="415.0" y="370" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">修复信任和合规</text><text x="415.0" y="390" text-anchor="middle" font-size="12" fill="#6b6a64" font-family="serif">medium</text><circle cx="740.0" cy="120.8" r="8" fill="#1B365D"/><text x="740.0" y="106.8" text-anchor="middle" font-size="15" fill="#141413" font-family="serif">7.4</text><text x="740.0" y="370" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">完成强证据验证</text><text x="740.0" y="390" text-anchor="middle" font-size="12" fill="#6b6a64" font-family="serif">medium-high</text><polyline points="90.0,188.0 415.0,143.2 740.0,120.8" fill="none" stroke="#1B365D" stroke-width="3"/><text x="40" y="52" font-size="13" fill="#6b6a64" font-family="serif">10</text><text x="48" y="330" font-size="13" fill="#6b6a64" font-family="serif">0</text></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>如果不修复信任与证明短板，需求总分大概率停留在验证边缘；完成强证据验证后才可能进入可扩张区。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>用 90 天作为复盘窗口，先验证企业信任和高会议密度销售团队的付费意愿。</p>
+    </article>
+
+      </div>
+    </section>
+
+    <section id="product">
+      <h2>产品概览</h2>
+      <div class="fact-grid">
+        <div class="fact-box"><h3>产品定义</h3><p>面向销售、咨询、产品和管理团队的 AI 会议录音、转写、纪要生成和行动项同步工具。</p></div>
+        <div class="fact-box"><h3>价值主张</h3><p>把分散的会议内容转成可追踪的纪要、决策和任务，减少会后整理与遗漏。</p></div>
+        <div class="fact-box"><h3>商业模式</h3><p>SaaS 订阅，可能叠加企业合规和集成服务。</p></div>
+        <div class="fact-box"><h3>假设</h3><ul><li>样例没有真实官网、价格页或用户评论输入，因此所有市场事实均需后续联网验证。</li><li>目标市场默认有线上会议和任务协作工具使用习惯。</li></ul></div>
+      </div>
+      <div class="product-detail-grid">
+        <div class="fact-box"><h3>核心功能</h3><ul><li>会议录音和自动转写</li><li>自动生成纪要、决策和行动项</li><li>与日历、会议软件和任务系统同步</li><li>支持按项目或客户归档历史会议</li></ul></div>
+        <div class="fact-box"><h3>定价信息</h3><ul><li>样例假设：个人免费试用，团队按席位订阅</li><li>样例假设：企业版增加数据保留、权限和合规能力</li></ul></div>
+      </div>
+    </section>
+
+    <section id="evidence">
+      <h2>证据质量与来源</h2>
+      <p>这是用于验证 skill 输出结构的样例报告。证据主要来自用户输入与模型假设，不代表真实产品调研结论。</p>
+      <div class="table-wrap"><table class="compact"><thead><tr><th>来源</th><th>等级</th><th>类型</th><th>标题</th><th>链接</th><th>日期</th></tr></thead><tbody><tr><td>S1</td><td>A</td><td>user_material</td><td>样例产品输入与需求场景假设</td><td></td><td>2026-06-09</td></tr><tr><td>S2</td><td>C</td><td>assumption</td><td>样例竞品与替代方案假设</td><td></td><td>2026-06-09</td></tr></tbody></table></div>
+    </section>
+
+    <section id="users">
+      <h2>目标用户与 JTBD</h2>
+      <div class="table-wrap"><table class=""><thead><tr><th>分群</th><th>场景</th><th>JTBD</th><th>当前替代</th><th>采用阻碍</th></tr></thead><tbody><tr><td>高会议密度销售团队</td><td>每天多场客户会议，需要在会后及时同步承诺事项和下一步动作。</td><td>减少会后整理时间，并避免客户承诺或跟进动作遗漏。</td><td>人工手记；CRM 备注；会议录音回听；会后群消息追踪</td><td>客户隐私和录音授权；CRM 集成成本；转写准确率和行动项识别可信度</td></tr><tr><td>产品与项目负责人</td><td>跨团队例会后需要把决策、问题和责任人同步到项目管理系统。</td><td>把会议讨论转成可追踪项目状态，减少重复沟通。</td><td>人工纪要；项目管理工具评论；共享文档；即时通讯群总结</td><td>会议上下文复杂导致 AI 摘要误判；团队成员不愿改变会议后流程；与现有项目管理工具同步不稳定</td></tr></tbody></table></div>
+    </section>
+
+    <section id="competitors">
+      <h2>竞品与替代方案</h2>
+      <div class="table-wrap"><table class=""><thead><tr><th>名称</th><th>类型</th><th>定位</th><th>优势</th><th>弱点</th><th>来源</th></tr></thead><tbody><tr><td>人工纪要</td><td>manual</td><td>低工具成本但高时间成本的默认替代方案。</td><td>上下文理解强；无需采购审批</td><td>耗时；标准不稳定；容易遗漏</td><td>S1</td></tr><tr><td>会议软件自带转写</td><td>substitute</td><td>嵌入现有会议工具的基础转写能力。</td><td>入口自然；部署成本低</td><td>行动项和业务系统同步可能不足；跨工具归档能力有限</td><td>S2</td></tr><tr><td>通用文档 AI 助手</td><td>indirect</td><td>把会议材料粘贴后生成总结。</td><td>灵活；学习成本低</td><td>需要人工搬运材料；缺少实时录音和系统集成</td><td>S2</td></tr></tbody></table></div>
+    </section>
+
+    <section id="triangle">
+      <h2>需求三角分析</h2>
+      <figure class="diagram-block triangle-figure">
+
+<svg class="triangle-svg" viewBox="0 0 760 430" role="img" aria-label="需求三角模型分析结构">
+  <rect x="0" y="0" width="760" height="430" fill="#ffffff"/>
+  <polygon points="380,70 168,324 592,324" fill="#ffffff" stroke="#1B365D" stroke-width="4" stroke-linejoin="round"/>
+  <circle cx="380" cy="262" r="88" fill="#ffffff" stroke="#141413" stroke-width="2"/>
+  <text x="380" y="32" text-anchor="middle" class="svg-title">缺乏感</text>
+  <text x="380" y="54" text-anchor="middle" class="svg-small">理想与现实的差距 | 7.2</text>
+  <text x="116" y="368" text-anchor="middle" class="svg-title">目标物</text>
+  <text x="116" y="390" text-anchor="middle" class="svg-small">填补差距的方案 | 6.9</text>
+  <text x="644" y="368" text-anchor="middle" class="svg-title">消费者能力</text>
+  <text x="644" y="390" text-anchor="middle" class="svg-small">成本承受力 | 5.6</text>
+  <text x="380" y="246" text-anchor="middle" class="svg-title">需求成立</text>
+  <text x="380" y="273" text-anchor="middle" class="svg-body">动机清晰 + 成本可承受 + 场景触发</text>
+  <text x="380" y="306" text-anchor="middle" class="svg-score">总分 5.0</text>
+  <text x="380" y="420" text-anchor="middle" class="svg-caption">任一维度明显缺失，需求成立概率都会下降。</text>
+</svg>
+
+        <figcaption class="figure-caption">图 2：需求三角模型。缺乏感、目标物和消费者能力共同决定需求成立概率。</figcaption>
+      </figure>
+      <div class="dimension-grid">
+            <article class="dimension-card">
+              <div class="dimension-head"><h3>缺乏感</h3><span>7.2</span></div>
+              <p>会议纪要和行动项追踪属于高频工作流，问题强度和发生频率都较高，但真实愿付意愿需要价格页、竞品和访谈证据补充。</p>
+              <h4>支持证据</h4>
+              <ul><li>高会议密度岗位有持续整理、同步和追踪压力，这是样例输入中的核心场景 [S1]。</li><li>销售、咨询和项目团队的会后动作遗漏会直接影响客户承诺、项目进度和内部协作 [S1]。</li></ul>
+              <h4>反证或缺口</h4>
+              <ul><li>样例没有真实用户评论或搜索数据，缺乏感强度仍需验证。</li><li>部分团队可能已经通过 CRM、共享文档或会议软件功能解决主要问题。</li></ul>
+              <div class="note"><strong>改进路径</strong><br>先访谈高会议密度销售与项目团队，量化每周整理时间、遗漏成本和已付费替代方案。</div>
+            </article>
+
+            <article class="dimension-card">
+              <div class="dimension-head"><h3>目标物</h3><span>6.9</span></div>
+              <p>目标物与用户任务匹配较好，品类认知也相对成熟；短板在于差异化和证据强度，需要证明它不只是转写或摘要工具。</p>
+              <h4>支持证据</h4>
+              <ul><li>自动转写、纪要、行动项和同步直接对应会后整理 JTBD [S1]。</li><li>目标物可以用一句话解释：把会议变成可追踪的决策和任务 [S1]。</li></ul>
+              <h4>反证或缺口</h4>
+              <ul><li>会议软件自带转写和通用文档 AI 可能削弱差异化 [S2]。</li><li>样例缺少真实演示、准确率数据、客户案例或第三方评价。</li></ul>
+              <div class="note"><strong>改进路径</strong><br>用真实会议样本展示行动项识别、业务系统同步和错误纠正能力，并与会议软件自带能力对比。</div>
+            </article>
+
+            <article class="dimension-card">
+              <div class="dimension-head"><h3>消费者能力</h3><span>5.6</span></div>
+              <p>学习成本不高，但信任、隐私、安全和审批成本明显偏高。这是样例产品的短板维度。</p>
+              <h4>支持证据</h4>
+              <ul><li>如果产品能接入现有日历、会议和任务系统，行动成本可以下降 [S1]。</li><li>团队版订阅和企业版合规能力是可能的商业路径 [S1]。</li></ul>
+              <h4>反证或缺口</h4>
+              <ul><li>录音授权、隐私合规和数据保留策略可能成为组织采用门槛。</li><li>准确率不足会造成错误纪要和错误行动项，直接提高信任成本。</li><li>企业客户可能需要采购、法务和安全审批。</li></ul>
+              <div class="note"><strong>改进路径</strong><br>优先补充权限、数据保留、隐私政策、企业安全说明、准确率边界和人工校对机制。</div>
+            </article>
+            </div>
+    </section>
+
+    <section id="scores">
+      <h2>评分与解释</h2>
+      <div class="table-wrap"><table class="compact"><thead><tr><th>维度</th><th>分数</th></tr></thead><tbody><tr><td>缺乏感</td><td>7.2</td></tr><tr><td>目标物</td><td>6.9</td></tr><tr><td>消费者能力</td><td>5.6</td></tr><tr><td>证据信心</td><td>0.76</td></tr><tr><td>总分</td><td>5.0</td></tr></tbody></table></div>
+    </section>
+
+    <section id="recommendations">
+      <h2>建议与实验</h2>
+      <div class="table-wrap"><table class=""><thead><tr><th>优先级</th><th>领域</th><th>建议</th><th>理由</th><th>预期影响</th><th>成本</th></tr></thead><tbody><tr><td>P0</td><td>trust</td><td>先建立隐私、授权、数据保留和安全白皮书，再扩大企业销售。</td><td>消费者能力短板集中在信任和风险成本。</td><td>降低组织审批阻力，提高团队版转化。</td><td>medium</td></tr><tr><td>P1</td><td>product</td><td>把产品演示聚焦在行动项识别和业务系统同步，而不是泛泛摘要。</td><td>差异化短板来自会议软件和通用 AI 的替代压力。</td><td>提升目标物清晰度和差异化。</td><td>medium</td></tr><tr><td>P1</td><td>research</td><td>补做 10-15 个高会议密度团队访谈，量化整理时间、遗漏成本和当前替代方案。</td><td>样例缺少真实用户反馈证据。</td><td>提高证据信心并校准缺乏感评分。</td><td>low</td></tr></tbody></table></div>
+      <h3>验证实验</h3>
+      <div class="table-wrap"><table class=""><thead><tr><th>假设</th><th>分群</th><th>方法</th><th>指标</th><th>阈值</th><th>决策规则</th></tr></thead><tbody><tr><td>高会议密度销售团队愿意为自动行动项同步付费。</td><td>高会议密度销售团队</td><td>落地页 + 真实会议 Demo + 预约试用</td><td>预约试用转化率</td><td>目标客群访客转化率超过 8%</td><td>低于阈值则重写价值主张或切换细分场景。</td></tr><tr><td>隐私和准确率说明能显著降低企业试用阻力。</td><td>产品与项目负责人</td><td>A/B 测试普通 Demo 与合规/准确率增强 Demo</td><td>企业试用申请率</td><td>增强 Demo 申请率提升 30%</td><td>若无提升，说明阻力可能来自集成或流程改变，而非信任材料。</td></tr></tbody></table></div>
+    </section>
+
+    <section id="forecast">
+      <h2>预测情景</h2>
+      <p>如果 10 个目标客户访谈中少于 3 个愿意试用，或增强 Demo 没有提升企业试用申请率，需要重新判断缺乏感和目标物。</p>
+      <div class="table-wrap"><table class=""><thead><tr><th>情景</th><th>预测分数</th><th>采用可能性</th><th>关键假设</th></tr></thead><tbody><tr><td>不处理短板</td><td>5.0</td><td>low</td><td>继续只强调自动摘要和转写。；没有新增安全、准确率和组织审批证据。</td></tr><tr><td>修复信任和合规短板</td><td>6.6</td><td>medium</td><td>补充权限、数据保留、安全说明和授权流程。；完成真实会议 Demo 并展示行动项准确率边界。</td></tr><tr><td>完成强证据验证</td><td>7.4</td><td>medium-high</td><td>10-15 个目标客户访谈中至少 5 个愿意试用。；落地页目标客群试用转化率超过 8%。；增强 Demo 显著提升企业试用申请率。</td></tr></tbody></table></div>
+    </section>
+
+    <section id="risks">
+      <h2>风险与伦理</h2>
+      <div class="table-wrap"><table class=""><thead><tr><th>严重度</th><th>类型</th><th>风险</th><th>缓释</th><th>来源</th></tr></thead><tbody><tr><td>high</td><td>evidence</td><td>样例报告缺少真实官网、用户评论、竞品价格和第三方评价。</td><td>正式报告必须联网检索并补充来源等级。</td><td>S1</td></tr><tr><td>high</td><td>privacy</td><td>会议录音与转写可能包含客户隐私、商业秘密或个人信息。</td><td>提供授权流程、数据保留策略、权限控制和删除机制。</td><td>S1</td></tr><tr><td>medium</td><td>execution</td><td>与会议软件、CRM 或任务系统集成不稳定会提高行动成本。</td><td>先支持最常见工具链，并提供失败回退和手动校对。</td><td>S2</td></tr></tbody></table></div>
+    </section>
+
+    <section id="final">
+      <h2>最终方案</h2>
+      <p class="lede">这是一个有真实场景但尚未证明组织采用能力的需求方向，当前不宜直接规模化，应先补验证和信任短板。</p>
+      <div class="note"><strong>总体策略</strong><br>聚焦高会议密度销售团队，把产品从泛纪要工具收窄为客户会议行动项闭环工具，用安全信任材料和真实 Demo 证明可被组织采用。</div>
+      <div class="three-phase">
+        <div class="table-wrap"><table class=""><thead><tr><th>阶段</th><th>动作</th></tr></thead><tbody><tr><td>未来 30 天</td><td>完成 10-15 个高会议密度销售团队访谈。；制作行动项识别、责任人、截止时间和 CRM/任务同步 Demo。；补齐隐私、授权、数据保留、删除机制和安全说明。</td></tr><tr><td>未来 60 天</td><td>用落地页和 Demo 验证预约试用转化率。；对比普通摘要定位和行动项闭环定位的转化差异。；选择一个主流工具链完成轻量集成验证。</td></tr><tr><td>未来 90 天</td><td>复盘企业试用申请率、会议上传率和团队协作使用率。；根据真实使用数据重算需求三角分数。；若进入 6.8 分以上区间，再评估渠道和销售扩张。</td></tr><tr><td>决策规则</td><td>如果目标客群访客预约试用转化率超过 8%，继续推进团队版验证。；如果增强 Demo 不能提升企业试用申请率，优先重查采用阻力。；如果访谈中付费意愿低于 30%，重新定位目标用户或暂停规模投入。</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="method">
+      <h2>方法与模型</h2>
+      <figure class="diagram-block">
+        <svg class="process-svg" viewBox="0 0 1030 230" role="img" aria-label="需求评估分析流程图"><rect x="0" y="0" width="1030" height="230" fill="#ffffff"/><rect x="26" y="32" width="130" height="132" rx="6" fill="#ffffff" stroke="#141413" stroke-width="2"/><text x="91.0" y="62" text-anchor="middle" class="svg-title">输入</text><text x="91.0" y="90" text-anchor="middle" class="svg-body">链接</text><text x="91.0" y="108" text-anchor="middle" class="svg-body">介绍</text><text x="91.0" y="126" text-anchor="middle" class="svg-body">文档</text><line x1="166" y1="98" x2="182" y2="98" stroke="#141413" stroke-width="2"/><path d="M 182 98 l -8 -5 v 10 z" fill="#141413"/><rect x="192" y="32" width="130" height="132" rx="6" fill="#ffffff" stroke="#141413" stroke-width="2"/><text x="257.0" y="62" text-anchor="middle" class="svg-title">解析</text><text x="257.0" y="90" text-anchor="middle" class="svg-body">产品画布</text><text x="257.0" y="108" text-anchor="middle" class="svg-body">用户假设</text><text x="257.0" y="126" text-anchor="middle" class="svg-body">价值主张</text><line x1="332" y1="98" x2="348" y2="98" stroke="#141413" stroke-width="2"/><path d="M 348 98 l -8 -5 v 10 z" fill="#141413"/><rect x="358" y="32" width="130" height="132" rx="6" fill="#ffffff" stroke="#141413" stroke-width="2"/><text x="423.0" y="62" text-anchor="middle" class="svg-title">检索</text><text x="423.0" y="90" text-anchor="middle" class="svg-body">权威资料</text><text x="423.0" y="108" text-anchor="middle" class="svg-body">竞品</text><text x="423.0" y="126" text-anchor="middle" class="svg-body">评价</text><text x="423.0" y="144" text-anchor="middle" class="svg-body">价格</text><line x1="498" y1="98" x2="514" y2="98" stroke="#141413" stroke-width="2"/><path d="M 514 98 l -8 -5 v 10 z" fill="#141413"/><rect x="524" y="32" width="130" height="132" rx="6" fill="#ffffff" stroke="#141413" stroke-width="2"/><text x="589.0" y="62" text-anchor="middle" class="svg-title">分析</text><text x="589.0" y="90" text-anchor="middle" class="svg-body">缺乏感</text><text x="589.0" y="108" text-anchor="middle" class="svg-body">目标物</text><text x="589.0" y="126" text-anchor="middle" class="svg-body">能力成本</text><line x1="664" y1="98" x2="680" y2="98" stroke="#141413" stroke-width="2"/><path d="M 680 98 l -8 -5 v 10 z" fill="#141413"/><rect x="690" y="32" width="130" height="132" rx="6" fill="#ffffff" stroke="#141413" stroke-width="2"/><text x="755.0" y="62" text-anchor="middle" class="svg-title">评分</text><text x="755.0" y="90" text-anchor="middle" class="svg-body">三维得分</text><text x="755.0" y="108" text-anchor="middle" class="svg-body">信心系数</text><text x="755.0" y="126" text-anchor="middle" class="svg-body">红旗项</text><line x1="830" y1="98" x2="846" y2="98" stroke="#141413" stroke-width="2"/><path d="M 846 98 l -8 -5 v 10 z" fill="#141413"/><rect x="856" y="32" width="130" height="132" rx="6" fill="#ffffff" stroke="#141413" stroke-width="2"/><text x="921.0" y="62" text-anchor="middle" class="svg-title">输出</text><text x="921.0" y="90" text-anchor="middle" class="svg-body">Markdown</text><text x="921.0" y="108" text-anchor="middle" class="svg-body">HTML</text><text x="921.0" y="126" text-anchor="middle" class="svg-body">Word</text><text x="921.0" y="144" text-anchor="middle" class="svg-body">PDF</text><text x="515" y="206" text-anchor="middle" class="svg-caption">核心原则：先把产品放进用户真实场景，再用证据校准三角各边。</text></svg>
+        <figcaption class="figure-caption">图：需求评估分析流程。检索只接受可追溯来源，不确定信息进入假设区。</figcaption>
+      </figure>
+      <p>评分采用需求三角的几何短板逻辑：缺乏感、目标物和消费者能力必须同时成立，单一高分不能完全补偿另一条边塌陷。</p>
+    </section>
+
+    <section id="appendix">
+      <h2>附录</h2>
+      <h3>未解问题</h3>
+      <ul><li>目标客户当前每周花多少时间整理会议纪要？</li><li>客户愿意为自动行动项同步支付多少费用？</li><li>隐私合规、准确率和集成能力中哪个最影响试用转化？</li></ul>
+    </section>
+  </main>
+</body>
+</html>

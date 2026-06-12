@@ -1,0 +1,1379 @@
+{
+  "meta": {
+    "title": "蔚来 ES8 需求诊断报告",
+    "product_name": "蔚来全新 ES8",
+    "generated_at": "2026-06-12",
+    "language": "zh-CN",
+    "analyst": "Yao Demand Skill",
+    "analysis_goal": "真实产品需求诊断与增长短板识别",
+    "target_market": "中国高端大型三排 SUV 市场",
+    "source_boundary": "公开资料检索至 2026-06-12。优先采用蔚来官方、IR/财报、官方竞品页面和近期行业媒体；车主口碑类来源只作为定性线索，不等同于全量用户调研。"
+  },
+  "executive_summary": {
+    "one_sentence": "全新 ES8 已经证明高端大型三排纯电 SUV 存在强需求，真正限制它从爆发走向长期稳态的不是目标物本身，而是用户对真实续航、冬季/高速能耗、满载储物、质量细节和竞品替代的能力成本判断。",
+    "decision": "fix_short_board",
+    "total_score": 7.36,
+    "lack_score": 8.27,
+    "target_object_score": 8.52,
+    "consumer_ability_score": 7.4,
+    "evidence_confidence": 0.88,
+    "context_adjustment": 0.25,
+    "biggest_opportunity": "大型三排纯电 SUV 正在从边缘尝试进入高端家庭主车选择，ES8 借助换电、BaaS、服务体系和 100000 台级别交付验证占据先发位置。",
+    "biggest_risk": "新车热度、竞品挤压和真实用车不确定性可能让用户从“喜欢这台车”退回到“再等等、再比较、再看口碑”。"
+  },
+  "product_canvas": {
+    "definition": "面向高净值家庭、商务兼家庭用户和蔚来体系用户的旗舰级纯电大型三排 SUV，通过大空间、舒适座舱、换电补能、BaaS 降低入门门槛与高端服务体系来承接家庭出行与商务接待需求。",
+    "value_proposition": "在 6-7 人真实乘坐场景下，用纯电旗舰体验、换电补能和蔚来服务同时解决空间、体面、安全和补能焦虑。",
+    "features": [
+      "5280mm 车长、3130mm 轴距的大型三排空间",
+      "6 座与 7 座版本，强调第二排与第三排舒适性",
+      "102kWh/100kWh 级电池、900V 高压平台、CLTC 约 635km 的旗舰纯电能力",
+      "双电机四驱，公开报道 0-100km/h 约 3.97 秒",
+      "NIO Power 换电和充电网络，BaaS 方案降低购车起点",
+      "NT.Cedar 智能系统、智能座舱和辅助驾驶能力",
+      "高强度车身、11 安全气囊和旗舰级被动安全配置"
+    ],
+    "pricing": [
+      "官方上市起售价约 40.68 万元，BaaS 起点约 29.88 万元；签名版约 44.68 万元，BaaS 起点约 33.88 万元。",
+      "电池租用月费公开报道约 1128 元/月，实际以蔚来当期政策为准。"
+    ],
+    "business_model": "整车销售 + BaaS 电池租用 + 换电/充电/服务生态 + 高端用户运营。",
+    "target_users": [
+      "一二线城市高收入家庭，尤其是二胎、三胎或多代同乘家庭",
+      "需要兼顾商务接待与家庭出行的企业主、管理层和专业人士",
+      "已经信任蔚来服务、补能网络和社区生态的老用户",
+      "希望从燃油/增程大型 SUV 切换到纯电但担心补能与保值风险的用户"
+    ],
+    "usage_scenarios": [
+      "城市通勤与儿童接送",
+      "周末家庭出行与多代同乘",
+      "节假日长途自驾和高速换电",
+      "商务接待与高端形象展示",
+      "从燃油/增程 SUV 切换到纯电主车"
+    ],
+    "assumptions": [
+      "本报告聚焦中国市场的全新 ES8，不把欧洲小规模市场表现作为主要依据。",
+      "销量、交付、基础设施等公开披露数据存在口径差异，评分以趋势和相对确定性为主。",
+      "车主口碑类来源代表公开样本，不等同于全量用户调研。"
+    ]
+  },
+  "segments": [
+    {
+      "name": "高端多孩家庭",
+      "scenario": "需要 6-7 人同乘、老人孩子舒适上下车、第三排可长期使用，并兼顾安全和体面。",
+      "job_to_be_done": "买一台可以作为家庭主车的大型 SUV，让全家出行舒服、安全、不焦虑。",
+      "current_alternatives": [
+        "理想 L9",
+        "问界 M9",
+        "GLS/X7 等燃油豪华 SUV",
+        "MPV"
+      ],
+      "buying_role": "家庭共同决策，通常由家庭财务主导者和主要驾驶者共同拍板",
+      "adoption_blockers": [
+        "价格和长期成本",
+        "真实续航与冬季高速",
+        "满载后储物空间",
+        "交付等待"
+      ]
+    },
+    {
+      "name": "商务兼家庭用户",
+      "scenario": "平时用于商务接待、客户拜访或公司形象展示，周末承担家庭出行。",
+      "job_to_be_done": "用一台车同时满足体面、舒适、智能和家庭承载，避免商务与家庭两套车辆成本。",
+      "current_alternatives": [
+        "宝马 X5",
+        "奔驰 GLE",
+        "问界 M9",
+        "理想 L9"
+      ],
+      "buying_role": "企业主、管理层、专业人士本人",
+      "adoption_blockers": [
+        "传统豪华品牌惯性",
+        "纯电长途不确定性",
+        "智驾和车机稳定性",
+        "残值与品牌财务信任"
+      ]
+    },
+    {
+      "name": "蔚来老用户与纯电拥护者",
+      "scenario": "已经接受换电、服务和社区生态，希望升级到更大的家庭旗舰。",
+      "job_to_be_done": "在不离开蔚来体系的前提下，从中大型 SUV/轿车升级到真正的大三排主车。",
+      "current_alternatives": [
+        "蔚来 ES6/ES7/ES9",
+        "特斯拉 Model Y L",
+        "继续持有现车"
+      ],
+      "buying_role": "车主本人主导，家庭成员确认空间和舒适性",
+      "adoption_blockers": [
+        "升级成本",
+        "ES9 等内部车型分流",
+        "热门配置等待",
+        "老车置换残值"
+      ]
+    },
+    {
+      "name": "长途重度自驾家庭",
+      "scenario": "频繁跨城、自驾游、节假日高速出行，对补能可达性和续航稳定要求极高。",
+      "job_to_be_done": "获得大三排舒适体验，同时不牺牲长途路线自由度。",
+      "current_alternatives": [
+        "增程大型 SUV",
+        "燃油大型 SUV",
+        "混动 MPV"
+      ],
+      "buying_role": "主要驾驶者和家庭共同评估",
+      "adoption_blockers": [
+        "高速/冬季续航折扣",
+        "换电站排队和覆盖",
+        "满载能耗",
+        "节假日不确定性"
+      ]
+    }
+  ],
+  "competitors": [
+    {
+      "name": "理想 L9",
+      "type": "direct",
+      "positioning": "增程式家庭旗舰 SUV，强调家庭空间、舒适和补能无焦虑。",
+      "strengths": [
+        "增程降低里程焦虑",
+        "家庭场景心智强",
+        "价格与配置清晰"
+      ],
+      "weaknesses": [
+        "不是纯电旗舰体验",
+        "能源形式和品牌调性与纯电用户偏好不同"
+      ],
+      "source_ids": [
+        "S15"
+      ]
+    },
+    {
+      "name": "问界 M9",
+      "type": "direct",
+      "positioning": "鸿蒙智行高端旗舰 SUV，依靠华为生态、智能座舱和智驾心智竞争。",
+      "strengths": [
+        "华为生态强信任",
+        "智能化认知强",
+        "增程/纯电路线覆盖不同偏好"
+      ],
+      "weaknesses": [
+        "品牌豪华感仍在重塑",
+        "与蔚来服务和换电体验不同"
+      ],
+      "source_ids": [
+        "S16"
+      ]
+    },
+    {
+      "name": "特斯拉 Model Y L",
+      "type": "direct",
+      "positioning": "六座纯电 SUV，以品牌效率和更低价格切入家庭纯电需求。",
+      "strengths": [
+        "价格门槛更低",
+        "特斯拉品牌和充电网络认知强",
+        "交付效率高"
+      ],
+      "weaknesses": [
+        "豪华感与大三排舒适不如 ES8",
+        "家庭旗舰属性较弱"
+      ],
+      "source_ids": [
+        "S17"
+      ]
+    },
+    {
+      "name": "宝马 X5",
+      "type": "substitute",
+      "positioning": "传统豪华中大型 SUV，承接保守高端用户和燃油豪华品牌偏好。",
+      "strengths": [
+        "豪华品牌心智强",
+        "残值和社会认知稳定",
+        "燃油补能无学习成本"
+      ],
+      "weaknesses": [
+        "三排和智能化不占优",
+        "使用成本和新能源体验不如纯电"
+      ],
+      "source_ids": [
+        "S18"
+      ]
+    },
+    {
+      "name": "继续持有现车或购买 MPV",
+      "type": "substitute",
+      "positioning": "用户推迟高价换车，或用 MPV 解决更强家庭承载。",
+      "strengths": [
+        "现金流压力更低",
+        "MPV 的乘坐与储物效率高"
+      ],
+      "weaknesses": [
+        "缺少 SUV 形象与纯电旗舰体验",
+        "不能解决换新和智能化诉求"
+      ],
+      "source_ids": []
+    }
+  ],
+  "triangle_analysis": {
+    "lack": {
+      "score": 8.27,
+      "subscores": {
+        "intensity": 8.5,
+        "frequency": 7.8,
+        "urgency": 7.0,
+        "awareness": 8.8,
+        "trend": 9.0,
+        "willingness_to_pay": 8.5
+      },
+      "evidence": [
+        "官方与行业资料显示，全新 ES8 定位高端大型三排纯电 SUV，并把空间、舒适、安全和补能作为核心问题来回应 [S1][S2]。",
+        "2026 年 4 月官方 IR 披露 ES8 在 215 天达成 100000 台交付里程碑，说明高价区间存在真实购买而非单纯关注 [S5]。",
+        "近期行业报道显示大型三排纯电 SUV 市场正在扩大，ES8 连续月销过万并向 120000 台交付推进 [S8][S10]。"
+      ],
+      "counter_evidence": [
+        "换车属于高金额、低频决策，很多用户会等待竞品、价格政策和长期口碑。",
+        "大型三排纯电的高速、冬季和满载体验还需要更长周期验证。",
+        "销量高峰可能受到换代、价格重置和早期订单集中交付影响。"
+      ],
+      "reasoning": "高端家庭用户对大空间、舒适、安全和低补能焦虑的缺乏感很强；官方交付里程碑与近期销量势能进一步说明这不是小众兴趣。但它的紧迫性低于日常刚需工具，仍受换车周期和竞品发布节奏影响。",
+      "improvement_path": "把缺乏感从“大车豪华”具体化为多代同乘、满载长途、商务兼家庭和冬季高速等强场景，并持续披露真实用车证据。"
+    },
+    "target_object": {
+      "score": 8.52,
+      "subscores": {
+        "job_fit": 8.7,
+        "clarity": 8.2,
+        "differentiation": 8.6,
+        "proof": 8.9,
+        "category_fit": 8.4,
+        "time_to_value": 8.0
+      },
+      "evidence": [
+        "官方产品页披露全新 ES8 的大空间、座舱舒适、智能系统和安全配置，直接匹配家庭旗舰 SUV 任务 [S1]。",
+        "官方上市与预售信息显示，ES8 用 BaaS 降低入门门槛，并把换电和充电网络作为纯电大型车的重要支撑 [S2][S3][S12]。",
+        "100000 台级别交付、连续月销过万和高端市场排名线索构成了较强目标物验证 [S5][S8]。"
+      ],
+      "counter_evidence": [
+        "理想 L9、问界 M9 和 Model Y L 分别从无焦虑、智能生态和低价效率上削弱 ES8 的独占性。",
+        "BaaS、换电、购车价格和长期成本组合复杂，需要销售端解释。",
+        "长期价值是否稳定还依赖续航、质量、软件和服务体验持续达标。"
+      ],
+      "reasoning": "ES8 的产品定义清楚，目标物不是单一参数，而是大三排、纯电、换电、BaaS 与服务的组合方案。这个组合足以形成差异化，也已经被交付数据验证。短板在于长期体验必须持续符合 40 万元级旗舰预期。",
+      "improvement_path": "保持“大三排纯电旗舰 + 换电体系”的主叙事，用真实车主和竞品对比证明它不是配置堆叠，而是完整高端家庭主车方案。"
+    },
+    "consumer_ability": {
+      "score": 7.4,
+      "subscores": {
+        "money_cost": 7.0,
+        "action_cost": 6.8,
+        "learning_cost": 7.6,
+        "trust_cost": 8.0,
+        "risk_cost": 6.7,
+        "image_cost": 8.4,
+        "availability": 7.8
+      },
+      "evidence": [
+        "官方和媒体披露的 BaaS 起点降低了一次性购车门槛，但仍需要用户理解电池租用与长期总成本 [S3][S9]。",
+        "公开口碑样本普遍认可空间、舒适、换电和服务，但也反复提到真实续航、冬季高速、满载储物、车机/辅助驾驶和品控细节 [S13][S14]。",
+        "蔚来财报和交付规模增强了品牌信任，但高端家庭车购买仍需要家庭共识、试驾、等待交付和竞品比较 [S7]。"
+      ],
+      "counter_evidence": [
+        "部分地区换电站覆盖和排队体验可能与一线城市不同。",
+        "高价家庭车的购买链条长，家庭成员意见不一致会拉低转化。",
+        "竞品降价或新车型发布会提高用户等待与比较成本。"
+      ],
+      "reasoning": "目标用户具备支付能力，且蔚来品牌、服务和换电网络降低了信任成本；但购买行动成本和长期风险成本仍是相对短板。用户不是不知道 ES8 好，而是要确认自己能否放心买、放心用、长期不后悔。",
+      "improvement_path": "优先降低能力成本：用冬季/高速实测、满载场景、BaaS 总成本计算器、交付透明度和质量闭环来减少犹豫。"
+    }
+  },
+  "visual_diagnostics": [
+    {
+      "id": "total_score_gauge",
+      "title": "总分诊断：强需求已成立，先修短板再放大",
+      "chart_type": "score_gauge",
+      "priority": 1,
+      "data": {
+        "score": 7.36,
+        "max": 10,
+        "label": "需求总分",
+        "decision": "修短板后放大"
+      },
+      "insight": "总分进入较强区间，说明 ES8 不是概念型需求，而是已经被交付和销量验证的真实需求。",
+      "recommendation": "增长节奏上不宜只加大投放，应把冬季/高速续航、满载体验和交付口碑作为下一轮放大的前置条件。",
+      "source_ids": [
+        "S4",
+        "S5",
+        "S6",
+        "S8"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "id": "triangle_radar",
+      "title": "需求三角雷达：消费者能力是相对短板",
+      "chart_type": "radar",
+      "priority": 2,
+      "data": {
+        "items": [
+          {
+            "label": "缺乏感",
+            "value": 8.27
+          },
+          {
+            "label": "目标物",
+            "value": 8.52
+          },
+          {
+            "label": "消费者能力",
+            "value": 7.4
+          }
+        ]
+      },
+      "insight": "缺乏感与目标物都很强，说明市场问题和解决方案匹配度较高；能力维度低于另外两维。",
+      "recommendation": "把营销重点从“旗舰配置”转向“用户能否放心买、放心用、长期不后悔”。",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S5",
+        "S13",
+        "S14"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "id": "dimension_short_board",
+      "title": "三大维度短板：能力成本最需要修",
+      "chart_type": "bar",
+      "priority": 3,
+      "data": {
+        "max": 10,
+        "items": [
+          {
+            "label": "缺乏感",
+            "value": 8.27
+          },
+          {
+            "label": "目标物",
+            "value": 8.52
+          },
+          {
+            "label": "消费者能力",
+            "value": 7.4
+          }
+        ]
+      },
+      "insight": "能力维度没有低到否定需求，但会决定高峰销量能否转化为长期稳定销量。",
+      "recommendation": "优先降低能力成本，而不是继续堆叠配置卖点。",
+      "source_ids": [
+        "S13",
+        "S14"
+      ],
+      "confidence": 0.86
+    },
+    {
+      "id": "subscore_heatmap",
+      "title": "子项热力图：风险成本与行动成本是红区",
+      "chart_type": "heatmap",
+      "priority": 4,
+      "data": {
+        "items": [
+          {
+            "group": "缺乏感",
+            "label": "强度",
+            "value": 8.5
+          },
+          {
+            "group": "缺乏感",
+            "label": "频率",
+            "value": 7.8
+          },
+          {
+            "group": "缺乏感",
+            "label": "紧迫",
+            "value": 7.0
+          },
+          {
+            "group": "缺乏感",
+            "label": "显性",
+            "value": 8.8
+          },
+          {
+            "group": "缺乏感",
+            "label": "趋势",
+            "value": 9.0
+          },
+          {
+            "group": "缺乏感",
+            "label": "支付",
+            "value": 8.5
+          },
+          {
+            "group": "目标物",
+            "label": "匹配",
+            "value": 8.7
+          },
+          {
+            "group": "目标物",
+            "label": "清晰",
+            "value": 8.2
+          },
+          {
+            "group": "目标物",
+            "label": "差异",
+            "value": 8.6
+          },
+          {
+            "group": "目标物",
+            "label": "证明",
+            "value": 8.9
+          },
+          {
+            "group": "目标物",
+            "label": "品类",
+            "value": 8.4
+          },
+          {
+            "group": "目标物",
+            "label": "见效",
+            "value": 8.0
+          },
+          {
+            "group": "消费者能力",
+            "label": "价格",
+            "value": 7.0
+          },
+          {
+            "group": "消费者能力",
+            "label": "行动",
+            "value": 6.8
+          },
+          {
+            "group": "消费者能力",
+            "label": "学习",
+            "value": 7.6
+          },
+          {
+            "group": "消费者能力",
+            "label": "信任",
+            "value": 8.0
+          },
+          {
+            "group": "消费者能力",
+            "label": "风险",
+            "value": 6.7
+          },
+          {
+            "group": "消费者能力",
+            "label": "形象",
+            "value": 8.4
+          },
+          {
+            "group": "消费者能力",
+            "label": "可得",
+            "value": 7.8
+          }
+        ]
+      },
+      "insight": "目标物相关子项整体偏高，消费者能力里的行动成本与风险成本明显偏低。",
+      "recommendation": "用更透明的用车成本、续航边界、交付周期和售后 SLA 来降低犹豫。",
+      "source_ids": [
+        "S1",
+        "S7",
+        "S13",
+        "S14"
+      ],
+      "confidence": 0.84
+    },
+    {
+      "id": "lack_detail",
+      "title": "缺乏感细分：趋势与支付意愿最强",
+      "chart_type": "radar",
+      "priority": 5,
+      "data": {
+        "items": [
+          {
+            "label": "痛感强度",
+            "value": 8.5
+          },
+          {
+            "label": "使用频率",
+            "value": 7.8
+          },
+          {
+            "label": "替换紧迫",
+            "value": 7.0
+          },
+          {
+            "label": "问题显性",
+            "value": 8.8
+          },
+          {
+            "label": "趋势推力",
+            "value": 9.0
+          },
+          {
+            "label": "支付意愿",
+            "value": 8.5
+          }
+        ]
+      },
+      "insight": "市场正在从“纯电大三排能不能卖”转向“谁能稳定吃下这个价格带”。",
+      "recommendation": "抓住纯电大型三排的品类窗口，但避免把短期换代热度误判为永久领先。",
+      "source_ids": [
+        "S5",
+        "S8",
+        "S10"
+      ],
+      "confidence": 0.86
+    },
+    {
+      "id": "target_detail",
+      "title": "目标物细分：换电与大三排形成强识别",
+      "chart_type": "radar",
+      "priority": 6,
+      "data": {
+        "items": [
+          {
+            "label": "任务匹配",
+            "value": 8.7
+          },
+          {
+            "label": "认知清晰",
+            "value": 8.2
+          },
+          {
+            "label": "差异化",
+            "value": 8.6
+          },
+          {
+            "label": "证据强度",
+            "value": 8.9
+          },
+          {
+            "label": "品类契合",
+            "value": 8.4
+          },
+          {
+            "label": "价值显现",
+            "value": 8.0
+          }
+        ]
+      },
+      "insight": "ES8 的强项不是单点配置，而是把空间、服务、补能和价格方案组合成一个可理解的旗舰答案。",
+      "recommendation": "保持“大三排纯电旗舰 + 换电体系”的主叙事，不要让传播被零散配置稀释。",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S12"
+      ],
+      "confidence": 0.87
+    },
+    {
+      "id": "ability_detail",
+      "title": "消费者能力细分：风险成本拖后腿",
+      "chart_type": "radar",
+      "priority": 7,
+      "data": {
+        "items": [
+          {
+            "label": "金钱成本",
+            "value": 7.0
+          },
+          {
+            "label": "行动成本",
+            "value": 6.8
+          },
+          {
+            "label": "学习成本",
+            "value": 7.6
+          },
+          {
+            "label": "信任成本",
+            "value": 8.0
+          },
+          {
+            "label": "风险成本",
+            "value": 6.7
+          },
+          {
+            "label": "形象成本",
+            "value": 8.4
+          },
+          {
+            "label": "可获得性",
+            "value": 7.8
+          }
+        ]
+      },
+      "insight": "目标用户买得起，但不代表愿意承担不确定性；风险成本比价格本身更影响犹豫。",
+      "recommendation": "用真实车主长期样本和场景化保障政策替代抽象承诺。",
+      "source_ids": [
+        "S7",
+        "S13",
+        "S14"
+      ],
+      "confidence": 0.82
+    },
+    {
+      "id": "segment_matrix",
+      "title": "人群机会矩阵：老用户与高端家庭最优先",
+      "chart_type": "matrix",
+      "priority": 8,
+      "data": {
+        "x_axis": "购买能力/转化效率",
+        "y_axis": "需求强度",
+        "items": [
+          {
+            "label": "蔚来老用户",
+            "x": 8.4,
+            "y": 7.9,
+            "size": 8
+          },
+          {
+            "label": "高端多孩家庭",
+            "x": 7.8,
+            "y": 8.7,
+            "size": 9
+          },
+          {
+            "label": "商务兼家庭",
+            "x": 7.4,
+            "y": 8.2,
+            "size": 7
+          },
+          {
+            "label": "长途自驾家庭",
+            "x": 6.5,
+            "y": 8.1,
+            "size": 6
+          },
+          {
+            "label": "传统豪华换购",
+            "x": 6.9,
+            "y": 7.5,
+            "size": 7
+          }
+        ]
+      },
+      "insight": "高端多孩家庭需求最强，蔚来老用户转化成本最低；长途自驾家庭需求强但补能和续航证明要求更高。",
+      "recommendation": "先吃透老用户与高端家庭，再用长途案例和换电网络证明去扩展犹豫人群。",
+      "source_ids": [
+        "S1",
+        "S5",
+        "S8",
+        "S13"
+      ],
+      "confidence": 0.78
+    },
+    {
+      "id": "competitor_matrix",
+      "title": "竞品定位：ES8 赢在纯电补能与服务闭环",
+      "chart_type": "matrix",
+      "priority": 9,
+      "data": {
+        "x_axis": "补能/使用确定性",
+        "y_axis": "家庭旗舰匹配度",
+        "items": [
+          {
+            "label": "蔚来 ES8",
+            "x": 8.2,
+            "y": 8.5,
+            "size": 9
+          },
+          {
+            "label": "理想 L9",
+            "x": 8.6,
+            "y": 8.3,
+            "size": 8
+          },
+          {
+            "label": "问界 M9",
+            "x": 8.4,
+            "y": 8.4,
+            "size": 8
+          },
+          {
+            "label": "Model Y L",
+            "x": 7.5,
+            "y": 6.8,
+            "size": 7
+          },
+          {
+            "label": "宝马 X5",
+            "x": 7.0,
+            "y": 7.2,
+            "size": 6
+          }
+        ]
+      },
+      "insight": "ES8 的位置接近第一梯队，但理想和问界用增程/华为生态降低不确定性，特斯拉用价格效率形成下压。",
+      "recommendation": "不要只和传统豪华比配置，应正面回应增程无焦虑和华为智舱智驾的替代理由。",
+      "source_ids": [
+        "S15",
+        "S16",
+        "S17",
+        "S18"
+      ],
+      "confidence": 0.78
+    },
+    {
+      "id": "adoption_funnel",
+      "title": "转化漏斗：从试驾到交付的损耗在决策链条",
+      "chart_type": "funnel",
+      "priority": 10,
+      "data": {
+        "items": [
+          {
+            "label": "认知",
+            "value": 100
+          },
+          {
+            "label": "到店/试驾",
+            "value": 72
+          },
+          {
+            "label": "锁单",
+            "value": 50
+          },
+          {
+            "label": "等待交付",
+            "value": 43
+          },
+          {
+            "label": "满意使用",
+            "value": 37
+          },
+          {
+            "label": "推荐复购",
+            "value": 30
+          }
+        ]
+      },
+      "insight": "高价家庭车的损耗不是单点发生，而是家庭成员共识、预算计算、配置选择和等待体验共同造成。",
+      "recommendation": "门店和销售流程要围绕家庭共识与长期用车成本设计，而不是只做个人试驾体验。",
+      "source_ids": [
+        "S3",
+        "S5",
+        "S13"
+      ],
+      "confidence": 0.72
+    },
+    {
+      "id": "evidence_stack",
+      "title": "证据结构：官方与交付数据强，口碑仍需长期样本",
+      "chart_type": "stacked_bar",
+      "priority": 11,
+      "data": {
+        "segments": [
+          {
+            "label": "产品事实",
+            "value": 8
+          },
+          {
+            "label": "市场销量",
+            "value": 9
+          },
+          {
+            "label": "竞品信息",
+            "value": 6
+          },
+          {
+            "label": "用户口碑",
+            "value": 4
+          },
+          {
+            "label": "长期留存",
+            "value": 2
+          }
+        ]
+      },
+      "insight": "产品与交付证据很强，但长期留存、冬季真实体验和质量稳定性仍需要更多公开样本。",
+      "recommendation": "建立按季更新的车主体验证据库，特别关注 6-12 个月后的满意度与推荐率。",
+      "source_ids": [
+        "S1",
+        "S4",
+        "S5",
+        "S6",
+        "S13",
+        "S14"
+      ],
+      "confidence": 0.83
+    },
+    {
+      "id": "risk_matrix",
+      "title": "风险矩阵：竞品挤压与真实续航最关键",
+      "chart_type": "matrix",
+      "priority": 12,
+      "data": {
+        "x_axis": "发生概率",
+        "y_axis": "影响程度",
+        "items": [
+          {
+            "label": "冬季高速续航",
+            "x": 7.8,
+            "y": 8.2,
+            "size": 8
+          },
+          {
+            "label": "竞品挤压",
+            "x": 8.0,
+            "y": 8.0,
+            "size": 8
+          },
+          {
+            "label": "新车热度回落",
+            "x": 6.8,
+            "y": 7.2,
+            "size": 7
+          },
+          {
+            "label": "软件/品控波动",
+            "x": 6.4,
+            "y": 6.8,
+            "size": 6
+          },
+          {
+            "label": "交付等待",
+            "x": 5.8,
+            "y": 6.4,
+            "size": 6
+          },
+          {
+            "label": "BaaS理解偏差",
+            "x": 5.5,
+            "y": 6.2,
+            "size": 5
+          }
+        ]
+      },
+      "insight": "最高风险来自“用户预期与真实长期体验不一致”，其次是强竞品持续把选择成本拉高。",
+      "recommendation": "把风险最高的场景做成可验证承诺：冬季高速续航、换电覆盖、满载储物和软件稳定性。",
+      "source_ids": [
+        "S13",
+        "S14",
+        "S15",
+        "S16",
+        "S17"
+      ],
+      "confidence": 0.8
+    },
+    {
+      "id": "priority_actions",
+      "title": "行动优先级：先补能力成本，再放大声量",
+      "chart_type": "bar",
+      "priority": 13,
+      "data": {
+        "max": 10,
+        "items": [
+          {
+            "label": "冬季/高速证据",
+            "value": 9.2
+          },
+          {
+            "label": "满载家庭场景",
+            "value": 8.6
+          },
+          {
+            "label": "交付透明度",
+            "value": 8.1
+          },
+          {
+            "label": "BaaS成本教育",
+            "value": 7.8
+          },
+          {
+            "label": "智舱智驾稳定",
+            "value": 7.6
+          },
+          {
+            "label": "竞品对比工具",
+            "value": 7.4
+          }
+        ]
+      },
+      "insight": "这些行动都不只是传播动作，而是在降低用户真实购买门槛。",
+      "recommendation": "优先做能够让用户和家人共同决策的证据型内容与销售工具。",
+      "source_ids": [
+        "S13",
+        "S14"
+      ],
+      "confidence": 0.82
+    },
+    {
+      "id": "forecast_scenarios",
+      "title": "12 个月预测：基准情形仍可维持强需求",
+      "chart_type": "forecast",
+      "priority": 14,
+      "data": {
+        "scenarios": [
+          {
+            "name": "保守",
+            "score_after": 6.7,
+            "adoption_likelihood": "medium",
+            "assumptions": [
+              "竞品降价",
+              "真实续航口碑分化",
+              "月销回落到高位但不再破圈"
+            ]
+          },
+          {
+            "name": "基准",
+            "score_after": 7.5,
+            "adoption_likelihood": "medium-high",
+            "assumptions": [
+              "交付稳定",
+              "换电网络继续扩张",
+              "ES8 稳住高端纯电大三排第一梯队"
+            ]
+          },
+          {
+            "name": "乐观",
+            "score_after": 8.2,
+            "adoption_likelihood": "high",
+            "assumptions": [
+              "冬季/高速体验被证实",
+              "服务口碑扩散",
+              "持续压制增程竞品心智"
+            ]
+          }
+        ]
+      },
+      "insight": "除非出现质量或竞争重大负面，ES8 的需求基础不会突然消失；差别在于它能否从爆款变成稳定旗舰。",
+      "recommendation": "把 2026 年下半年的核心指标从交付量扩展到订单取消率、交付满意度、冬季投诉率和老带新率。",
+      "source_ids": [
+        "S5",
+        "S6",
+        "S8",
+        "S10"
+      ],
+      "confidence": 0.76
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "P0",
+      "area": "真实场景证据",
+      "recommendation": "建立冬季高速、满员长途、节假日换电、家庭露营和商务接待等高不确定场景的真实案例库。",
+      "rationale": "这些场景正是用户从喜欢到放心之间的关键障碍。",
+      "expected_impact": "降低续航和补能异议，提高试驾后锁单率。",
+      "effort": "medium"
+    },
+    {
+      "priority": "P0",
+      "area": "BaaS 与长期成本",
+      "recommendation": "上线买断、BaaS、换电、保险、保值和换车周期的一页式成本计算器。",
+      "rationale": "ES8 的价格方案降低门槛，但解释成本高。",
+      "expected_impact": "减少家庭决策摩擦和价格异议。",
+      "effort": "medium"
+    },
+    {
+      "priority": "P1",
+      "area": "家庭满载体验",
+      "recommendation": "把 6-7 人同乘、儿童座椅、老人上下车、后备厢和前备厢收纳做成标准化演示。",
+      "rationale": "高端家庭用户买的是真实家庭主车，不是单人试驾体验。",
+      "expected_impact": "提升家庭用户二次到店和推荐率。",
+      "effort": "medium"
+    },
+    {
+      "priority": "P1",
+      "area": "竞品对比",
+      "recommendation": "按补能、空间、长期成本、智能化、服务和品牌风险建立透明竞品对比工具。",
+      "rationale": "用户一定会比较理想、问界、特斯拉和传统豪华。",
+      "expected_impact": "降低竞品流失，提高销售端异议处理一致性。",
+      "effort": "low"
+    },
+    {
+      "priority": "P2",
+      "area": "长期口碑",
+      "recommendation": "建立 3/6/12 个月车主追踪报告，持续公开质量、能耗、补能、服务和推荐意愿。",
+      "rationale": "爆款转稳定旗舰需要长期证据，而不只是上市热度。",
+      "expected_impact": "提高老带新和长期信任。",
+      "effort": "high"
+    }
+  ],
+  "experiments": [
+    {
+      "hypothesis": "如果潜客看到同配置、同载重、同路线的冬季/高速真实续航和换电案例，续航相关犹豫会显著下降。",
+      "segment": "长途重度自驾家庭",
+      "method": "北方冬季高速、南方湿冷、高速满载三类路线做车主共创实测内容，并在销售流程中随机展示。",
+      "metric": "试驾后锁单率、续航相关异议数量、订单取消率",
+      "threshold": "锁单率提升 10% 以上，续航相关异议下降 20% 以上。",
+      "decision_rule": "达标则纳入门店标准销售材料；不达标则重做补能承诺和路线建议。"
+    },
+    {
+      "hypothesis": "把 BaaS 与买断方案做成家庭决策表，可以减少价格疑虑和销售解释成本。",
+      "segment": "高端多孩家庭",
+      "method": "门店和线上询价页提供 3/5/8 年总成本对比，加入保值、换电、换车周期假设。",
+      "metric": "价格异议处理时长、BaaS 选择率、下订率",
+      "threshold": "价格异议处理时长下降 25%，下订率提升 8%。",
+      "decision_rule": "达标则固化为所有销售渠道的第一层解释工具。"
+    },
+    {
+      "hypothesis": "全家共同体验第三排、储物、上下车和长途舒适，会比单人试驾更能推动决策。",
+      "segment": "高端多孩家庭与商务兼家庭用户",
+      "method": "设计 45 分钟家庭试驾路线，覆盖老人上下车、儿童座椅、后备厢装载和第二/三排切换。",
+      "metric": "家庭试驾后的二次到店率、锁单率、推荐意愿",
+      "threshold": "二次到店率提升 15%，锁单率提升 10%。",
+      "decision_rule": "达标则将家庭试驾作为 ES8 核心转化流程。"
+    }
+  ],
+  "risks": [
+    {
+      "type": "产品体验",
+      "severity": "high",
+      "risk": "真实续航与冬季高速口碑不稳定，会削弱纯电大三排主车信心。",
+      "mitigation": "用官方、媒体和车主共同实测形成透明边界，并提供路线补能建议。",
+      "source_ids": [
+        "S13",
+        "S14"
+      ]
+    },
+    {
+      "type": "竞争",
+      "severity": "high",
+      "risk": "问界、理想、特斯拉或传统豪华降价和新车型发布，抬高用户比较成本。",
+      "mitigation": "建立动态竞品对比和价格价值锚，不把优势只押在新车热度。",
+      "source_ids": [
+        "S15",
+        "S16",
+        "S17",
+        "S18"
+      ]
+    },
+    {
+      "type": "交付",
+      "severity": "medium",
+      "risk": "热门配置交付等待影响用户情绪和订单确定性。",
+      "mitigation": "对热门配置做清晰等待预期和补偿机制，销售端避免过度承诺。",
+      "source_ids": [
+        "S5",
+        "S8"
+      ]
+    },
+    {
+      "type": "软件与质量",
+      "severity": "medium",
+      "risk": "车机、辅助驾驶和品控细节损害旗舰感。",
+      "mitigation": "建立高频问题闭环、OTA 透明节奏和重点车主回访机制。",
+      "source_ids": [
+        "S13",
+        "S14"
+      ]
+    },
+    {
+      "type": "成本认知",
+      "severity": "medium",
+      "risk": "BaaS 总成本理解偏差导致后期不满或决策拖延。",
+      "mitigation": "把总拥有成本和不同使用年限适用人群讲清楚。",
+      "source_ids": [
+        "S3",
+        "S9"
+      ]
+    }
+  ],
+  "forecast": {
+    "horizon": "未来 12 个月",
+    "scenarios": [
+      {
+        "name": "保守",
+        "score_after": 6.7,
+        "adoption_likelihood": "medium",
+        "assumptions": [
+          "竞品降价或新车型分流",
+          "真实续航口碑分化",
+          "月销回落到高位但不再破圈"
+        ]
+      },
+      {
+        "name": "基准",
+        "score_after": 7.5,
+        "adoption_likelihood": "medium-high",
+        "assumptions": [
+          "交付稳定",
+          "换电网络继续扩张",
+          "ES8 稳住高端纯电大三排第一梯队"
+        ]
+      },
+      {
+        "name": "乐观",
+        "score_after": 8.2,
+        "adoption_likelihood": "high",
+        "assumptions": [
+          "冬季/高速体验被证实",
+          "服务口碑扩散",
+          "持续压制增程竞品心智"
+        ]
+      }
+    ],
+    "confidence": 0.76,
+    "recheck_trigger": "如果连续两个季度 ES8 月销低于预期、订单取消率显著上升、冬季/高速口碑负面集中，或问界/理想/特斯拉出现强降价，需要重新计算消费者能力分。"
+  },
+  "final_plan": {
+    "final_judgment": "ES8 不是需求不成立，而是强需求进入长期验证期。当前应判定为“修短板后放大”：继续承接高端大三排纯电窗口，但增长动作必须围绕降低能力成本展开。",
+    "strategy": "用“真实场景证据链 + BaaS 成本透明 + 家庭满载体验 + 动态竞品对比”把用户从喜欢推进到放心，从短期爆款推进到稳定旗舰。",
+    "next_30_days": [
+      "汇总并发布冬季/高速/满载/换电真实案例的第一版证据库。",
+      "把 BaaS 与买断总成本做成门店统一解释工具。",
+      "设计家庭满载试驾流程，覆盖老人、孩子、第三排和储物。"
+    ],
+    "next_60_days": [
+      "上线动态竞品对比工具，覆盖理想 L9、问界 M9、Model Y L、宝马 X5。",
+      "跟踪试驾后锁单率、订单取消率、交付等待投诉和续航异议。",
+      "建立 3 个月车主回访样本，输出第一份长期体验摘要。"
+    ],
+    "next_90_days": [
+      "按地区复盘换电覆盖、交付周期和订单转化差异。",
+      "用真实转化数据重算需求三角分数，重点观察消费者能力是否超过 8.0。",
+      "如果能力分改善，再扩大渠道投放；如果没有改善，优先修复续航/交付/质量短板。"
+    ],
+    "decision_rules": [
+      "如果消费者能力分持续低于 7.5，不建议把增长预算主要投向泛流量获客。",
+      "如果冬季/高速相关异议下降 20% 以上，可以扩大长途家庭用户投放。",
+      "如果竞品分流导致订单取消率上升，需要调整价格价值锚和销售话术。",
+      "如果 6-12 个月老带新比例提升，说明 ES8 从换代热度进入稳定口碑阶段。"
+    ]
+  },
+  "evidence": [
+    {
+      "id": "S1",
+      "title": "NIO ES8 官方产品页",
+      "url": "https://www.nio.com/es8",
+      "source_type": "official_product_page",
+      "quality": "A",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2026",
+      "claims": [
+        "空间、舒适、安全、智能系统与产品卖点"
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "S2",
+      "title": "NIO All-New ES8 Pre-order Announcement",
+      "url": "https://www.nio.com/news/20250821001",
+      "source_type": "official_news",
+      "quality": "A",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2025-08-21",
+      "claims": [
+        "预售价、BaaS、产品定位、空间和网络信息"
+      ],
+      "confidence": 0.94
+    },
+    {
+      "id": "S3",
+      "title": "NIO Day 2025 All-New ES8 Launch",
+      "url": "https://www.nio.com/news/20250920001",
+      "source_type": "official_news",
+      "quality": "A",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2025-09-20",
+      "claims": [
+        "上市价格、交付时间和版本结构"
+      ],
+      "confidence": 0.93
+    },
+    {
+      "id": "S4",
+      "title": "NIO September and Q3 2025 Delivery Update",
+      "url": "https://ir.nio.com/news-releases/news-release-details/nio-inc-provides-september-and-third-quarter-2025-delivery/",
+      "source_type": "investor_relations",
+      "quality": "A",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2025-10-01",
+      "claims": [
+        "上市后交付背景和集团交付趋势"
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "S5",
+      "title": "NIO April 2026 Delivery Update",
+      "url": "https://ir.nio.com/zh-hant/news-releases/news-release-details/nio-inc-provides-april-2026-delivery-update/",
+      "source_type": "investor_relations",
+      "quality": "A",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2026-05-01",
+      "claims": [
+        "ES8 在 215 天达成 100000 台交付里程碑",
+        "40 万元以上市场验证"
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "S6",
+      "title": "NIO May 2026 Delivery Update",
+      "url": "https://www.stocktitan.net/news/NIO/nio-inc-provides-may-2026-delivery-o4v1jhbondmw.html",
+      "source_type": "press_release_mirror",
+      "quality": "B",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2026-06-01",
+      "claims": [
+        "2026 年 5 月集团交付与 ES8 高端市场排名线索"
+      ],
+      "confidence": 0.82
+    },
+    {
+      "id": "S7",
+      "title": "NIO Q1 2026 Financial Results",
+      "url": "https://www.globenewswire.com/news-release/2026/05/21/3299109/0/en/nio-inc-reports-unaudited-first-quarter-2026-financial-results.html",
+      "source_type": "financial_results",
+      "quality": "A",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2026-05-21",
+      "claims": [
+        "集团收入、毛利、交付和现金状态"
+      ],
+      "confidence": 0.93
+    },
+    {
+      "id": "S8",
+      "title": "NIO new ES8 expected to reach 120000th delivery this month",
+      "url": "https://cnevpost.com/2026/06/05/nio-new-es8-to-reach-120000th-delivery-this-month/",
+      "source_type": "industry_media",
+      "quality": "B",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2026-06-05",
+      "claims": [
+        "最新 ES8 销量势能、月销过万和 110000/120000 台线索"
+      ],
+      "confidence": 0.8
+    },
+    {
+      "id": "S9",
+      "title": "Nio launches 3rd-gen ES8 SUV",
+      "url": "https://cnevpost.com/2025/09/20/nio-launches-3rd-gen-es8/",
+      "source_type": "industry_media",
+      "quality": "B",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2025-09-20",
+      "claims": [
+        "价格、BaaS 月费、平台、续航和性能信息"
+      ],
+      "confidence": 0.78
+    },
+    {
+      "id": "S10",
+      "title": "大型三排 SUV 市场结构变化报道",
+      "url": "https://auto.ifeng.com/c/8tGKsZmZf1R",
+      "source_type": "industry_media",
+      "quality": "B",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2026-05",
+      "claims": [
+        "纯电大型三排 SUV 与增程/燃油销量趋势"
+      ],
+      "confidence": 0.76
+    },
+    {
+      "id": "S11",
+      "title": "全新 ES8 110000 台交付报道",
+      "url": "https://auto.news18a.com/news/storys_258835.html",
+      "source_type": "industry_media",
+      "quality": "C",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2026-05-23",
+      "claims": [
+        "110000 台里程碑和规格交叉参考"
+      ],
+      "confidence": 0.55
+    },
+    {
+      "id": "S12",
+      "title": "NIO Power 官方页面",
+      "url": "https://www.nio.cn/nio-power",
+      "source_type": "official_product_page",
+      "quality": "A",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2026",
+      "claims": [
+        "换电站、充电桩和第三方充电接入规模"
+      ],
+      "confidence": 0.92
+    },
+    {
+      "id": "S13",
+      "title": "全新蔚来 ES8 真实车主口碑评测",
+      "url": "https://k.sina.com.cn/article_7857141524_1d45277140190321lw.html",
+      "source_type": "user_feedback_media",
+      "quality": "C",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2026-06-10",
+      "claims": [
+        "公开车主反馈、优点和痛点线索"
+      ],
+      "confidence": 0.56
+    },
+    {
+      "id": "S14",
+      "title": "全新蔚来 ES8 用户口碑与痛点分析",
+      "url": "https://chejiahao.autohome.com.cn/info/24743824",
+      "source_type": "user_feedback_media",
+      "quality": "C",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2026",
+      "claims": [
+        "口碑优缺点、续航和车机/智驾顾虑"
+      ],
+      "confidence": 0.55
+    },
+    {
+      "id": "S15",
+      "title": "理想 L9 官方页面",
+      "url": "https://www.lixiang.com/L9",
+      "source_type": "competitor_official",
+      "quality": "A",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2026",
+      "claims": [
+        "竞品价格和家庭旗舰定位"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "id": "S16",
+      "title": "问界 M9 官方页面",
+      "url": "https://hima.auto/wenjie/",
+      "source_type": "competitor_official",
+      "quality": "A",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2026",
+      "claims": [
+        "问界 M9 价格、定位和续航/智能化对比"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "id": "S17",
+      "title": "特斯拉 Model Y L 上市报道",
+      "url": "https://www.stcn.com/article/detail/3175664.html",
+      "source_type": "industry_media",
+      "quality": "B",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2025-08-19",
+      "claims": [
+        "Model Y L 中国上市价格与六座纯电竞争线索"
+      ],
+      "confidence": 0.72
+    },
+    {
+      "id": "S18",
+      "title": "宝马 X5 中国市场价格报道",
+      "url": "https://auto.news18a.com/",
+      "source_type": "industry_media",
+      "quality": "C",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2026",
+      "claims": [
+        "传统豪华竞品价格带参考"
+      ],
+      "confidence": 0.5
+    }
+  ],
+  "open_questions": [
+    "全新 ES8 的订单取消率、不同地区交付周期和配置选择结构未完全公开。",
+    "车主真实能耗、冬季高速和长期质量样本仍需要更系统的数据。",
+    "ES9、Model Y L 等新车型对 ES8 的实际分流比例需要后续销量验证。",
+    "BaaS 用户长期满意度与买断用户之间的差异尚缺少公开大样本。"
+  ]
+}

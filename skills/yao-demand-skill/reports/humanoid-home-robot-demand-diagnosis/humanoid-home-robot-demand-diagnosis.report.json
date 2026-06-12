@@ -1,0 +1,1423 @@
+{
+  "meta": {
+    "title": "人形家用机器人需求诊断报告",
+    "product_name": "人形家用机器人",
+    "generated_at": "2026-06-12",
+    "language": "zh-CN",
+    "analyst": "Yao Demand Skill",
+    "analysis_goal": "新品类需求验证与商业化优先级判断",
+    "target_market": "中国一二线城市中高收入家庭，重点覆盖家务辅助、银发陪护、居家安全和高端智能家居尝鲜人群",
+    "source_boundary": "用户输入为品类方向而非具体 SKU。本报告检索截至 2026-06-12 的官方产品页、行业报告、政策与媒体实测/评论；工业、科研和商用人形机器人只作为能力边界、价格区间和替代方案证据，不把其订单直接等同于家庭购买需求。"
+  },
+  "executive_summary": {
+    "one_sentence": "人形家用机器人存在真实愿望和长期趋势，但当下家庭场景的需求成立被价格、能力边界、安全隐私和可获得性明显卡住，更适合先从高端试点、养老陪护和家政服务机构共创验证，而不是面向普通家庭规模化销售。",
+    "decision": "reposition",
+    "total_score": 4.33,
+    "lack_score": 6.65,
+    "target_object_score": 5.63,
+    "consumer_ability_score": 3.46,
+    "evidence_confidence": 0.82,
+    "context_adjustment": 0.1,
+    "biggest_opportunity": "老龄化、家政服务缺口、智能家居普及和家庭自动化愿望共同形成长期需求土壤；如果能把任务范围收窄到高频、低风险、可验证的家庭任务，需求会明显增强。",
+    "biggest_risk": "真实家庭环境开放且不规则，当前通用家务能力、远程操作隐私、物理安全、价格和售后责任都没有达到普通家庭放心购买的门槛。"
+  },
+  "product_canvas": {
+    "definition": "面向家庭环境的具身智能人形机器人，采用双足或类人移动形态，能通过视觉、语音和机械臂在家中完成取物、整理、提醒、陪伴、巡检、简单家务和智能家居控制等任务。",
+    "value_proposition": "把家庭中反复出现、耗时、分散且难以标准化的家务和照护任务，转化为可委托、可监督、可逐步学习的实体执行能力。",
+    "features": [
+      "语音对话、家庭成员识别和场景记忆",
+      "取物、递送、开门、简单收纳和桌面整理",
+      "洗衣、叠衣、厨房辅助等低速家务试点任务",
+      "老人陪伴、用药/喝水提醒、跌倒巡检和异常通知",
+      "夜间安全巡逻、门窗/燃气/宠物状态检查",
+      "与智能门锁、灯光、空调、安防和家庭日历联动",
+      "远程专家模式或云端辅助，用于处理超出自主能力的复杂任务",
+      "任务日志、隐私授权、安全刹停、儿童/宠物避让和保险责任机制"
+    ],
+    "pricing": [
+      "1X 官方 NEO 页面披露早期接入可选择 20000 美元购买或 499 美元/月订阅，并计划 2026 年在美国交付早期订单 [S1]。",
+      "Unitree 官方商店显示人形机器人硬件从 4900 美元起到 100000 美元级别不等，但这些型号更多面向开发、展示、科研或行业场景 [S4]。",
+      "国内媒体和行业分析普遍认为，真正进入家庭需要把整机价格从数十万元级继续压到约 10 万元人民币或更低，并建立售后、保险和安全标准 [S10]。",
+      "家庭服务机器人也可能采用硬件销售 + 订阅、RaaS 租赁、远程专家服务、家政/养老机构共创和保险售后打包模式。"
+    ],
+    "business_model": "硬件销售或租赁 + 月度订阅/RaaS + 远程专家服务 + 家庭安全/养老服务包 + 维保保险 + 与家政、养老、地产和智能家居生态合作。",
+    "target_users": [
+      "高净值尝鲜家庭和科技爱好者",
+      "双职工育儿家庭",
+      "独居或半自理老人家庭及其子女",
+      "已有保姆、护工或家庭管家支出的高端家庭",
+      "家政、养老和高端物业机构的共创试点客户"
+    ],
+    "usage_scenarios": [
+      "下班后整理客厅、递送物品和处理低风险跑腿任务",
+      "老人独居场景的陪伴、提醒、巡检和异常通知",
+      "夜间家庭安全巡逻与智能设备联动",
+      "家政人员到场前后的辅助整理、清单核对和远程协助",
+      "高端住宅、养老机构或展示空间的服务机器人试点"
+    ],
+    "assumptions": [
+      "本报告把“人形家用机器人”定义为可进入真实家庭环境的服务机器人，不把工厂搬运、科研竞赛和舞台展示作为主要需求证据。",
+      "没有单一品牌输入时，评分以品类需求成立度为对象，而不是评价某一家公司的技术实力。",
+      "公开资料中家庭部署数据有限，因此用户口碑和真实留存仍是最弱证据层。"
+    ]
+  },
+  "segments": [
+    {
+      "name": "高端尝鲜家庭",
+      "scenario": "已购买高端智能家居、扫地机、安防设备和新能源车，愿意为前沿科技体验付费。",
+      "job_to_be_done": "让家里拥有一个可展示、可体验、能做少量实事的未来家庭助手。",
+      "current_alternatives": [
+        "智能音箱和全屋智能",
+        "扫地/洗地/割草机器人",
+        "家政服务",
+        "不买，继续观望"
+      ],
+      "buying_role": "家庭中的科技决策者和付款人主导，其他成员决定是否允许入户。",
+      "adoption_blockers": [
+        "价格与实际任务价值不匹配",
+        "远程操作和摄像头入户带来的隐私担忧",
+        "儿童、宠物和老人场景下的安全责任",
+        "售后维护和占用空间"
+      ]
+    },
+    {
+      "name": "双职工育儿家庭",
+      "scenario": "工作日时间紧张，希望降低打扫、收纳、照看孩子和家庭提醒的负担。",
+      "job_to_be_done": "减少碎片化家务和提醒任务，让父母下班后少花时间处理琐事。",
+      "current_alternatives": [
+        "钟点工和保姆",
+        "扫地机、洗地机、洗碗机、烘干机",
+        "家庭成员分工",
+        "儿童看护设备"
+      ],
+      "buying_role": "夫妻共同决策，安全和价格通常是一票否决项。",
+      "adoption_blockers": [
+        "不能替代真正育儿和复杂家务",
+        "儿童安全风险",
+        "学习和设置成本",
+        "家庭隐私和噪音"
+      ]
+    },
+    {
+      "name": "独居或半自理老人家庭",
+      "scenario": "老人需要陪伴、提醒、巡检和简单协助，子女希望远程确认状态。",
+      "job_to_be_done": "在不长期雇佣护工的情况下，提高老人居家安全感和子女的可知情程度。",
+      "current_alternatives": [
+        "护工和保姆",
+        "智能摄像头、呼叫器和穿戴设备",
+        "社区养老服务",
+        "养老机构"
+      ],
+      "buying_role": "子女付款和配置，老人决定是否愿意长期共处。",
+      "adoption_blockers": [
+        "老人对机器人形态和操作的接受度",
+        "跌倒、服药和突发事件责任边界",
+        "隐私和远程监控授权",
+        "维护、上门服务和设备故障应急"
+      ]
+    },
+    {
+      "name": "高净值家庭/家庭管家替代",
+      "scenario": "已有长期家政或管家支出，希望机器人承担夜间巡检、简单服务和可展示任务。",
+      "job_to_be_done": "把一部分可标准化服务交给机器人，同时提升家庭科技形象和服务连续性。",
+      "current_alternatives": [
+        "全职保姆/管家",
+        "物业管家",
+        "智能家居中控",
+        "安防服务"
+      ],
+      "buying_role": "家庭资产拥有者或管家团队决策，维护团队参与使用。",
+      "adoption_blockers": [
+        "机器人不能处理复杂非标服务",
+        "昂贵设备与人工成本的替代账算不清",
+        "高端家庭对隐私泄露零容忍",
+        "售后响应必须接近家电/汽车级"
+      ]
+    },
+    {
+      "name": "家政/养老机构共创客户",
+      "scenario": "机构希望通过机器人降低人力压力、展示科技能力，并积累可复制服务流程。",
+      "job_to_be_done": "先在半结构化环境中验证任务库、成本模型和服务责任，再逐步复制到家庭。",
+      "current_alternatives": [
+        "服务机器人",
+        "呼叫系统和摄像巡检",
+        "护工排班系统",
+        "人工培训和标准化流程"
+      ],
+      "buying_role": "机构经营者、运营负责人和安全责任人共同决策。",
+      "adoption_blockers": [
+        "采购预算和 ROI",
+        "责任事故和保险",
+        "员工协同成本",
+        "技术展示与真实效率之间的落差"
+      ]
+    }
+  ],
+  "competitors": [
+    {
+      "name": "1X NEO",
+      "type": "direct",
+      "positioning": "面向家庭的 NEO Home Robot，官方披露购买或订阅方案，并使用 Redwood AI 与 Expert Mode 处理部分复杂任务。",
+      "strengths": [
+        "明确面向家庭场景",
+        "有官方定价和早期交付计划",
+        "远程专家模式可能补足早期自主能力"
+      ],
+      "weaknesses": [
+        "价格和订阅成本很高",
+        "远程操作引发隐私和信任问题",
+        "早期自主能力边界仍需验证"
+      ],
+      "source_ids": [
+        "S1",
+        "S2",
+        "S12",
+        "S13"
+      ]
+    },
+    {
+      "name": "Figure 03",
+      "type": "direct",
+      "positioning": "Figure 官方强调面向日常场景和家庭环境的通用人形机器人。",
+      "strengths": [
+        "品牌和融资关注度高",
+        "主张 Helix 能理解家庭环境和处理家务任务",
+        "硬件形态更接近通用家用机器人想象"
+      ],
+      "weaknesses": [
+        "尚未形成普通家庭可购买产品",
+        "媒体测试和披露显示家庭应用仍处于早期",
+        "真实家庭数据和任务可靠性不足"
+      ],
+      "source_ids": [
+        "S3",
+        "S11"
+      ]
+    },
+    {
+      "name": "Unitree 人形机器人",
+      "type": "indirect",
+      "positioning": "以开发者、科研、展示和行业客户为主的人形机器人硬件平台，价格覆盖较广。",
+      "strengths": [
+        "硬件价格区间下降速度快",
+        "国内供应链和开发者生态强",
+        "对行业教育和能力边界有示范价值"
+      ],
+      "weaknesses": [
+        "不是完整家用服务产品",
+        "家庭任务、售后、隐私和安全包装不足",
+        "消费者购买理由不如行业客户清晰"
+      ],
+      "source_ids": [
+        "S4"
+      ]
+    },
+    {
+      "name": "扫地机、洗地机和智能家居",
+      "type": "substitute",
+      "positioning": "针对单一家庭任务的成熟机器人和智能设备组合。",
+      "strengths": [
+        "价格低、效果明确",
+        "隐私和安全风险小",
+        "已被家庭广泛接受"
+      ],
+      "weaknesses": [
+        "不能处理跨房间、多步骤和非结构化家务",
+        "陪伴和照护能力有限"
+      ],
+      "source_ids": [
+        "S5",
+        "S6"
+      ]
+    },
+    {
+      "name": "人类家政和护工",
+      "type": "manual",
+      "positioning": "最直接满足家务和照护需求的人工服务。",
+      "strengths": [
+        "处理非标任务能力强",
+        "情绪劳动和照护责任更成熟",
+        "可按需购买服务时间"
+      ],
+      "weaknesses": [
+        "服务质量不稳定",
+        "长期成本高",
+        "匹配、培训和信任成本持续存在"
+      ],
+      "source_ids": [
+        "S9"
+      ]
+    },
+    {
+      "name": "不购买/继续等待",
+      "type": "non_consumption",
+      "positioning": "用户把人形家用机器人视为未来产品，但短期不承担价格、隐私和安全风险。",
+      "strengths": [
+        "零支出、零入户风险",
+        "等待技术成熟和价格下降",
+        "继续使用现有设备和人工服务"
+      ],
+      "weaknesses": [
+        "无法获得早期自动化和陪伴体验",
+        "不能解决家务和照护人力缺口"
+      ],
+      "source_ids": []
+    }
+  ],
+  "triangle_analysis": {
+    "lack": {
+      "score": 6.65,
+      "subscores": {
+        "intensity": 7.0,
+        "frequency": 8.0,
+        "urgency": 5.0,
+        "awareness": 7.0,
+        "trend": 9.0,
+        "willingness_to_pay": 5.0
+      },
+      "evidence": [
+        "中国 60 岁及以上人口已超过 3.2 亿，老龄化与家庭照护压力构成长期需求底盘 [S7]。",
+        "国内家政服务市场规模和从业人数庞大，且存在匹配、标准化和培训成本问题，说明家庭服务确实有持续痛点 [S9]。",
+        "IFR 数据显示消费服务机器人接近 2000 万台年销量，家庭任务类占比极高，家庭自动化意愿已经被单任务机器人验证 [S5][S6]。",
+        "政策层面明确把人形机器人视为战略产品，并提到未来拓展到医疗、家政、民生服务等场景 [S8]。"
+      ],
+      "counter_evidence": [
+        "家庭并不一定缺“人形机器人”，很多家庭只缺更便宜可靠的扫地、收纳、照护提醒或家政服务。",
+        "完整人形机器人属于高价、低频、强信任产品，用户紧迫性明显低于刚需家电和人工服务。",
+        "IFR 同期数据显示 care-at-home 机器人登记销量很低，家庭照护型机器人并未被大规模购买验证 [S6]。"
+      ],
+      "reasoning": "缺乏感真实存在，但它首先指向家务和照护问题，而不是必然指向人形形态。老龄化、家政服务成本和家庭自动化趋势让长期需求有基础；短期弱点在于用户对“现在就买一台类人机器人进家”的迫切性和付费意愿不足。",
+      "improvement_path": "把宏大的家用机器人愿景拆成高频、可量化、低风险的场景：老人夜间巡检、取物递送、用药提醒、异常通知、简单整理，并用真实家庭试点证明用户愿意为这些任务持续付费。"
+    },
+    "target_object": {
+      "score": 5.63,
+      "subscores": {
+        "job_fit": 6.0,
+        "clarity": 7.0,
+        "differentiation": 7.0,
+        "proof": 3.5,
+        "category_fit": 5.0,
+        "time_to_value": 4.0
+      },
+      "evidence": [
+        "1X NEO 和 Figure 03 都把家庭、日常任务和家务协助作为公开叙事，说明目标物方向清晰 [S1][S2][S3]。",
+        "人形形态相对单任务机器人有跨房间、使用人类工具、与家庭成员互动的差异化想象。",
+        "Unitree 等平台把硬件价格和可获得性向下推进，但更多仍是开发和行业硬件，不等同于完整家庭产品 [S4]。"
+      ],
+      "counter_evidence": [
+        "公开资料显示家庭场景下的完整自主能力仍不成熟，部分复杂任务需要远程专家或人工遥操作 [S1][S2][S11][S12]。",
+        "单任务家电和人工家政在大多数家庭任务上更便宜、更确定、更容易被接受。",
+        "“类人形态”带来展示价值，也带来机械安全、空间占用、恐惧感和隐私审查成本。"
+      ],
+      "reasoning": "目标物有强想象和一定产品雏形，但距离“家庭购买后稳定完成核心任务”还有明显证据缺口。它更像早期通用平台，而不是已经被充分证明的家用产品。当前最有机会的目标物不是“全能机器人”，而是“可监管的家庭任务执行终端”。",
+      "improvement_path": "把目标物从全能管家重定位为可解释、可授权、可远程接管的家庭任务机器人；先证明 5 个任务的完成率、失败恢复、用户复用率和事故率，再扩展通用家务。"
+    },
+    "consumer_ability": {
+      "score": 3.46,
+      "subscores": {
+        "money_cost": 2.5,
+        "action_cost": 4.0,
+        "learning_cost": 5.0,
+        "trust_cost": 2.5,
+        "risk_cost": 2.5,
+        "image_cost": 6.0,
+        "availability": 3.0
+      },
+      "evidence": [
+        "1X NEO 官方披露的购买价和订阅价对普通家庭仍属高门槛 [S1]。",
+        "行业观点认为人形机器人进入家庭还需要价格下降、安全稳定、标准、保险、维护和生态配套 [S10]。",
+        "媒体对 NEO 的评论集中质疑远程操作和家庭数据隐私，这会显著推高信任成本 [S12][S13]。",
+        "欧盟 AI Act 等风险监管框架显示，具备物理交互和安全影响的 AI 产品需要更严格的风险治理 [S14][S15]。"
+      ],
+      "counter_evidence": [
+        "高端尝鲜家庭和机构客户能承受更高价格，并愿意为展示、陪伴或服务创新付费。",
+        "订阅/RaaS、押金可退、保险和上门维保可降低一次性购买阻力。",
+        "如果机器人只进入半结构化空间或限定任务，安全和隐私成本可以被局部压低。"
+      ],
+      "reasoning": "消费者能力是当前最大短板。即使需求愿望和产品叙事成立，家庭要把一个带摄像头、机械臂、可能远程接管的昂贵设备放进私密空间，需要同时跨过金钱、信任、安全、维护和责任边界。普通家庭短期很难承受这组成本。",
+      "improvement_path": "不要先要求普通家庭购买整机；先用机构共创、押金试用、月租保险包、本地隐私模式、清晰遥操作授权和有限任务库降低能力成本。"
+    }
+  },
+  "visual_diagnostics": [
+    {
+      "id": "score",
+      "title": "总分诊断：愿望强，家庭购买能力不足",
+      "chart_type": "score_gauge",
+      "priority": 1,
+      "data": {
+        "score": 4.33,
+        "label": "需求总分",
+        "decision": "重定入口市场"
+      },
+      "insight": "总分处在脆弱区间，说明品类长期方向成立，但现在不适合按普通家电逻辑直接规模化销售。",
+      "recommendation": "先把入口市场从普通家庭改为高端试点、养老陪护和家政/机构共创。",
+      "source_ids": [
+        "S1",
+        "S7",
+        "S9",
+        "S10",
+        "S12"
+      ],
+      "confidence": 0.82
+    },
+    {
+      "id": "triangle",
+      "title": "需求三角雷达：消费者能力拖后腿",
+      "chart_type": "radar",
+      "priority": 2,
+      "data": {
+        "items": [
+          {
+            "label": "缺乏感",
+            "value": 6.65
+          },
+          {
+            "label": "目标物",
+            "value": 5.63
+          },
+          {
+            "label": "消费者能力",
+            "value": 3.46
+          }
+        ]
+      },
+      "insight": "缺乏感不低，目标物也有雏形；真正限制需求成立的是家庭能否放心、负担并持续使用。",
+      "recommendation": "所有迭代优先围绕降成本、降风险、降信任门槛，而不是继续堆叠能力演示。",
+      "source_ids": [
+        "S1",
+        "S10",
+        "S12",
+        "S13"
+      ],
+      "confidence": 0.8
+    },
+    {
+      "id": "short-board",
+      "title": "三大维度短板：先修能力成本",
+      "chart_type": "bar",
+      "priority": 3,
+      "data": {
+        "max": 10,
+        "items": [
+          {
+            "label": "缺乏感",
+            "value": 6.65
+          },
+          {
+            "label": "目标物",
+            "value": 5.63
+          },
+          {
+            "label": "消费者能力",
+            "value": 3.46
+          }
+        ]
+      },
+      "insight": "能力成本低到足以否定规模化家庭购买，继续强化愿景不会自动转化为订单。",
+      "recommendation": "先用订阅、保险、可退押金、上门服务和透明隐私协议重构购买门槛。",
+      "source_ids": [
+        "S1",
+        "S10",
+        "S13"
+      ],
+      "confidence": 0.84
+    },
+    {
+      "id": "subscore-heatmap",
+      "title": "子项热力图：钱、信任、风险是红区",
+      "chart_type": "heatmap",
+      "priority": 4,
+      "data": {
+        "items": [
+          {
+            "group": "缺乏感",
+            "label": "强度",
+            "value": 7
+          },
+          {
+            "group": "缺乏感",
+            "label": "频率",
+            "value": 8
+          },
+          {
+            "group": "缺乏感",
+            "label": "紧迫",
+            "value": 5
+          },
+          {
+            "group": "缺乏感",
+            "label": "趋势",
+            "value": 9
+          },
+          {
+            "group": "目标物",
+            "label": "匹配",
+            "value": 6
+          },
+          {
+            "group": "目标物",
+            "label": "清晰",
+            "value": 7
+          },
+          {
+            "group": "目标物",
+            "label": "验证",
+            "value": 3.5
+          },
+          {
+            "group": "目标物",
+            "label": "见效",
+            "value": 4
+          },
+          {
+            "group": "能力",
+            "label": "金钱",
+            "value": 2.5
+          },
+          {
+            "group": "能力",
+            "label": "行动",
+            "value": 4
+          },
+          {
+            "group": "能力",
+            "label": "信任",
+            "value": 2.5
+          },
+          {
+            "group": "能力",
+            "label": "风险",
+            "value": 2.5
+          }
+        ]
+      },
+      "insight": "热力图显示最弱项并非用户没有需求，而是用户不敢让设备进入家庭核心空间。",
+      "recommendation": "先把隐私、安全、故障和责任做成产品的一等功能。",
+      "source_ids": [
+        "S10",
+        "S12",
+        "S13",
+        "S14"
+      ],
+      "confidence": 0.78
+    },
+    {
+      "id": "lack-detail",
+      "title": "缺乏感结构：趋势强，紧迫性一般",
+      "chart_type": "radar",
+      "priority": 5,
+      "data": {
+        "items": [
+          {
+            "label": "强度",
+            "value": 7
+          },
+          {
+            "label": "频率",
+            "value": 8
+          },
+          {
+            "label": "紧迫",
+            "value": 5
+          },
+          {
+            "label": "认知",
+            "value": 7
+          },
+          {
+            "label": "趋势",
+            "value": 9
+          },
+          {
+            "label": "付费",
+            "value": 5
+          }
+        ]
+      },
+      "insight": "用户知道家务和照护很痛，也相信自动化是趋势，但短期仍可用人工服务和单任务设备替代。",
+      "recommendation": "不要抽象讲未来家庭，应聚焦老人安全、夜间巡检、取物递送等更有触发感的场景。",
+      "source_ids": [
+        "S5",
+        "S6",
+        "S7",
+        "S9"
+      ],
+      "confidence": 0.79
+    },
+    {
+      "id": "target-detail",
+      "title": "目标物结构：概念清楚，实证不足",
+      "chart_type": "radar",
+      "priority": 6,
+      "data": {
+        "items": [
+          {
+            "label": "任务匹配",
+            "value": 6
+          },
+          {
+            "label": "清晰",
+            "value": 7
+          },
+          {
+            "label": "差异",
+            "value": 7
+          },
+          {
+            "label": "证据",
+            "value": 3.5
+          },
+          {
+            "label": "品类",
+            "value": 5
+          },
+          {
+            "label": "见效",
+            "value": 4
+          }
+        ]
+      },
+      "insight": "人形形态的差异化明确，但真实家庭任务完成率、失败恢复和长期复用还缺少强证据。",
+      "recommendation": "先公开有限任务的家庭测试基准，而不是只展示实验室或舞台能力。",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S11"
+      ],
+      "confidence": 0.76
+    },
+    {
+      "id": "ability-detail",
+      "title": "消费者能力：隐私和价格同时压制",
+      "chart_type": "radar",
+      "priority": 7,
+      "data": {
+        "items": [
+          {
+            "label": "金钱",
+            "value": 2.5
+          },
+          {
+            "label": "行动",
+            "value": 4
+          },
+          {
+            "label": "学习",
+            "value": 5
+          },
+          {
+            "label": "信任",
+            "value": 2.5
+          },
+          {
+            "label": "风险",
+            "value": 2.5
+          },
+          {
+            "label": "形象",
+            "value": 6
+          },
+          {
+            "label": "可得",
+            "value": 3
+          }
+        ]
+      },
+      "insight": "高端用户可能愿意展示科技形象，但普通家庭很难同时接受高价、摄像头、机械臂和远程接管。",
+      "recommendation": "把遥操作状态、录像边界、数据用途和本地控制做成可见、可审计、可撤销的机制。",
+      "source_ids": [
+        "S1",
+        "S12",
+        "S13",
+        "S15"
+      ],
+      "confidence": 0.82
+    },
+    {
+      "id": "segment-matrix",
+      "title": "人群机会矩阵：先吃高端与机构共创",
+      "chart_type": "matrix",
+      "priority": 8,
+      "data": {
+        "x_axis": "采用能力/支付承受",
+        "y_axis": "需求强度",
+        "items": [
+          {
+            "label": "高端尝鲜家庭",
+            "x": 5.8,
+            "y": 6.5,
+            "size": 7
+          },
+          {
+            "label": "独居老人家庭",
+            "x": 4.2,
+            "y": 8.2,
+            "size": 8
+          },
+          {
+            "label": "双职工育儿家庭",
+            "x": 4.8,
+            "y": 7,
+            "size": 7
+          },
+          {
+            "label": "高净值管家家庭",
+            "x": 6,
+            "y": 7.5,
+            "size": 8
+          },
+          {
+            "label": "机构共创客户",
+            "x": 6.5,
+            "y": 7.8,
+            "size": 7
+          }
+        ]
+      },
+      "insight": "老人家庭需求最强但采用能力不高；高净值家庭和机构共创客户更适合作为早期入口。",
+      "recommendation": "用机构和高端家庭积累场景，再把验证后的任务包下沉到老人家庭。",
+      "source_ids": [
+        "S7",
+        "S9",
+        "S10"
+      ],
+      "confidence": 0.74
+    },
+    {
+      "id": "competitor-matrix",
+      "title": "替代方案矩阵：成熟替代品更可买",
+      "chart_type": "matrix",
+      "priority": 9,
+      "data": {
+        "x_axis": "家庭任务覆盖",
+        "y_axis": "购买确定性",
+        "items": [
+          {
+            "label": "人形家用机器人",
+            "x": 6.2,
+            "y": 3.5,
+            "size": 7
+          },
+          {
+            "label": "1X NEO",
+            "x": 6,
+            "y": 3.2,
+            "size": 6
+          },
+          {
+            "label": "Figure 03",
+            "x": 6.5,
+            "y": 2.8,
+            "size": 6
+          },
+          {
+            "label": "Unitree 硬件",
+            "x": 4.5,
+            "y": 4.5,
+            "size": 5
+          },
+          {
+            "label": "扫地机智能家居",
+            "x": 3.8,
+            "y": 8.3,
+            "size": 8
+          },
+          {
+            "label": "人类家政护工",
+            "x": 7,
+            "y": 6,
+            "size": 8
+          },
+          {
+            "label": "不购买观望",
+            "x": 1.5,
+            "y": 9,
+            "size": 6
+          }
+        ]
+      },
+      "insight": "人形机器人覆盖面看起来更大，但购买确定性低；扫地机、智能家居和人工服务更容易成交。",
+      "recommendation": "定位上不要直接替代全部家政，应先补成熟替代品做不了的夜间、跨设备和陪伴巡检任务。",
+      "source_ids": [
+        "S1",
+        "S3",
+        "S4",
+        "S5",
+        "S9"
+      ],
+      "confidence": 0.78
+    },
+    {
+      "id": "adoption-funnel",
+      "title": "采用漏斗：从愿望到持续使用急剧收缩",
+      "chart_type": "funnel",
+      "priority": 10,
+      "data": {
+        "items": [
+          {
+            "label": "知道愿望",
+            "value": 100
+          },
+          {
+            "label": "愿意了解",
+            "value": 72
+          },
+          {
+            "label": "接受入户",
+            "value": 36
+          },
+          {
+            "label": "接受高价",
+            "value": 18
+          },
+          {
+            "label": "接受试点",
+            "value": 10
+          },
+          {
+            "label": "持续使用",
+            "value": 5
+          }
+        ]
+      },
+      "insight": "最大流失不在认知层，而在入户许可、高价购买和持续任务价值。",
+      "recommendation": "漏斗优化要从隐私授权、可退试用和任务复用率开始，不要只做品牌教育。",
+      "source_ids": [
+        "S1",
+        "S12",
+        "S13"
+      ],
+      "assumption_based": true,
+      "confidence": 0.68
+    },
+    {
+      "id": "evidence-stack",
+      "title": "证据结构：政策与官方多，用户留存少",
+      "chart_type": "stacked_bar",
+      "priority": 11,
+      "data": {
+        "segments": [
+          {
+            "label": "官方产品",
+            "value": 5
+          },
+          {
+            "label": "政策行业",
+            "value": 5
+          },
+          {
+            "label": "媒体实测",
+            "value": 4
+          },
+          {
+            "label": "用户反馈",
+            "value": 1
+          },
+          {
+            "label": "假设",
+            "value": 3
+          }
+        ]
+      },
+      "insight": "证据偏向供给侧和趋势侧，缺少真实家庭长期使用数据，因此不能高估需求确定性。",
+      "recommendation": "下一轮必须补真实家庭访谈、上门试用和 30 天留存数据。",
+      "source_ids": [
+        "S1",
+        "S5",
+        "S8",
+        "S9",
+        "S11"
+      ],
+      "confidence": 0.75
+    },
+    {
+      "id": "risk-matrix",
+      "title": "风险矩阵：隐私、安全、能力落差最危险",
+      "chart_type": "matrix",
+      "priority": 12,
+      "data": {
+        "x_axis": "发生概率",
+        "y_axis": "影响程度",
+        "items": [
+          {
+            "label": "隐私远程操作",
+            "x": 8,
+            "y": 9,
+            "size": 9
+          },
+          {
+            "label": "物理安全",
+            "x": 7,
+            "y": 9,
+            "size": 8
+          },
+          {
+            "label": "价格过高",
+            "x": 8,
+            "y": 8,
+            "size": 8
+          },
+          {
+            "label": "能力不达预期",
+            "x": 8,
+            "y": 8,
+            "size": 8
+          },
+          {
+            "label": "售后维护",
+            "x": 6,
+            "y": 7,
+            "size": 6
+          },
+          {
+            "label": "监管责任",
+            "x": 5,
+            "y": 8,
+            "size": 6
+          }
+        ]
+      },
+      "insight": "风险并非附属问题，而是直接决定用户是否允许机器人进家的购买条件。",
+      "recommendation": "先发布家庭安全白皮书、隐私控制台、遥操作标识和保险责任方案。",
+      "source_ids": [
+        "S10",
+        "S12",
+        "S13",
+        "S14",
+        "S15"
+      ],
+      "confidence": 0.84
+    },
+    {
+      "id": "priority-matrix",
+      "title": "建议优先级：别先做全能家务",
+      "chart_type": "matrix",
+      "priority": 13,
+      "data": {
+        "x_axis": "执行难度",
+        "y_axis": "需求增益",
+        "items": [
+          {
+            "label": "养老陪护 MVP",
+            "x": 4,
+            "y": 8,
+            "size": 8
+          },
+          {
+            "label": "隐私本地化",
+            "x": 6,
+            "y": 9,
+            "size": 9
+          },
+          {
+            "label": "RaaS 降价",
+            "x": 7,
+            "y": 8,
+            "size": 8
+          },
+          {
+            "label": "家政机构共创",
+            "x": 5,
+            "y": 7,
+            "size": 7
+          },
+          {
+            "label": "高端试点",
+            "x": 4,
+            "y": 6,
+            "size": 6
+          },
+          {
+            "label": "通用家务全自动",
+            "x": 9,
+            "y": 9,
+            "size": 9
+          }
+        ]
+      },
+      "insight": "通用家务全自动价值大但难度最高，短期更适合先做养老陪护、隐私机制和机构共创。",
+      "recommendation": "产品路线应从可控高价值任务切入，再逐步扩大自动化边界。",
+      "source_ids": [
+        "S9",
+        "S10",
+        "S13"
+      ],
+      "confidence": 0.76
+    },
+    {
+      "id": "forecast",
+      "title": "情景预测：重定位后才有上升空间",
+      "chart_type": "forecast",
+      "priority": 14,
+      "data": {
+        "scenarios": [
+          {
+            "name": "概念预售",
+            "score_after": 4.3,
+            "adoption_likelihood": "低"
+          },
+          {
+            "name": "养老共创",
+            "score_after": 5.8,
+            "adoption_likelihood": "中"
+          },
+          {
+            "name": "安全降价",
+            "score_after": 6.9,
+            "adoption_likelihood": "中高"
+          }
+        ]
+      },
+      "insight": "如果仍按概念预售推进，需求分数难明显改善；若先验证养老/机构场景并降低能力成本，才可能进入可验证区间。",
+      "recommendation": "用 90 天试点证明安全、价格和任务复用，再讨论面向家庭扩大销售。",
+      "source_ids": [
+        "S1",
+        "S9",
+        "S10"
+      ],
+      "confidence": 0.73
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "P0",
+      "area": "入口市场",
+      "recommendation": "不要把首个商业化目标定义为普通家庭全能管家，应重定位为高端家庭试点、养老陪护 MVP 和家政/养老机构共创。",
+      "rationale": "普通家庭的金钱、信任和安全门槛过高；机构和高端家庭更能承受早期产品的不确定性。",
+      "expected_impact": "提高试点成交率和有效反馈密度，减少因能力落差造成的品牌损伤。",
+      "effort": "中"
+    },
+    {
+      "priority": "P0",
+      "area": "隐私与安全",
+      "recommendation": "把本地隐私模式、远程接管可见提示、数据用途开关、物理急停、儿童/宠物安全和保险责任写进产品默认体验。",
+      "rationale": "家庭场景不是办公室或工厂，隐私和物理安全是购买前置条件。",
+      "expected_impact": "降低入户许可阻力，提升家庭成员共同决策通过率。",
+      "effort": "高"
+    },
+    {
+      "priority": "P1",
+      "area": "任务库",
+      "recommendation": "先固定 5 个低风险高频任务：取物递送、用药/喝水提醒、夜间巡检、简单整理、智能家居联动。",
+      "rationale": "有限任务可以被定义、测试和改进，比“全能家务”更容易形成真实购买理由。",
+      "expected_impact": "提高用户对实际价值的感知，并形成可复用的家庭任务数据。",
+      "effort": "中"
+    },
+    {
+      "priority": "P1",
+      "area": "价格模型",
+      "recommendation": "采用押金可退、短期租赁、含保险和维保的 RaaS，而不是要求用户一次性承担整机购买。",
+      "rationale": "人形家用机器人价格和故障风险都高，租赁和保障能降低试错成本。",
+      "expected_impact": "扩大可试用人群，并提升真实需求验证速度。",
+      "effort": "中高"
+    },
+    {
+      "priority": "P1",
+      "area": "渠道",
+      "recommendation": "优先绑定养老机构、家政公司、高端物业和智能家居集成商，构建半结构化试点场景。",
+      "rationale": "这些渠道能提供明确场景、维护能力和责任接口，比直接卖给散户更稳。",
+      "expected_impact": "降低落地复杂度，形成家庭销售前的示范案例。",
+      "effort": "中"
+    },
+    {
+      "priority": "P2",
+      "area": "证据建设",
+      "recommendation": "公开家庭场景测试基准：任务完成率、失败恢复时间、误触发率、隐私授权率、30 天复用率和事故率。",
+      "rationale": "当前证据偏供给侧，用户需要看到家庭真实环境下的可重复结果。",
+      "expected_impact": "提升目标物证明强度，为下一轮融资、渠道和销售提供可信材料。",
+      "effort": "中"
+    }
+  ],
+  "experiments": [
+    {
+      "hypothesis": "高净值家庭愿意为可监管的家庭任务机器人支付月租，而不是购买高价整机。",
+      "segment": "高端尝鲜家庭",
+      "method": "30 户深访 + 价格敏感度 fake-door 页面 + 可退押金测试",
+      "metric": "押金转化率、愿意月租区间、隐私条款接受率",
+      "threshold": "可退押金转化率达到 8% 以上，且 30% 以上样本接受 3000 元/月以上服务包",
+      "decision_rule": "未达阈值则停止直接家庭预售，转向机构共创"
+    },
+    {
+      "hypothesis": "老人家庭更愿意购买夜间巡检和异常通知，而不是抽象陪伴。",
+      "segment": "独居或半自理老人家庭",
+      "method": "20 户老人家庭 Wizard-of-Oz 试点，机器人部分任务由人工遥操作模拟",
+      "metric": "任务复用率、老人抵触率、子女付费意愿、异常通知信任度",
+      "threshold": "30 天内每户每周复用 4 次以上，子女愿付费比例超过 40%",
+      "decision_rule": "若复用集中在巡检和提醒，则优先养老安全 MVP"
+    },
+    {
+      "hypothesis": "透明遥操作和本地隐私控制能显著提升入户接受率。",
+      "segment": "双职工育儿家庭",
+      "method": "A/B 展示三种隐私方案：默认云端、可见遥操作、本地优先且可撤销授权",
+      "metric": "入户同意率、儿童场景接受率、数据上传授权率",
+      "threshold": "本地优先方案的入户同意率比默认云端高 30% 以上",
+      "decision_rule": "若差异显著，则把本地隐私控制作为核心卖点"
+    },
+    {
+      "hypothesis": "家政/养老机构可以先承接早期机器人维护和任务标准化。",
+      "segment": "家政/养老机构共创客户",
+      "method": "2 家机构 60 天试点，比较机器人辅助前后的巡检、人力响应和客户满意度",
+      "metric": "人均服务时长下降、故障响应时间、机构续租意愿",
+      "threshold": "单项流程节省 15% 以上人力时间，机构愿意续租或共同采购",
+      "decision_rule": "达标则优先 B2B2C 渠道，不达标则缩小任务范围"
+    },
+    {
+      "hypothesis": "用户更愿意为结果付费，而不是为人形硬件本身付费。",
+      "segment": "高净值家庭/家庭管家替代",
+      "method": "比较三种报价：整机购买、月租硬件、按任务/安全服务包收费",
+      "metric": "报价偏好、拒绝原因、可接受服务等级",
+      "threshold": "服务包偏好超过整机购买 2 倍",
+      "decision_rule": "若成立，则销售话术从硬件参数改为服务结果和责任保障"
+    }
+  ],
+  "risks": [
+    {
+      "type": "隐私",
+      "severity": "high",
+      "risk": "摄像头、麦克风、家庭地图和远程操作会让用户担心私人空间被记录或外部人员访问。",
+      "mitigation": "默认本地处理敏感数据；远程操作必须显著提示、授权、可回放审计，并允许用户一键关闭。",
+      "source_ids": [
+        "S12",
+        "S13"
+      ]
+    },
+    {
+      "type": "安全",
+      "severity": "high",
+      "risk": "机械臂、移动底盘和双足运动可能对儿童、老人、宠物和家具造成伤害。",
+      "mitigation": "限定速度和力矩，建立家庭安全区、急停按钮、碰撞日志和第三方保险。",
+      "source_ids": [
+        "S10",
+        "S15"
+      ]
+    },
+    {
+      "type": "能力落差",
+      "severity": "high",
+      "risk": "宣传中的全能家务与真实家庭非结构化环境之间存在巨大落差，容易造成退货和口碑反噬。",
+      "mitigation": "只承诺通过测试的有限任务；所有演示标注自主、半自主或远程辅助状态。",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S11",
+        "S12"
+      ]
+    },
+    {
+      "type": "价格",
+      "severity": "high",
+      "risk": "整机和订阅价格过高，用户很难把价值与家政、护工、扫地机等替代方案算清楚。",
+      "mitigation": "提供租赁、押金试用、分任务服务包和明确的人工替代成本对比。",
+      "source_ids": [
+        "S1",
+        "S4",
+        "S10"
+      ]
+    },
+    {
+      "type": "售后责任",
+      "severity": "medium",
+      "risk": "家庭机器人故障需要上门维护、备用方案和事故处理，传统电子产品售后不足以覆盖。",
+      "mitigation": "用汽车/家电级维保网络、备用设备和 SLA 合同支撑早期客户。",
+      "source_ids": [
+        "S10"
+      ]
+    },
+    {
+      "type": "监管",
+      "severity": "medium",
+      "risk": "具备物理交互和安全影响的 AI 产品可能面临高风险 AI、产品安全、数据合规和责任认定要求。",
+      "mitigation": "从试点阶段就建立风险评估、数据治理、日志审计和第三方安全认证。",
+      "source_ids": [
+        "S14",
+        "S15"
+      ]
+    }
+  ],
+  "forecast": {
+    "horizon": "未来 12-24 个月，以中国一二线城市高收入家庭和机构试点为主要观察窗口",
+    "scenarios": [
+      {
+        "name": "概念预售继续推进",
+        "score_after": 4.3,
+        "adoption_likelihood": "低",
+        "assumptions": [
+          "继续以全能家务和未来家庭为主叙事",
+          "价格、隐私、遥操作和任务完成率没有透明改善",
+          "用户更多围观和试用，普通家庭购买转化低"
+        ]
+      },
+      {
+        "name": "养老/机构共创优先",
+        "score_after": 5.8,
+        "adoption_likelihood": "中",
+        "assumptions": [
+          "先在养老、家政和高端物业中验证巡检、提醒、递送任务",
+          "采用租赁和保险服务包降低购买门槛",
+          "积累可公开的家庭任务基准和真实复用数据"
+        ]
+      },
+      {
+        "name": "安全、价格和能力同时改善",
+        "score_after": 6.9,
+        "adoption_likelihood": "中高",
+        "assumptions": [
+          "整机或服务包价格显著下降",
+          "本地隐私、远程授权、物理安全和售后责任成为行业默认配置",
+          "至少 5 个家庭任务在 30 天试点中证明高复用和低事故率"
+        ]
+      }
+    ],
+    "confidence": 0.73,
+    "recheck_trigger": "当出现 1000 户以上真实家庭部署、30 天留存和任务完成率公开数据，或出现低于 10 万元人民币且含维保保险的可靠家用型号时，应重新评分。"
+  },
+  "final_plan": {
+    "final_judgment": "人形家用机器人不是没有需求，而是当前需求被消费者能力短板压住。现阶段不宜按普通消费电子直接规模化销售，应先做重定位：从全能家庭管家转向可监管的高价值家庭任务机器人。",
+    "strategy": "用高端家庭和机构共创证明有限任务价值，用隐私安全和租赁服务降低入户门槛，再逐步扩大家庭任务边界。",
+    "next_30_days": [
+      "明确首版家庭任务范围，只保留取物递送、夜间巡检、用药/喝水提醒、简单整理和智能家居联动。",
+      "完成 30 户目标家庭深访，分别覆盖高端尝鲜、双职工育儿、老人家庭和已有家政支出的家庭。",
+      "设计隐私与遥操作协议原型，包括可见提示、本地优先、授权撤销、数据日志和一键关停。",
+      "制作三种价格方案 fake-door 页面：整机购买、月租/RaaS、按服务包付费。"
+    ],
+    "next_60_days": [
+      "与 1-2 家养老或家政机构启动半结构化场景试点，验证巡检、提醒和递送任务。",
+      "招募 10 户高净值家庭做上门演示或 Wizard-of-Oz 试用，记录入户许可、恐惧点和任务复用。",
+      "建立安全事件分级和售后责任流程，明确哪些任务必须人工接管或禁止执行。",
+      "发布第一版家庭任务基准：任务完成率、失败恢复时间、隐私授权率、用户满意度。"
+    ],
+    "next_90_days": [
+      "根据试点数据决定主入口：养老陪护、家政共创或高端家庭体验。",
+      "把价格模型收敛到可退押金 + 月租 + 保险维保包，避免高价整机直接劝退。",
+      "形成 3 个可公开案例，分别证明安全、复用和付费意愿。",
+      "重新计算需求三角分数，若消费者能力仍低于 5.0，则继续延后家庭规模化销售。"
+    ],
+    "decision_rules": [
+      "若 30 天家庭试点每户每周复用低于 3 次，停止全能家用叙事，回到单场景任务。",
+      "若隐私条款接受率低于 50%，优先重做本地隐私和遥操作授权机制。",
+      "若用户愿付月租中位数不足以覆盖硬件折旧、上门维护和保险成本，不进入量产销售。",
+      "若机构试点不能证明 15% 以上流程效率提升，不把 B2B2C 作为主渠道。",
+      "只有当消费者能力分数提升到 5.5 以上，且目标物证明分数超过 6.5，才讨论普通家庭扩张。"
+    ]
+  },
+  "evidence": [
+    {
+      "id": "S1",
+      "title": "1X NEO Home Robot Order Page",
+      "url": "https://www.1x.tech/order",
+      "source_type": "official product/order page",
+      "quality": "A",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2026",
+      "claims": [
+        "NEO Home Robot 提供 499 美元/月订阅和 20000 美元购买选项。",
+        "官网说明早期美国交付从 2026 年开始，复杂任务可使用 Expert Mode 远程专家辅助。"
+      ],
+      "confidence": 0.9
+    },
+    {
+      "id": "S2",
+      "title": "1X NEO Product Page",
+      "url": "https://www.1x.tech/neo",
+      "source_type": "official product page",
+      "quality": "A",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2026",
+      "claims": [
+        "官网描述 NEO 可在家庭中执行开门、洗衣等任务，并使用 Redwood AI 和 Expert Mode。",
+        "官方叙事明确把家庭场景作为核心方向。"
+      ],
+      "confidence": 0.86
+    },
+    {
+      "id": "S3",
+      "title": "Figure AI Official Website",
+      "url": "https://www.figure.ai/",
+      "source_type": "official product/company page",
+      "quality": "A",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2026",
+      "claims": [
+        "Figure 03 被官方描述为面向 everyday 场景的通用人形机器人。",
+        "官方提到 Helix 能处理家庭环境和家务任务。"
+      ],
+      "confidence": 0.82
+    },
+    {
+      "id": "S4",
+      "title": "Unitree Humanoid Robot Shop",
+      "url": "https://shop.unitree.com/collections/humanoid-robot",
+      "source_type": "official product/shop page",
+      "quality": "A",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2026",
+      "claims": [
+        "Unitree 官方商店列出多款人形机器人，价格从 4900 美元起到 100000 美元级别。",
+        "这些产品更偏开发、科研、展示和行业硬件，不等同于完整家用服务产品。"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "id": "S5",
+      "title": "IFR: Service Robots See Global Growth Boom",
+      "url": "https://ifr.org/ifr-press-releases/news/service-robots-see-global-growth-boom",
+      "source_type": "industry report / association press release",
+      "quality": "A",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2025",
+      "claims": [
+        "IFR 报道服务机器人市场增长，消费服务机器人 2024 年销量接近 2000 万台。",
+        "家庭任务类是消费服务机器人中最大的类别。"
+      ],
+      "confidence": 0.86
+    },
+    {
+      "id": "S6",
+      "title": "World Robotics 2025 Service Robots Executive Summary",
+      "url": "https://www.diag.uniroma1.it/~deluca/rob1_en/2025_WorldRobotics_ExecSummary_Service.pdf",
+      "source_type": "industry report PDF",
+      "quality": "A",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2025",
+      "claims": [
+        "消费机器人接近 2010 万台，家庭任务占消费机器人绝大多数。",
+        "care-at-home 机器人登记销量仍很低，说明家庭照护型机器人尚未规模化。"
+      ],
+      "confidence": 0.84
+    },
+    {
+      "id": "S7",
+      "title": "国家统计局：2025 年人口数据解读",
+      "url": "https://www.stats.gov.cn/xxgk/jd/sjjd2020/202601/t20260119_1962338.html",
+      "source_type": "official statistics",
+      "quality": "A",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2026-01-19",
+      "claims": [
+        "2025 年中国 60 岁及以上人口超过 3.23 亿，65 岁及以上人口超过 2.23 亿。",
+        "城镇化率继续提升，家庭服务与照护场景会更多集中在城市家庭。"
+      ],
+      "confidence": 0.92
+    },
+    {
+      "id": "S8",
+      "title": "新华社：工信部印发人形机器人创新发展指导意见",
+      "url": "https://www.news.cn/tech/20231103/f76096318e964b13a8c31011de8cda2a/c.html",
+      "source_type": "policy news / official media",
+      "quality": "A",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2023-11-03",
+      "claims": [
+        "指导意见把人形机器人视为战略产品，并提出到 2025 年初步建立创新体系、实现批量生产和示范应用。",
+        "到 2027 年形成产业生态，并拓展到医疗、家政、民生服务等场景。"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "id": "S9",
+      "title": "新华社瞭望：AI 重塑家政服务",
+      "url": "https://www.news.cn/tech/20260203/f213de0442a247c4873895b65307c3d9/c.html",
+      "source_type": "official media / industry analysis",
+      "quality": "B",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2026-02-03",
+      "claims": [
+        "国内家政服务市场规模和从业人数庞大，存在匹配、标准化、培训和质量问题。",
+        "报道提到陪伴机器人和家务机器人在机构、社区和家庭场景探索，但也强调成本、技术适配、隐私和复杂动作仍是障碍。"
+      ],
+      "confidence": 0.78
+    },
+    {
+      "id": "S10",
+      "title": "数字中国/经济日报：人形机器人何时进入百姓家",
+      "url": "https://www.digitalchina.gov.cn/2025/xwzx/szkx/202505/t20250512_5017222.htm",
+      "source_type": "official media / industry analysis",
+      "quality": "B",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2025-05-12",
+      "claims": [
+        "报道认为工业制造等结构化场景更可能先商业落地，家庭场景仍需要时间。",
+        "人形机器人进入家庭需要价格下降、安全稳定、标准、保险、维护和生态配套。"
+      ],
+      "confidence": 0.8
+    },
+    {
+      "id": "S11",
+      "title": "TIME: Figure 03 Humanoid Robot Reveal",
+      "url": "https://time.com/7324233/figure-03-robot-humanoid-reveal/",
+      "source_type": "third-party media",
+      "quality": "B",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2025",
+      "claims": [
+        "媒体报道 Figure 03 面向家庭目标，但演示和实际落地仍显示其尚未准备好面向普通家庭大规模使用。",
+        "真实家庭数据和任务可靠性仍是关键缺口。"
+      ],
+      "confidence": 0.74
+    },
+    {
+      "id": "S12",
+      "title": "Tom's Guide: NEO Home Robot Privacy and Teleoperation Concerns",
+      "url": "https://www.tomsguide.com/home/smart-home/the-neo-home-robot-thats-breaking-the-internet-promises-to-change-the-world-but-theres-one-huge-problem",
+      "source_type": "third-party media / critique",
+      "quality": "B",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2025",
+      "claims": [
+        "报道提到 NEO 的价格和月费，并重点质疑远程操作、摄像头和家庭隐私问题。",
+        "文章提醒用户谨慎看待早期预订承诺。"
+      ],
+      "confidence": 0.72
+    },
+    {
+      "id": "S13",
+      "title": "TechRadar: NEO Robot Privacy Concerns",
+      "url": "https://www.techradar.com/ai-platforms-assistants/neo-robot-sounds-like-the-answer-to-our-home-chore-prayers-but-also-a-potential-privacy-nightmare",
+      "source_type": "third-party media / critique",
+      "quality": "B",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2025",
+      "claims": [
+        "报道讨论 NEO 的遥操作、家庭数据和隐私边界。",
+        "文章指出家庭机器人需要明确数据控制、限制和类似 GDPR 的保护。"
+      ],
+      "confidence": 0.72
+    },
+    {
+      "id": "S14",
+      "title": "European Commission: AI Act Regulatory Framework",
+      "url": "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai",
+      "source_type": "regulatory source",
+      "quality": "A",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2026",
+      "claims": [
+        "欧盟 AI Act 是按风险分层治理 AI 的综合框架。",
+        "高风险 AI 需要更严格的合规和风险管理。"
+      ],
+      "confidence": 0.9
+    },
+    {
+      "id": "S15",
+      "title": "EU AI Act Article 6: Classification Rules for High-Risk AI Systems",
+      "url": "https://artificialintelligenceact.eu/article/6/",
+      "source_type": "legal reference",
+      "quality": "B",
+      "retrieved_at": "2026-06-12",
+      "published_at": "2024",
+      "claims": [
+        "若 AI 系统作为特定产品安全组件或落入高风险场景，可能被归入高风险 AI。",
+        "家用人形机器人涉及物理世界和安全影响，需提前考虑风险治理。"
+      ],
+      "confidence": 0.78
+    }
+  ],
+  "open_questions": [
+    "目标产品是否采用双足人形、轮式人形，还是带机械臂的家庭服务机器人？不同形态会显著影响安全和成本。",
+    "首批市场是否限定中国一二线高净值家庭，还是面向全球早期采用者？",
+    "机器人是否允许远程专家接管？如果允许，隐私授权和数据边界如何设计？",
+    "首版是否必须做家务，还是可以从老人安全巡检、陪伴和提醒切入？",
+    "团队是否已有家庭场景任务完成率、事故率和 30 天复用率数据？"
+  ]
+}

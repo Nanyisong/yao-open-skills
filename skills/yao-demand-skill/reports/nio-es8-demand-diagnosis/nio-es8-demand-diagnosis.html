@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>蔚来 ES8 需求诊断报告</title>
+  <meta name="generator" content="Yao Demand Skill">
+  <style>
+    :root {
+      --paper: #ffffff;
+      --near-black: #141413;
+      --dark-warm: #3d3d3a;
+      --olive: #504e49;
+      --stone: #6b6a64;
+      --border: #e8e6dc;
+      --border-soft: #efeee8;
+      --brand: #1B365D;
+      --brand-soft: #EEF2F7;
+      --green: #2f6f4e;
+      --amber: #8a641f;
+      --red: #9b3a32;
+      --serif: "TsangerJinKai02", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "STSong", Georgia, serif;
+      --mono: "JetBrains Mono", "SF Mono", Consolas, "TsangerJinKai02", "Source Han Serif SC", monospace;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 78px; background: var(--paper); overflow-x: hidden; }
+    body {
+      margin: 0;
+      padding-top: 57px;
+      background: var(--paper);
+      color: var(--near-black);
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.62;
+      letter-spacing: 0;
+      overflow-x: hidden;
+      text-rendering: optimizeLegibility;
+    }
+    .top-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 14px rgba(20, 20, 19, 0.06);
+    }
+    .nav-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 10px 28px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .nav-title {
+      min-width: 180px;
+      max-width: 320px;
+      color: var(--near-black);
+      font-size: 15px;
+      line-height: 1.25;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .nav-links {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      white-space: nowrap;
+    }
+    .nav-links a {
+      color: var(--brand);
+      text-decoration: none;
+      font-size: 14px;
+      padding: 5px 0 7px;
+      border-bottom: 2px solid transparent;
+    }
+    .nav-links a:hover { border-bottom-color: var(--brand); }
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 48px 28px 72px;
+    }
+    header.report-header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 28px;
+      margin-bottom: 28px;
+    }
+    .eyebrow {
+      color: var(--brand);
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(32px, 5vw, 54px);
+      line-height: 1.12;
+      font-weight: 500;
+    }
+    h2 {
+      margin: 0 0 16px;
+      font-size: 26px;
+      line-height: 1.25;
+      font-weight: 500;
+      border-left: 4px solid var(--brand);
+      padding-left: 12px;
+    }
+    h3 {
+      margin: 0 0 8px;
+      font-size: 19px;
+      line-height: 1.3;
+      font-weight: 500;
+    }
+    h4 {
+      margin: 18px 0 8px;
+      font-size: 15px;
+      line-height: 1.35;
+      color: var(--dark-warm);
+      font-weight: 500;
+    }
+    section {
+      padding: 46px 0;
+      border-top: 1px solid var(--border-soft);
+      scroll-margin-top: 74px;
+    }
+    section + section {
+      margin-top: 8px;
+    }
+    .lede {
+      max-width: 980px;
+      color: var(--dark-warm);
+      font-size: 18px;
+      line-height: 1.72;
+      text-wrap: pretty;
+    }
+    .meta-grid, .score-grid, .fact-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+      align-items: start;
+    }
+    .meta-item, .score-card, .fact-box, .dimension-card, .note {
+      border: 1px solid var(--border);
+      background: var(--paper);
+      border-radius: 0;
+      padding: 16px;
+    }
+    .meta-item span, .score-card span {
+      display: block;
+      color: var(--stone);
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+    .score-card strong {
+      display: block;
+      font-size: 28px;
+      line-height: 1.1;
+      font-weight: 500;
+      color: var(--brand);
+    }
+    .decision {
+      display: inline-block;
+      color: var(--brand);
+      background: var(--brand-soft);
+      border-radius: 0;
+      padding: 2px 8px;
+      font-size: 14px;
+    }
+    .total-score {
+      border-top: 4px solid var(--brand);
+    }
+    .band-strong strong, .band-good strong { color: var(--green); }
+    .band-uncertain strong { color: var(--amber); }
+    .band-fragile strong, .band-weak strong { color: var(--red); }
+    .dimension-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .diagram-block {
+      margin: 18px 0 26px;
+      padding: 0;
+      overflow-x: auto;
+    }
+    .diagram-block svg {
+      width: 100%;
+      min-width: 720px;
+      height: auto;
+      display: block;
+    }
+    .triangle-figure {
+      text-align: center;
+    }
+    .triangle-figure svg {
+      max-width: 760px;
+      min-width: 0;
+      margin: 0 auto;
+    }
+    .figure-caption {
+      margin-top: 8px;
+      color: var(--stone);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    .svg-title {
+      font-family: var(--serif);
+      font-size: 19px;
+      font-weight: 500;
+      fill: #141413;
+    }
+    .svg-body {
+      font-family: var(--serif);
+      font-size: 17px;
+      fill: #141413;
+    }
+    .svg-small {
+      font-family: var(--serif);
+      font-size: 13px;
+      fill: #3d3d3a;
+    }
+    .svg-score {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 500;
+      fill: #1B365D;
+    }
+    .svg-caption {
+      font-family: var(--serif);
+      font-size: 15px;
+      font-weight: 500;
+      fill: #141413;
+    }
+    .dimension-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-soft);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+    .dimension-head span {
+      color: var(--brand);
+      font-size: 28px;
+      line-height: 1;
+    }
+    .table-wrap {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      margin: 14px 0 22px;
+      border: 1px solid var(--border-soft);
+      border-radius: 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    table.compact { font-size: 13px; }
+    th {
+      text-align: left;
+      color: var(--dark-warm);
+      font-weight: 500;
+      background: #fbfbfa;
+      border-bottom: 1px solid var(--border);
+      padding: 10px 12px;
+    }
+    td {
+      vertical-align: top;
+      border-bottom: 1px solid var(--border-soft);
+      padding: 9px 12px;
+      overflow-wrap: anywhere;
+    }
+    tr:last-child td { border-bottom: 0; }
+    ul { margin: 8px 0 0 20px; padding: 0; }
+    li { margin: 4px 0; }
+    p, li {
+      text-wrap: pretty;
+    }
+    .fact-box p, .dimension-card p, .note, .chart-insight, .chart-recommendation {
+      text-align: justify;
+      text-justify: inter-ideograph;
+    }
+    .muted { color: var(--stone); }
+    .note {
+      margin-top: 14px;
+      background: #fbfbfa;
+      overflow-wrap: anywhere;
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 18px;
+    }
+    .product-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 22px;
+      align-items: stretch;
+    }
+    .product-overview .fact-box {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-width: 0;
+      padding: 18px 18px 20px;
+    }
+    .product-overview .fact-box h3 {
+      margin-bottom: 12px;
+    }
+    .product-overview .fact-box p {
+      margin: 0;
+    }
+    .product-overview .fact-box ul {
+      margin-top: 0;
+    }
+    .product-overview .fact-box li {
+      margin: 0 0 7px;
+    }
+    .product-overview .fact-box li:last-child {
+      margin-bottom: 0;
+    }
+    .product-detail-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 18px;
+      margin-top: 22px;
+      align-items: stretch;
+    }
+    .product-detail-card {
+      min-height: 230px;
+    }
+    .product-detail-grid .feature-list {
+      column-count: 2;
+      column-gap: 30px;
+    }
+    .product-detail-grid .feature-list li {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin-bottom: 8px;
+    }
+    .product-detail-grid .pricing-list li {
+      margin-bottom: 10px;
+    }
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+      align-items: stretch;
+    }
+    .chart-module {
+      border: 1px solid var(--border);
+      background: var(--paper);
+      border-radius: 0;
+      padding: 20px;
+      break-inside: avoid;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-width: 0;
+    }
+    .chart-module-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(150px, 220px);
+      gap: 14px;
+      border-bottom: 1px solid var(--border-soft);
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+    }
+    .chart-kicker {
+      display: inline-block;
+      color: var(--brand);
+      font-size: 12px;
+      line-height: 1;
+      margin-bottom: 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .chart-confidence {
+      max-width: 220px;
+      color: var(--stone);
+      font-size: 12px;
+      line-height: 1.35;
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+    .chart-svg-wrap {
+      width: 100%;
+      overflow: visible;
+      margin: 10px 0 16px;
+    }
+    .chart-svg-wrap svg {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      height: auto;
+      background: #ffffff;
+    }
+    .chart-insight, .chart-recommendation {
+      margin: 8px 0 0;
+      color: var(--dark-warm);
+      font-size: 14px;
+      line-height: 1.62;
+      overflow-wrap: anywhere;
+    }
+    .chart-insight {
+      margin-top: auto;
+    }
+    a { color: var(--brand); overflow-wrap: anywhere; }
+    @media (max-width: 1100px) and (min-width: 821px) {
+      .product-summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    @page {
+      size: A4;
+      margin: 18mm 20mm 20mm 20mm;
+      background: #ffffff;
+    }
+    @media print {
+      body { padding-top: 0; font-size: 10pt; line-height: 1.52; }
+      .top-nav { display: none; }
+      main { max-width: none; padding: 0; }
+      section, .score-card, .fact-box, .risk-item { break-inside: avoid; }
+      h1 { font-size: 28pt; line-height: 1.12; }
+      h2 { font-size: 16pt; }
+      h3 { font-size: 12pt; }
+      .lede { max-width: none; font-size: 11pt; line-height: 1.58; }
+      .dimension-grid, .meta-grid, .score-grid, .fact-grid, .two-col, .product-summary-grid, .product-detail-grid {
+        display: block;
+      }
+      .chart-grid {
+        display: block;
+      }
+      .chart-module {
+        margin-bottom: 13pt;
+        padding: 12pt;
+        border-color: #d8d5c9;
+      }
+      .chart-module-head {
+        display: block;
+      }
+      .chart-confidence {
+        max-width: none;
+        text-align: left;
+      }
+      .chart-svg-wrap {
+        overflow: visible;
+      }
+      .chart-svg-wrap svg {
+        min-width: 0;
+      }
+      .dimension-card, .score-card, .meta-item, .fact-box {
+        margin-bottom: 10pt;
+      }
+      table { min-width: 0; font-size: 8.5pt; }
+      .table-wrap { overflow: visible; border: 0; }
+    }
+    @media (max-width: 820px) {
+      .nav-inner { padding: 10px 18px; display: block; }
+      .nav-title { max-width: none; margin-bottom: 8px; }
+      main { padding: 32px 18px 56px; }
+      .meta-grid, .score-grid, .fact-grid, .dimension-grid, .two-col, .chart-grid, .product-summary-grid, .product-detail-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      h1 { font-size: 34px; }
+      h2 { font-size: 23px; }
+      .chart-module-head {
+        display: block;
+      }
+      .chart-confidence {
+        max-width: none;
+        text-align: left;
+        margin-top: 4px;
+      }
+      .chart-svg-wrap {
+        overflow: visible;
+      }
+      .chart-svg-wrap svg {
+        max-width: 100%;
+        min-width: 0;
+      }
+      .product-detail-card {
+        min-height: 0;
+      }
+      .product-detail-grid .feature-list {
+        column-count: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="nav-inner">
+      <div class="nav-title">蔚来全新 ES8</div>
+      <div class="nav-links"><a href="#summary">摘要</a><a href="#visuals">图表</a><a href="#product">产品</a><a href="#users">用户</a><a href="#competitors">竞品</a><a href="#triangle">三角</a><a href="#evidence">证据</a><a href="#recommendations">建议</a><a href="#forecast">预测</a><a href="#risks">风险</a><a href="#final">方案</a><a href="#method">方法</a><a href="#appendix">附录</a></div>
+    </div>
+  </nav>
+  <main>
+    <header class="report-header">
+      <div class="eyebrow">需求三角评估报告</div>
+      <h1>蔚来 ES8 需求诊断报告</h1>
+      <p class="lede">全新 ES8 已经证明高端大型三排纯电 SUV 存在强需求，真正限制它从爆发走向长期稳态的不是目标物本身，而是用户对真实续航、冬季/高速能耗、满载储物、质量细节和竞品替代的能力成本判断。</p>
+      <div class="meta-grid">
+        <div class="meta-item"><span>产品</span>蔚来全新 ES8</div>
+        <div class="meta-item"><span>日期</span>2026-06-12</div>
+        <div class="meta-item"><span>目标市场</span>中国高端大型三排 SUV 市场</div>
+        <div class="meta-item"><span>建议决策</span><span class="decision">先修短板</span></div>
+      </div>
+      <div class="score-grid">
+        <div class="score-card total-score band-good"><span>总分</span><strong>7.4</strong></div>
+        <div class="score-card"><span>缺乏感</span><strong>8.3</strong></div>
+        <div class="score-card"><span>目标物</span><strong>8.5</strong></div>
+        <div class="score-card"><span>消费者能力</span><strong>7.4</strong></div>
+      </div>
+    </header>
+
+    <section id="summary">
+      <h2>执行摘要</h2>
+      <div class="two-col">
+        <div class="fact-box"><h3>最大机会</h3><p>大型三排纯电 SUV 正在从边缘尝试进入高端家庭主车选择，ES8 借助换电、BaaS、服务体系和 100000 台级别交付验证占据先发位置。</p></div>
+        <div class="fact-box"><h3>最大风险</h3><p>新车热度、竞品挤压和真实用车不确定性可能让用户从“喜欢这台车”退回到“再等等、再比较、再看口碑”。</p></div>
+      </div>
+      <div class="note"><strong>最短板：</strong>消费者能力<br><strong>下一步：</strong>用“真实场景证据链 + BaaS 成本透明 + 家庭满载体验 + 动态竞品对比”把用户从喜欢推进到放心，从短期爆款推进到稳定旗舰。</div>
+    </section>
+
+    <section id="visuals">
+      <h2>可视化诊断</h2>
+      <p class="lede">这些图表把需求强弱、短板、证据、风险和行动优先级压缩成可扫描的诊断模块。每个模块都包含解读和建议，避免只有图表没有判断。</p>
+      <div class="chart-grid">
+
+    <article class="chart-module chart-score_gauge" id="chart-total_score_gauge">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">score_gauge</span>
+          <h3>总分诊断：强需求已成立，先修短板再放大</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.88 | S4 S5 S6 S8</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 640 260" role="img" aria-label="总分诊断图表"><rect x="0" y="0" width="640" height="260" fill="#ffffff"/><text x="42" y="52" font-size="24" fill="#141413" font-family="serif">需求总分</text><text x="598" y="52" text-anchor="end" font-size="32" fill="#1B365D" font-family="serif">7.4</text><rect x="42.0" y="98" width="216.8" height="40" fill="#f4e5e2" stroke="#ffffff"/><text x="150.4" y="164" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">弱</text><rect x="264.4" y="98" width="77.8" height="40" fill="#f2ead9" stroke="#ffffff"/><text x="303.3" y="164" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">脆弱</text><rect x="347.8" y="98" width="66.7" height="40" fill="#eef2f7" stroke="#ffffff"/><text x="381.2" y="164" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">可验证</text><rect x="420.1" y="98" width="72.3" height="40" fill="#e7f0ea" stroke="#ffffff"/><text x="456.2" y="164" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">较强</text><rect x="497.9" y="98" width="100.1" height="40" fill="#dfece5" stroke="#ffffff"/><text x="548.0" y="164" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">强</text><line x1="42" y1="138" x2="598" y2="138" stroke="#141413" stroke-width="1"/><line x1="451.2" y1="78" x2="451.2" y2="150" stroke="#141413" stroke-width="3"/><circle cx="451.2" cy="78" r="7" fill="#1B365D"/><text x="42" y="214" font-size="18" fill="#141413" font-family="serif">建议动作：修短板后放大</text></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>总分进入较强区间，说明 ES8 不是概念型需求，而是已经被交付和销量验证的真实需求。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>增长节奏上不宜只加大投放，应把冬季/高速续航、满载体验和交付口碑作为下一轮放大的前置条件。</p>
+    </article>
+
+
+    <article class="chart-module chart-radar" id="chart-triangle_radar">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">radar</span>
+          <h3>需求三角雷达：消费者能力是相对短板</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.88 | S1 S2 S5 S13 S14</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 520 350" role="img" aria-label="雷达图"><rect x="0" y="0" width="520" height="350" fill="#ffffff"/><polygon points="260.0,156.5 278.6,188.8 241.4,188.8" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="260.0,135.0 297.2,199.5 222.8,199.5" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="260.0,113.5 315.9,210.2 204.1,210.3" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="260.0,92.0 334.5,221.0 185.5,221.0" fill="none" stroke="#efeee8" stroke-width="1"/><line x1="260" y1="178" x2="260.0" y2="92.0" stroke="#e8e6dc" stroke-width="1"/><text x="260.0" y="56.0" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">缺乏感</text><text x="260.0" y="73.0" text-anchor="middle" font-size="12" fill="#1B365D" font-family="serif">8.3</text><line x1="260" y1="178" x2="334.5" y2="221.0" stroke="#e8e6dc" stroke-width="1"/><text x="374.3" y="239.0" text-anchor="start" font-size="14" fill="#3d3d3a" font-family="serif">目标物</text><text x="374.3" y="256.0" text-anchor="start" font-size="12" fill="#1B365D" font-family="serif">8.5</text><line x1="260" y1="178" x2="185.5" y2="221.0" stroke="#e8e6dc" stroke-width="1"/><text x="145.7" y="239.0" text-anchor="end" font-size="14" fill="#3d3d3a" font-family="serif">消费者能力</text><text x="145.7" y="256.0" text-anchor="end" font-size="12" fill="#1B365D" font-family="serif">7.4</text><polygon points="260.0,106.9 323.5,214.6 204.9,209.8" fill="#EEF2F7" fill-opacity="0.82" stroke="#1B365D" stroke-width="3"/><circle cx="260" cy="178" r="3" fill="#141413"/></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>缺乏感与目标物都很强，说明市场问题和解决方案匹配度较高；能力维度低于另外两维。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>把营销重点从“旗舰配置”转向“用户能否放心买、放心用、长期不后悔”。</p>
+    </article>
+
+
+    <article class="chart-module chart-bar" id="chart-dimension_short_board">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">bar</span>
+          <h3>三大维度短板：能力成本最需要修</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.86 | S13 S14</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 640 230" role="img" aria-label="条形图"><rect x="0" y="0" width="640" height="230" fill="#ffffff"/><text x="36" y="57" font-size="15" fill="#141413" font-family="serif">缺乏感</text><rect x="200" y="40" width="346" height="20" fill="#f7f7f4" stroke="#efeee8"/><rect x="200" y="40" width="286.1" height="20" fill="#1B365D"/><text x="598" y="57" text-anchor="end" font-size="15" fill="#2f6f4e" font-family="serif">8.3</text><text x="36" y="99" font-size="15" fill="#141413" font-family="serif">目标物</text><rect x="200" y="82" width="346" height="20" fill="#f7f7f4" stroke="#efeee8"/><rect x="200" y="82" width="294.8" height="20" fill="#1B365D"/><text x="598" y="99" text-anchor="end" font-size="15" fill="#2f6f4e" font-family="serif">8.5</text><text x="36" y="141" font-size="15" fill="#141413" font-family="serif">消费者能力</text><rect x="200" y="124" width="346" height="20" fill="#f7f7f4" stroke="#efeee8"/><rect x="200" y="124" width="256.0" height="20" fill="#1B365D"/><text x="598" y="141" text-anchor="end" font-size="15" fill="#2f6f4e" font-family="serif">7.4</text></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>能力维度没有低到否定需求，但会决定高峰销量能否转化为长期稳定销量。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>优先降低能力成本，而不是继续堆叠配置卖点。</p>
+    </article>
+
+
+    <article class="chart-module chart-heatmap" id="chart-subscore_heatmap">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">heatmap</span>
+          <h3>子项热力图：风险成本与行动成本是红区</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.84 | S1 S7 S13 S14</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 520 368" role="img" aria-label="热力图"><rect x="0" y="0" width="520" height="368" fill="#ffffff"/><text x="28" y="42" font-size="14" fill="#141413" font-family="serif">缺乏感</text><rect x="28" y="60" width="138" height="30" rx="4" fill="#e7f0ea" stroke="#e8e6dc"/><text x="38" y="80" font-size="12" fill="#3d3d3a" font-family="serif">强度</text><text x="156" y="80" text-anchor="end" font-size="14" fill="#2f6f4e" font-family="serif">8</text><rect x="28" y="100" width="138" height="30" rx="4" fill="#e7f0ea" stroke="#e8e6dc"/><text x="38" y="120" font-size="12" fill="#3d3d3a" font-family="serif">频率</text><text x="156" y="120" text-anchor="end" font-size="14" fill="#2f6f4e" font-family="serif">8</text><rect x="28" y="140" width="138" height="30" rx="4" fill="#e7f0ea" stroke="#e8e6dc"/><text x="38" y="160" font-size="12" fill="#3d3d3a" font-family="serif">紧迫</text><text x="156" y="160" text-anchor="end" font-size="14" fill="#2f6f4e" font-family="serif">7</text><rect x="28" y="180" width="138" height="30" rx="4" fill="#e7f0ea" stroke="#e8e6dc"/><text x="38" y="200" font-size="12" fill="#3d3d3a" font-family="serif">显性</text><text x="156" y="200" text-anchor="end" font-size="14" fill="#2f6f4e" font-family="serif">9</text><rect x="28" y="220" width="138" height="30" rx="4" fill="#e7f0ea" stroke="#e8e6dc"/><text x="38" y="240" font-size="12" fill="#3d3d3a" font-family="serif">趋势</text><text x="156" y="240" text-anchor="end" font-size="14" fill="#2f6f4e" font-family="serif">9</text><rect x="28" y="260" width="138" height="30" rx="4" fill="#e7f0ea" stroke="#e8e6dc"/><text x="38" y="280" font-size="12" fill="#3d3d3a" font-family="serif">支付</text><text x="156" y="280" text-anchor="end" font-size="14" fill="#2f6f4e" font-family="serif">8</text><text x="184" y="42" font-size="14" fill="#141413" font-family="serif">目标物</text><rect x="184" y="60" width="138" height="30" rx="4" fill="#e7f0ea" stroke="#e8e6dc"/><text x="194" y="80" font-size="12" fill="#3d3d3a" font-family="serif">匹配</text><text x="312" y="80" text-anchor="end" font-size="14" fill="#2f6f4e" font-family="serif">9</text><rect x="184" y="100" width="138" height="30" rx="4" fill="#e7f0ea" stroke="#e8e6dc"/><text x="194" y="120" font-size="12" fill="#3d3d3a" font-family="serif">清晰</text><text x="312" y="120" text-anchor="end" font-size="14" fill="#2f6f4e" font-family="serif">8</text><rect x="184" y="140" width="138" height="30" rx="4" fill="#e7f0ea" stroke="#e8e6dc"/><text x="194" y="160" font-size="12" fill="#3d3d3a" font-family="serif">差异</text><text x="312" y="160" text-anchor="end" font-size="14" fill="#2f6f4e" font-family="serif">9</text><rect x="184" y="180" width="138" height="30" rx="4" fill="#e7f0ea" stroke="#e8e6dc"/><text x="194" y="200" font-size="12" fill="#3d3d3a" font-family="serif">证明</text><text x="312" y="200" text-anchor="end" font-size="14" fill="#2f6f4e" font-family="serif">9</text><rect x="184" y="220" width="138" height="30" rx="4" fill="#e7f0ea" stroke="#e8e6dc"/><text x="194" y="240" font-size="12" fill="#3d3d3a" font-family="serif">品类</text><text x="312" y="240" text-anchor="end" font-size="14" fill="#2f6f4e" font-family="serif">8</text><rect x="184" y="260" width="138" height="30" rx="4" fill="#e7f0ea" stroke="#e8e6dc"/><text x="194" y="280" font-size="12" fill="#3d3d3a" font-family="serif">见效</text><text x="312" y="280" text-anchor="end" font-size="14" fill="#2f6f4e" font-family="serif">8</text><text x="340" y="42" font-size="14" fill="#141413" font-family="serif">消费者能力</text><rect x="340" y="60" width="138" height="30" rx="4" fill="#e7f0ea" stroke="#e8e6dc"/><text x="350" y="80" font-size="12" fill="#3d3d3a" font-family="serif">价格</text><text x="468" y="80" text-anchor="end" font-size="14" fill="#2f6f4e" font-family="serif">7</text><rect x="340" y="100" width="138" height="30" rx="4" fill="#f2ead9" stroke="#e8e6dc"/><text x="350" y="120" font-size="12" fill="#3d3d3a" font-family="serif">行动</text><text x="468" y="120" text-anchor="end" font-size="14" fill="#8a641f" font-family="serif">7</text><rect x="340" y="140" width="138" height="30" rx="4" fill="#e7f0ea" stroke="#e8e6dc"/><text x="350" y="160" font-size="12" fill="#3d3d3a" font-family="serif">学习</text><text x="468" y="160" text-anchor="end" font-size="14" fill="#2f6f4e" font-family="serif">8</text><rect x="340" y="180" width="138" height="30" rx="4" fill="#e7f0ea" stroke="#e8e6dc"/><text x="350" y="200" font-size="12" fill="#3d3d3a" font-family="serif">信任</text><text x="468" y="200" text-anchor="end" font-size="14" fill="#2f6f4e" font-family="serif">8</text><rect x="340" y="220" width="138" height="30" rx="4" fill="#f2ead9" stroke="#e8e6dc"/><text x="350" y="240" font-size="12" fill="#3d3d3a" font-family="serif">风险</text><text x="468" y="240" text-anchor="end" font-size="14" fill="#8a641f" font-family="serif">7</text><rect x="340" y="260" width="138" height="30" rx="4" fill="#e7f0ea" stroke="#e8e6dc"/><text x="350" y="280" font-size="12" fill="#3d3d3a" font-family="serif">形象</text><text x="468" y="280" text-anchor="end" font-size="14" fill="#2f6f4e" font-family="serif">8</text><rect x="340" y="300" width="138" height="30" rx="4" fill="#e7f0ea" stroke="#e8e6dc"/><text x="350" y="320" font-size="12" fill="#3d3d3a" font-family="serif">可得</text><text x="468" y="320" text-anchor="end" font-size="14" fill="#2f6f4e" font-family="serif">8</text></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>目标物相关子项整体偏高，消费者能力里的行动成本与风险成本明显偏低。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>用更透明的用车成本、续航边界、交付周期和售后 SLA 来降低犹豫。</p>
+    </article>
+
+
+    <article class="chart-module chart-radar" id="chart-lack_detail">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">radar</span>
+          <h3>缺乏感细分：趋势与支付意愿最强</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.86 | S5 S8 S10</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 520 350" role="img" aria-label="雷达图"><rect x="0" y="0" width="520" height="350" fill="#ffffff"/><polygon points="260.0,156.5 278.6,167.2 278.6,188.8 260.0,199.5 241.4,188.8 241.4,167.2" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="260.0,135.0 297.2,156.5 297.2,199.5 260.0,221.0 222.8,199.5 222.8,156.5" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="260.0,113.5 315.9,145.8 315.9,210.2 260.0,242.5 204.1,210.3 204.1,145.8" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="260.0,92.0 334.5,135.0 334.5,221.0 260.0,264.0 185.5,221.0 185.5,135.0" fill="none" stroke="#efeee8" stroke-width="1"/><line x1="260" y1="178" x2="260.0" y2="92.0" stroke="#e8e6dc" stroke-width="1"/><text x="260.0" y="56.0" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">痛感强度</text><text x="260.0" y="73.0" text-anchor="middle" font-size="12" fill="#1B365D" font-family="serif">8.5</text><line x1="260" y1="178" x2="334.5" y2="135.0" stroke="#e8e6dc" stroke-width="1"/><text x="374.3" y="117.0" text-anchor="start" font-size="14" fill="#3d3d3a" font-family="serif">使用频率</text><text x="374.3" y="134.0" text-anchor="start" font-size="12" fill="#1B365D" font-family="serif">7.8</text><line x1="260" y1="178" x2="334.5" y2="221.0" stroke="#e8e6dc" stroke-width="1"/><text x="374.3" y="239.0" text-anchor="start" font-size="14" fill="#3d3d3a" font-family="serif">替换紧迫</text><text x="374.3" y="256.0" text-anchor="start" font-size="12" fill="#1B365D" font-family="serif">7.0</text><line x1="260" y1="178" x2="260.0" y2="264.0" stroke="#e8e6dc" stroke-width="1"/><text x="260.0" y="300.0" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">问题显性</text><text x="260.0" y="317.0" text-anchor="middle" font-size="12" fill="#1B365D" font-family="serif">8.8</text><line x1="260" y1="178" x2="185.5" y2="221.0" stroke="#e8e6dc" stroke-width="1"/><text x="145.7" y="239.0" text-anchor="end" font-size="14" fill="#3d3d3a" font-family="serif">趋势推力</text><text x="145.7" y="256.0" text-anchor="end" font-size="12" fill="#1B365D" font-family="serif">9.0</text><line x1="260" y1="178" x2="185.5" y2="135.0" stroke="#e8e6dc" stroke-width="1"/><text x="145.7" y="117.0" text-anchor="end" font-size="14" fill="#3d3d3a" font-family="serif">支付意愿</text><text x="145.7" y="134.0" text-anchor="end" font-size="12" fill="#1B365D" font-family="serif">8.5</text><polygon points="260.0,104.9 318.1,144.5 312.1,208.1 260.0,253.7 193.0,216.7 196.7,141.4" fill="#EEF2F7" fill-opacity="0.82" stroke="#1B365D" stroke-width="3"/><circle cx="260" cy="178" r="3" fill="#141413"/></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>市场正在从“纯电大三排能不能卖”转向“谁能稳定吃下这个价格带”。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>抓住纯电大型三排的品类窗口，但避免把短期换代热度误判为永久领先。</p>
+    </article>
+
+
+    <article class="chart-module chart-radar" id="chart-target_detail">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">radar</span>
+          <h3>目标物细分：换电与大三排形成强识别</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.87 | S1 S2 S3 S12</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 520 350" role="img" aria-label="雷达图"><rect x="0" y="0" width="520" height="350" fill="#ffffff"/><polygon points="260.0,156.5 278.6,167.2 278.6,188.8 260.0,199.5 241.4,188.8 241.4,167.2" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="260.0,135.0 297.2,156.5 297.2,199.5 260.0,221.0 222.8,199.5 222.8,156.5" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="260.0,113.5 315.9,145.8 315.9,210.2 260.0,242.5 204.1,210.3 204.1,145.8" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="260.0,92.0 334.5,135.0 334.5,221.0 260.0,264.0 185.5,221.0 185.5,135.0" fill="none" stroke="#efeee8" stroke-width="1"/><line x1="260" y1="178" x2="260.0" y2="92.0" stroke="#e8e6dc" stroke-width="1"/><text x="260.0" y="56.0" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">任务匹配</text><text x="260.0" y="73.0" text-anchor="middle" font-size="12" fill="#1B365D" font-family="serif">8.7</text><line x1="260" y1="178" x2="334.5" y2="135.0" stroke="#e8e6dc" stroke-width="1"/><text x="374.3" y="117.0" text-anchor="start" font-size="14" fill="#3d3d3a" font-family="serif">认知清晰</text><text x="374.3" y="134.0" text-anchor="start" font-size="12" fill="#1B365D" font-family="serif">8.2</text><line x1="260" y1="178" x2="334.5" y2="221.0" stroke="#e8e6dc" stroke-width="1"/><text x="374.3" y="239.0" text-anchor="start" font-size="14" fill="#3d3d3a" font-family="serif">差异化</text><text x="374.3" y="256.0" text-anchor="start" font-size="12" fill="#1B365D" font-family="serif">8.6</text><line x1="260" y1="178" x2="260.0" y2="264.0" stroke="#e8e6dc" stroke-width="1"/><text x="260.0" y="300.0" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">证据强度</text><text x="260.0" y="317.0" text-anchor="middle" font-size="12" fill="#1B365D" font-family="serif">8.9</text><line x1="260" y1="178" x2="185.5" y2="221.0" stroke="#e8e6dc" stroke-width="1"/><text x="145.7" y="239.0" text-anchor="end" font-size="14" fill="#3d3d3a" font-family="serif">品类契合</text><text x="145.7" y="256.0" text-anchor="end" font-size="12" fill="#1B365D" font-family="serif">8.4</text><line x1="260" y1="178" x2="185.5" y2="135.0" stroke="#e8e6dc" stroke-width="1"/><text x="145.7" y="117.0" text-anchor="end" font-size="14" fill="#3d3d3a" font-family="serif">价值显现</text><text x="145.7" y="134.0" text-anchor="end" font-size="12" fill="#1B365D" font-family="serif">8.0</text><polygon points="260.0,103.2 321.1,142.7 324.1,215.0 260.0,254.5 197.4,214.1 200.4,143.6" fill="#EEF2F7" fill-opacity="0.82" stroke="#1B365D" stroke-width="3"/><circle cx="260" cy="178" r="3" fill="#141413"/></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>ES8 的强项不是单点配置，而是把空间、服务、补能和价格方案组合成一个可理解的旗舰答案。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>保持“大三排纯电旗舰 + 换电体系”的主叙事，不要让传播被零散配置稀释。</p>
+    </article>
+
+
+    <article class="chart-module chart-radar" id="chart-ability_detail">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">radar</span>
+          <h3>消费者能力细分：风险成本拖后腿</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.82 | S7 S13 S14</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 520 350" role="img" aria-label="雷达图"><rect x="0" y="0" width="520" height="350" fill="#ffffff"/><polygon points="260.0,156.5 276.8,164.6 281.0,182.8 269.3,197.4 250.7,197.4 239.0,182.8 243.2,164.6" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="260.0,135.0 293.6,151.2 301.9,187.6 278.7,216.7 241.3,216.7 218.1,187.6 226.4,151.2" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="260.0,113.5 310.4,137.8 322.9,192.4 288.0,236.1 232.0,236.1 197.1,192.4 209.6,137.8" fill="none" stroke="#efeee8" stroke-width="1"/><polygon points="260.0,92.0 327.2,124.4 343.8,197.1 297.3,255.5 222.7,255.5 176.2,197.1 192.8,124.4" fill="none" stroke="#efeee8" stroke-width="1"/><line x1="260" y1="178" x2="260.0" y2="92.0" stroke="#e8e6dc" stroke-width="1"/><text x="260.0" y="56.0" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">金钱成本</text><text x="260.0" y="73.0" text-anchor="middle" font-size="12" fill="#1B365D" font-family="serif">7.0</text><line x1="260" y1="178" x2="327.2" y2="124.4" stroke="#e8e6dc" stroke-width="1"/><text x="363.2" y="101.9" text-anchor="start" font-size="14" fill="#3d3d3a" font-family="serif">行动成本</text><text x="363.2" y="118.9" text-anchor="start" font-size="12" fill="#1B365D" font-family="serif">6.8</text><line x1="260" y1="178" x2="343.8" y2="197.1" stroke="#e8e6dc" stroke-width="1"/><text x="388.7" y="205.1" text-anchor="start" font-size="14" fill="#3d3d3a" font-family="serif">学习成本</text><text x="388.7" y="222.1" text-anchor="start" font-size="12" fill="#1B365D" font-family="serif">7.6</text><line x1="260" y1="178" x2="297.3" y2="255.5" stroke="#e8e6dc" stroke-width="1"/><text x="317.3" y="287.9" text-anchor="start" font-size="14" fill="#3d3d3a" font-family="serif">信任成本</text><text x="317.3" y="304.9" text-anchor="start" font-size="12" fill="#1B365D" font-family="serif">8.0</text><line x1="260" y1="178" x2="222.7" y2="255.5" stroke="#e8e6dc" stroke-width="1"/><text x="202.7" y="287.9" text-anchor="end" font-size="14" fill="#3d3d3a" font-family="serif">风险成本</text><text x="202.7" y="304.9" text-anchor="end" font-size="12" fill="#1B365D" font-family="serif">6.7</text><line x1="260" y1="178" x2="176.2" y2="197.1" stroke="#e8e6dc" stroke-width="1"/><text x="131.3" y="205.1" text-anchor="end" font-size="14" fill="#3d3d3a" font-family="serif">形象成本</text><text x="131.3" y="222.1" text-anchor="end" font-size="12" fill="#1B365D" font-family="serif">8.4</text><line x1="260" y1="178" x2="192.8" y2="124.4" stroke="#e8e6dc" stroke-width="1"/><text x="156.8" y="101.9" text-anchor="end" font-size="14" fill="#3d3d3a" font-family="serif">可获得性</text><text x="156.8" y="118.9" text-anchor="end" font-size="12" fill="#1B365D" font-family="serif">7.8</text><polygon points="260.0,117.8 305.7,141.5 323.7,192.5 289.9,240.0 235.0,229.9 189.6,194.1 207.6,136.2" fill="#EEF2F7" fill-opacity="0.82" stroke="#1B365D" stroke-width="3"/><circle cx="260" cy="178" r="3" fill="#141413"/></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>目标用户买得起，但不代表愿意承担不确定性；风险成本比价格本身更影响犹豫。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>用真实车主长期样本和场景化保障政策替代抽象承诺。</p>
+    </article>
+
+
+    <article class="chart-module chart-matrix" id="chart-segment_matrix">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">matrix</span>
+          <h3>人群机会矩阵：老用户与高端家庭最优先</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.78 | S1 S5 S8 S13</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 520 419" role="img" aria-label="矩阵图"><rect x="0" y="0" width="520" height="419" fill="#ffffff"/><rect x="58" y="38" width="404" height="218" fill="#ffffff" stroke="#141413" stroke-width="1.5"/><line x1="260.0" y1="38" x2="260.0" y2="256" stroke="#efeee8" stroke-width="2"/><line x1="58" y1="147.0" x2="462" y2="147.0" stroke="#efeee8" stroke-width="2"/><text x="260.0" y="286" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">购买能力/转化效率</text><text x="20" y="147.0" transform="rotate(-90 20 147.0)" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">需求强度</text><text x="66" y="58" font-size="12" fill="#8a641f" font-family="serif">低确定性</text><text x="454" y="58" text-anchor="end" font-size="12" fill="#2f6f4e" font-family="serif">高确定性</text><line x1="58" y1="296" x2="462" y2="296" stroke="#efeee8" stroke-width="1"/><circle cx="397.4" cy="83.8" r="9.8" fill="#ffffff" stroke="#1B365D" stroke-width="2"/><text x="397.4" y="87.6" text-anchor="middle" font-size="11" fill="#1B365D" font-family="serif">1</text><circle cx="374.2" cy="65.6" r="10.2" fill="#ffffff" stroke="#1B365D" stroke-width="2"/><text x="374.2" y="69.4" text-anchor="middle" font-size="11" fill="#1B365D" font-family="serif">2</text><circle cx="355.9" cy="77.9" r="9.4" fill="#ffffff" stroke="#1B365D" stroke-width="2"/><text x="355.9" y="81.7" text-anchor="middle" font-size="11" fill="#1B365D" font-family="serif">3</text><circle cx="320.1" cy="79.0" r="9.1" fill="#ffffff" stroke="#1B365D" stroke-width="2"/><text x="320.1" y="82.8" text-anchor="middle" font-size="11" fill="#1B365D" font-family="serif">4</text><circle cx="337.2" cy="92.9" r="9.4" fill="#ffffff" stroke="#1B365D" stroke-width="2"/><text x="337.2" y="96.7" text-anchor="middle" font-size="11" fill="#1B365D" font-family="serif">5</text><circle cx="58" cy="310" r="8" fill="#ffffff" stroke="#1B365D" stroke-width="1.5"/><text x="58" y="314" text-anchor="middle" font-size="10.5" fill="#1B365D" font-family="serif">1</text><text x="74" y="314" font-size="12" fill="#141413" font-family="serif">蔚来老用户</text><text x="200" y="314" font-size="11.5" fill="#6b6a64" font-family="serif">8.4 / 7.9</text><circle cx="272" cy="310" r="8" fill="#ffffff" stroke="#1B365D" stroke-width="1.5"/><text x="272" y="314" text-anchor="middle" font-size="10.5" fill="#1B365D" font-family="serif">2</text><text x="288" y="314" font-size="12" fill="#141413" font-family="serif">高端多孩家庭</text><text x="414" y="314" font-size="11.5" fill="#6b6a64" font-family="serif">7.8 / 8.7</text><circle cx="58" cy="337" r="8" fill="#ffffff" stroke="#1B365D" stroke-width="1.5"/><text x="58" y="341" text-anchor="middle" font-size="10.5" fill="#1B365D" font-family="serif">3</text><text x="74" y="341" font-size="12" fill="#141413" font-family="serif">商务兼家庭</text><text x="200" y="341" font-size="11.5" fill="#6b6a64" font-family="serif">7.4 / 8.2</text><circle cx="272" cy="337" r="8" fill="#ffffff" stroke="#1B365D" stroke-width="1.5"/><text x="272" y="341" text-anchor="middle" font-size="10.5" fill="#1B365D" font-family="serif">4</text><text x="288" y="341" font-size="12" fill="#141413" font-family="serif">长途自驾家庭</text><text x="414" y="341" font-size="11.5" fill="#6b6a64" font-family="serif">6.5 / 8.1</text><circle cx="58" cy="364" r="8" fill="#ffffff" stroke="#1B365D" stroke-width="1.5"/><text x="58" y="368" text-anchor="middle" font-size="10.5" fill="#1B365D" font-family="serif">5</text><text x="74" y="368" font-size="12" fill="#141413" font-family="serif">传统豪华换购</text><text x="200" y="368" font-size="11.5" fill="#6b6a64" font-family="serif">6.9 / 7.5</text></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>高端多孩家庭需求最强，蔚来老用户转化成本最低；长途自驾家庭需求强但补能和续航证明要求更高。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>先吃透老用户与高端家庭，再用长途案例和换电网络证明去扩展犹豫人群。</p>
+    </article>
+
+
+    <article class="chart-module chart-matrix" id="chart-competitor_matrix">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">matrix</span>
+          <h3>竞品定位：ES8 赢在纯电补能与服务闭环</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.78 | S15 S16 S17 S18</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 520 419" role="img" aria-label="矩阵图"><rect x="0" y="0" width="520" height="419" fill="#ffffff"/><rect x="58" y="38" width="404" height="218" fill="#ffffff" stroke="#141413" stroke-width="1.5"/><line x1="260.0" y1="38" x2="260.0" y2="256" stroke="#efeee8" stroke-width="2"/><line x1="58" y1="147.0" x2="462" y2="147.0" stroke="#efeee8" stroke-width="2"/><text x="260.0" y="286" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">补能/使用确定性</text><text x="20" y="147.0" transform="rotate(-90 20 147.0)" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">家庭旗舰匹配度</text><text x="66" y="58" font-size="12" fill="#8a641f" font-family="serif">低确定性</text><text x="454" y="58" text-anchor="end" font-size="12" fill="#2f6f4e" font-family="serif">高确定性</text><line x1="58" y1="296" x2="462" y2="296" stroke="#efeee8" stroke-width="1"/><circle cx="376.1" cy="67.2" r="10.2" fill="#ffffff" stroke="#1B365D" stroke-width="2"/><text x="376.1" y="71.0" text-anchor="middle" font-size="11" fill="#1B365D" font-family="serif">1</text><circle cx="418.6" cy="78.6" r="9.8" fill="#ffffff" stroke="#1B365D" stroke-width="2"/><text x="418.6" y="82.4" text-anchor="middle" font-size="11" fill="#1B365D" font-family="serif">2</text><circle cx="397.4" cy="72.9" r="9.8" fill="#ffffff" stroke="#1B365D" stroke-width="2"/><text x="397.4" y="76.7" text-anchor="middle" font-size="11" fill="#1B365D" font-family="serif">3</text><circle cx="361.0" cy="107.8" r="9.4" fill="#ffffff" stroke="#1B365D" stroke-width="2"/><text x="361.0" y="111.6" text-anchor="middle" font-size="11" fill="#1B365D" font-family="serif">4</text><circle cx="340.8" cy="99.0" r="9.1" fill="#ffffff" stroke="#1B365D" stroke-width="2"/><text x="340.8" y="102.8" text-anchor="middle" font-size="11" fill="#1B365D" font-family="serif">5</text><circle cx="58" cy="310" r="8" fill="#ffffff" stroke="#1B365D" stroke-width="1.5"/><text x="58" y="314" text-anchor="middle" font-size="10.5" fill="#1B365D" font-family="serif">1</text><text x="74" y="314" font-size="12" fill="#141413" font-family="serif">蔚来 ES8</text><text x="200" y="314" font-size="11.5" fill="#6b6a64" font-family="serif">8.2 / 8.5</text><circle cx="272" cy="310" r="8" fill="#ffffff" stroke="#1B365D" stroke-width="1.5"/><text x="272" y="314" text-anchor="middle" font-size="10.5" fill="#1B365D" font-family="serif">2</text><text x="288" y="314" font-size="12" fill="#141413" font-family="serif">理想 L9</text><text x="414" y="314" font-size="11.5" fill="#6b6a64" font-family="serif">8.6 / 8.3</text><circle cx="58" cy="337" r="8" fill="#ffffff" stroke="#1B365D" stroke-width="1.5"/><text x="58" y="341" text-anchor="middle" font-size="10.5" fill="#1B365D" font-family="serif">3</text><text x="74" y="341" font-size="12" fill="#141413" font-family="serif">问界 M9</text><text x="200" y="341" font-size="11.5" fill="#6b6a64" font-family="serif">8.4 / 8.4</text><circle cx="272" cy="337" r="8" fill="#ffffff" stroke="#1B365D" stroke-width="1.5"/><text x="272" y="341" text-anchor="middle" font-size="10.5" fill="#1B365D" font-family="serif">4</text><text x="288" y="341" font-size="12" fill="#141413" font-family="serif">Model Y L</text><text x="414" y="341" font-size="11.5" fill="#6b6a64" font-family="serif">7.5 / 6.8</text><circle cx="58" cy="364" r="8" fill="#ffffff" stroke="#1B365D" stroke-width="1.5"/><text x="58" y="368" text-anchor="middle" font-size="10.5" fill="#1B365D" font-family="serif">5</text><text x="74" y="368" font-size="12" fill="#141413" font-family="serif">宝马 X5</text><text x="200" y="368" font-size="11.5" fill="#6b6a64" font-family="serif">7.0 / 7.2</text></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>ES8 的位置接近第一梯队，但理想和问界用增程/华为生态降低不确定性，特斯拉用价格效率形成下压。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>不要只和传统豪华比配置，应正面回应增程无焦虑和华为智舱智驾的替代理由。</p>
+    </article>
+
+
+    <article class="chart-module chart-funnel" id="chart-adoption_funnel">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">funnel</span>
+          <h3>转化漏斗：从试驾到交付的损耗在决策链条</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.72 | S3 S5 S13</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 520 284" role="img" aria-label="漏斗图"><rect x="0" y="0" width="520" height="284" fill="#ffffff"/><text x="28" y="49" font-size="14" fill="#141413" font-family="serif">认知</text><rect x="190.0" y="28" width="270.0" height="24" rx="4" fill="#1B365D" fill-opacity="0.95"/><text x="494" y="46" text-anchor="end" font-size="14" fill="#3d3d3a" font-family="serif">100</text><text x="28" y="87" font-size="14" fill="#141413" font-family="serif">到店/试驾</text><rect x="227.8" y="66" width="194.4" height="24" rx="4" fill="#1B365D" fill-opacity="0.89"/><text x="494" y="84" text-anchor="end" font-size="14" fill="#3d3d3a" font-family="serif">72</text><text x="28" y="125" font-size="14" fill="#141413" font-family="serif">锁单</text><rect x="257.5" y="104" width="135.0" height="24" rx="4" fill="#1B365D" fill-opacity="0.84"/><text x="494" y="122" text-anchor="end" font-size="14" fill="#3d3d3a" font-family="serif">50</text><text x="28" y="163" font-size="14" fill="#141413" font-family="serif">等待交付</text><rect x="266.9" y="142" width="116.1" height="24" rx="4" fill="#1B365D" fill-opacity="0.78"/><text x="494" y="160" text-anchor="end" font-size="14" fill="#3d3d3a" font-family="serif">43</text><text x="28" y="201" font-size="14" fill="#141413" font-family="serif">满意使用</text><rect x="275.1" y="180" width="99.9" height="24" rx="4" fill="#1B365D" fill-opacity="0.73"/><text x="494" y="198" text-anchor="end" font-size="14" fill="#3d3d3a" font-family="serif">37</text><text x="28" y="239" font-size="14" fill="#141413" font-family="serif">推荐复购</text><rect x="284.5" y="218" width="81.0" height="24" rx="4" fill="#1B365D" fill-opacity="0.67"/><text x="494" y="236" text-anchor="end" font-size="14" fill="#3d3d3a" font-family="serif">30</text></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>高价家庭车的损耗不是单点发生，而是家庭成员共识、预算计算、配置选择和等待体验共同造成。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>门店和销售流程要围绕家庭共识与长期用车成本设计，而不是只做个人试驾体验。</p>
+    </article>
+
+
+    <article class="chart-module chart-stacked_bar" id="chart-evidence_stack">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">stacked_bar</span>
+          <h3>证据结构：官方与交付数据强，口碑仍需长期样本</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.83 | S1 S4 S5 S6 S13 S14</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 520 240" role="img" aria-label="堆叠条形图"><rect x="0" y="0" width="520" height="240" fill="#ffffff"/><rect x="34" y="72" width="452" height="38" fill="#f7f7f4" stroke="#efeee8"/><rect x="34.0" y="72" width="124.7" height="38" fill="#1B365D"/><text x="96.3" y="96" text-anchor="middle" font-size="12" fill="#ffffff" font-family="serif">产品事实</text><rect x="158.7" y="72" width="140.3" height="38" fill="#7A8CA5"/><text x="228.8" y="96" text-anchor="middle" font-size="12" fill="#ffffff" font-family="serif">市场销量</text><rect x="299.0" y="72" width="93.5" height="38" fill="#C7D0DB"/><text x="345.7" y="96" text-anchor="middle" font-size="12" fill="#ffffff" font-family="serif">竞品信息</text><rect x="392.5" y="72" width="62.3" height="38" fill="#e8e6dc"/><text x="423.7" y="96" text-anchor="middle" font-size="12" fill="#ffffff" font-family="serif">用户口碑</text><rect x="454.8" y="72" width="31.2" height="38" fill="#8a641f"/><rect x="36" y="148" width="12" height="12" fill="#1B365D"/><text x="54" y="160" font-size="13" fill="#141413" font-family="serif">产品事实 8</text><rect x="272" y="148" width="12" height="12" fill="#7A8CA5"/><text x="290" y="160" font-size="13" fill="#141413" font-family="serif">市场销量 9</text><rect x="36" y="178" width="12" height="12" fill="#C7D0DB"/><text x="54" y="190" font-size="13" fill="#141413" font-family="serif">竞品信息 6</text><rect x="272" y="178" width="12" height="12" fill="#e8e6dc"/><text x="290" y="190" font-size="13" fill="#141413" font-family="serif">用户口碑 4</text><rect x="36" y="208" width="12" height="12" fill="#8a641f"/><text x="54" y="220" font-size="13" fill="#141413" font-family="serif">长期留存 2</text></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>产品与交付证据很强，但长期留存、冬季真实体验和质量稳定性仍需要更多公开样本。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>建立按季更新的车主体验证据库，特别关注 6-12 个月后的满意度与推荐率。</p>
+    </article>
+
+
+    <article class="chart-module chart-matrix" id="chart-risk_matrix">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">matrix</span>
+          <h3>风险矩阵：竞品挤压与真实续航最关键</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.80 | S13 S14 S15 S16 S17</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 520 419" role="img" aria-label="矩阵图"><rect x="0" y="0" width="520" height="419" fill="#ffffff"/><rect x="58" y="38" width="404" height="218" fill="#ffffff" stroke="#141413" stroke-width="1.5"/><line x1="260.0" y1="38" x2="260.0" y2="256" stroke="#efeee8" stroke-width="2"/><line x1="58" y1="147.0" x2="462" y2="147.0" stroke="#efeee8" stroke-width="2"/><text x="260.0" y="286" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">发生概率</text><text x="20" y="147.0" transform="rotate(-90 20 147.0)" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">影响程度</text><text x="66" y="58" font-size="12" fill="#8a641f" font-family="serif">低确定性</text><text x="454" y="58" text-anchor="end" font-size="12" fill="#2f6f4e" font-family="serif">高确定性</text><line x1="58" y1="296" x2="462" y2="296" stroke="#efeee8" stroke-width="1"/><circle cx="367.5" cy="74.2" r="9.8" fill="#ffffff" stroke="#1B365D" stroke-width="2"/><text x="367.5" y="78.0" text-anchor="middle" font-size="11" fill="#1B365D" font-family="serif">1</text><circle cx="386.8" cy="84.6" r="9.8" fill="#ffffff" stroke="#1B365D" stroke-width="2"/><text x="386.8" y="88.4" text-anchor="middle" font-size="11" fill="#1B365D" font-family="serif">2</text><circle cx="335.4" cy="97.6" r="9.4" fill="#ffffff" stroke="#1B365D" stroke-width="2"/><text x="335.4" y="101.4" text-anchor="middle" font-size="11" fill="#1B365D" font-family="serif">3</text><circle cx="316.3" cy="108.4" r="9.1" fill="#ffffff" stroke="#1B365D" stroke-width="2"/><text x="316.3" y="112.2" text-anchor="middle" font-size="11" fill="#1B365D" font-family="serif">4</text><circle cx="295.4" cy="115.3" r="9.1" fill="#ffffff" stroke="#1B365D" stroke-width="2"/><text x="295.4" y="119.1" text-anchor="middle" font-size="11" fill="#1B365D" font-family="serif">5</text><circle cx="274.7" cy="122.8" r="8.8" fill="#ffffff" stroke="#1B365D" stroke-width="2"/><text x="274.7" y="126.6" text-anchor="middle" font-size="11" fill="#1B365D" font-family="serif">6</text><circle cx="58" cy="310" r="8" fill="#ffffff" stroke="#1B365D" stroke-width="1.5"/><text x="58" y="314" text-anchor="middle" font-size="10.5" fill="#1B365D" font-family="serif">1</text><text x="74" y="314" font-size="12" fill="#141413" font-family="serif">冬季高速续航</text><text x="200" y="314" font-size="11.5" fill="#6b6a64" font-family="serif">7.8 / 8.2</text><circle cx="272" cy="310" r="8" fill="#ffffff" stroke="#1B365D" stroke-width="1.5"/><text x="272" y="314" text-anchor="middle" font-size="10.5" fill="#1B365D" font-family="serif">2</text><text x="288" y="314" font-size="12" fill="#141413" font-family="serif">竞品挤压</text><text x="414" y="314" font-size="11.5" fill="#6b6a64" font-family="serif">8.0 / 8.0</text><circle cx="58" cy="337" r="8" fill="#ffffff" stroke="#1B365D" stroke-width="1.5"/><text x="58" y="341" text-anchor="middle" font-size="10.5" fill="#1B365D" font-family="serif">3</text><text x="74" y="341" font-size="12" fill="#141413" font-family="serif">新车热度回落</text><text x="200" y="341" font-size="11.5" fill="#6b6a64" font-family="serif">6.8 / 7.2</text><circle cx="272" cy="337" r="8" fill="#ffffff" stroke="#1B365D" stroke-width="1.5"/><text x="272" y="341" text-anchor="middle" font-size="10.5" fill="#1B365D" font-family="serif">4</text><text x="288" y="341" font-size="12" fill="#141413" font-family="serif">软件/品控波动</text><text x="414" y="341" font-size="11.5" fill="#6b6a64" font-family="serif">6.4 / 6.8</text><circle cx="58" cy="364" r="8" fill="#ffffff" stroke="#1B365D" stroke-width="1.5"/><text x="58" y="368" text-anchor="middle" font-size="10.5" fill="#1B365D" font-family="serif">5</text><text x="74" y="368" font-size="12" fill="#141413" font-family="serif">交付等待</text><text x="200" y="368" font-size="11.5" fill="#6b6a64" font-family="serif">5.8 / 6.4</text><circle cx="272" cy="364" r="8" fill="#ffffff" stroke="#1B365D" stroke-width="1.5"/><text x="272" y="368" text-anchor="middle" font-size="10.5" fill="#1B365D" font-family="serif">6</text><text x="288" y="368" font-size="12" fill="#141413" font-family="serif">BaaS理解偏差</text><text x="414" y="368" font-size="11.5" fill="#6b6a64" font-family="serif">5.5 / 6.2</text></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>最高风险来自“用户预期与真实长期体验不一致”，其次是强竞品持续把选择成本拉高。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>把风险最高的场景做成可验证承诺：冬季高速续航、换电覆盖、满载储物和软件稳定性。</p>
+    </article>
+
+
+    <article class="chart-module chart-bar" id="chart-priority_actions">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">bar</span>
+          <h3>行动优先级：先补能力成本，再放大声量</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.82 | S13 S14</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 640 320" role="img" aria-label="条形图"><rect x="0" y="0" width="640" height="320" fill="#ffffff"/><text x="36" y="57" font-size="15" fill="#141413" font-family="serif">冬季/高速证据</text><rect x="200" y="40" width="346" height="20" fill="#f7f7f4" stroke="#efeee8"/><rect x="200" y="40" width="318.3" height="20" fill="#1B365D"/><text x="598" y="57" text-anchor="end" font-size="15" fill="#2f6f4e" font-family="serif">9.2</text><text x="36" y="99" font-size="15" fill="#141413" font-family="serif">满载家庭场景</text><rect x="200" y="82" width="346" height="20" fill="#f7f7f4" stroke="#efeee8"/><rect x="200" y="82" width="297.6" height="20" fill="#1B365D"/><text x="598" y="99" text-anchor="end" font-size="15" fill="#2f6f4e" font-family="serif">8.6</text><text x="36" y="141" font-size="15" fill="#141413" font-family="serif">交付透明度</text><rect x="200" y="124" width="346" height="20" fill="#f7f7f4" stroke="#efeee8"/><rect x="200" y="124" width="280.3" height="20" fill="#1B365D"/><text x="598" y="141" text-anchor="end" font-size="15" fill="#2f6f4e" font-family="serif">8.1</text><text x="36" y="183" font-size="15" fill="#141413" font-family="serif">BaaS成本教育</text><rect x="200" y="166" width="346" height="20" fill="#f7f7f4" stroke="#efeee8"/><rect x="200" y="166" width="269.9" height="20" fill="#1B365D"/><text x="598" y="183" text-anchor="end" font-size="15" fill="#2f6f4e" font-family="serif">7.8</text><text x="36" y="225" font-size="15" fill="#141413" font-family="serif">智舱智驾稳定</text><rect x="200" y="208" width="346" height="20" fill="#f7f7f4" stroke="#efeee8"/><rect x="200" y="208" width="263.0" height="20" fill="#1B365D"/><text x="598" y="225" text-anchor="end" font-size="15" fill="#2f6f4e" font-family="serif">7.6</text><text x="36" y="267" font-size="15" fill="#141413" font-family="serif">竞品对比工具</text><rect x="200" y="250" width="346" height="20" fill="#f7f7f4" stroke="#efeee8"/><rect x="200" y="250" width="256.0" height="20" fill="#1B365D"/><text x="598" y="267" text-anchor="end" font-size="15" fill="#2f6f4e" font-family="serif">7.4</text></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>这些行动都不只是传播动作，而是在降低用户真实购买门槛。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>优先做能够让用户和家人共同决策的证据型内容与销售工具。</p>
+    </article>
+
+
+    <article class="chart-module chart-forecast" id="chart-forecast_scenarios">
+      <div class="chart-module-head">
+        <div>
+          <span class="chart-kicker">forecast</span>
+          <h3>12 个月预测：基准情形仍可维持强需求</h3>
+        </div>
+        <span class="chart-confidence">置信度 0.76 | S5 S6 S8 S10</span>
+      </div>
+      <div class="chart-svg-wrap"><svg viewBox="0 0 520 330" role="img" aria-label="预测情景图"><rect x="0" y="0" width="520" height="330" fill="#ffffff"/><line x1="52" y1="252" x2="466" y2="252" stroke="#141413" stroke-width="1.5"/><line x1="52" y1="42" x2="52" y2="252" stroke="#141413" stroke-width="1.5"/><circle cx="52.0" cy="111.3" r="7" fill="#1B365D"/><text x="52.0" y="99.3" text-anchor="middle" font-size="14" fill="#141413" font-family="serif">6.7</text><text x="52.0" y="286" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">保守</text><text x="52.0" y="306" text-anchor="middle" font-size="11.5" fill="#6b6a64" font-family="serif">medium</text><circle cx="259.0" cy="94.5" r="7" fill="#1B365D"/><text x="259.0" y="82.5" text-anchor="middle" font-size="14" fill="#141413" font-family="serif">7.5</text><text x="259.0" y="286" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">基准</text><text x="259.0" y="306" text-anchor="middle" font-size="11.5" fill="#6b6a64" font-family="serif">medium-hi…</text><circle cx="466.0" cy="79.8" r="7" fill="#1B365D"/><text x="466.0" y="67.8" text-anchor="middle" font-size="14" fill="#141413" font-family="serif">8.2</text><text x="466.0" y="286" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">乐观</text><text x="466.0" y="306" text-anchor="middle" font-size="11.5" fill="#6b6a64" font-family="serif">high</text><polyline points="52.0,111.3 259.0,94.5 466.0,79.8" fill="none" stroke="#1B365D" stroke-width="3"/><text x="22" y="46" font-size="12" fill="#6b6a64" font-family="serif">10</text><text x="30" y="254" font-size="12" fill="#6b6a64" font-family="serif">0</text></svg></div>
+      <p class="chart-insight"><strong>解读：</strong>除非出现质量或竞争重大负面，ES8 的需求基础不会突然消失；差别在于它能否从爆款变成稳定旗舰。</p>
+      <p class="chart-recommendation"><strong>建议：</strong>把 2026 年下半年的核心指标从交付量扩展到订单取消率、交付满意度、冬季投诉率和老带新率。</p>
+    </article>
+
+      </div>
+    </section>
+
+    <section id="product" class="product-overview">
+      <h2>产品概览</h2>
+      <div class="product-summary-grid">
+        <div class="fact-box product-card"><h3>产品定义</h3><p>面向高净值家庭、商务兼家庭用户和蔚来体系用户的旗舰级纯电大型三排 SUV，通过大空间、舒适座舱、换电补能、BaaS 降低入门门槛与高端服务体系来承接家庭出行与商务接待需求。</p></div>
+        <div class="fact-box product-card"><h3>价值主张</h3><p>在 6-7 人真实乘坐场景下，用纯电旗舰体验、换电补能和蔚来服务同时解决空间、体面、安全和补能焦虑。</p></div>
+        <div class="fact-box product-card"><h3>商业模式</h3><p>整车销售 + BaaS 电池租用 + 换电/充电/服务生态 + 高端用户运营。</p></div>
+        <div class="fact-box product-card"><h3>假设</h3><ul class="assumption-list"><li>本报告聚焦中国市场的全新 ES8，不把欧洲小规模市场表现作为主要依据。</li><li>销量、交付、基础设施等公开披露数据存在口径差异，评分以趋势和相对确定性为主。</li><li>车主口碑类来源代表公开样本，不等同于全量用户调研。</li></ul></div>
+      </div>
+      <div class="product-detail-grid">
+        <div class="fact-box product-detail-card"><h3>核心功能</h3><ul class="feature-list"><li>5280mm 车长、3130mm 轴距的大型三排空间</li><li>6 座与 7 座版本，强调第二排与第三排舒适性</li><li>102kWh/100kWh 级电池、900V 高压平台、CLTC 约 635km 的旗舰纯电能力</li><li>双电机四驱，公开报道 0-100km/h 约 3.97 秒</li><li>NIO Power 换电和充电网络，BaaS 方案降低购车起点</li><li>NT.Cedar 智能系统、智能座舱和辅助驾驶能力</li><li>高强度车身、11 安全气囊和旗舰级被动安全配置</li></ul></div>
+        <div class="fact-box product-detail-card"><h3>定价信息</h3><ul class="pricing-list"><li>官方上市起售价约 40.68 万元，BaaS 起点约 29.88 万元；签名版约 44.68 万元，BaaS 起点约 33.88 万元。</li><li>电池租用月费公开报道约 1128 元/月，实际以蔚来当期政策为准。</li></ul></div>
+      </div>
+    </section>
+
+    <section id="evidence">
+      <h2>证据质量与来源</h2>
+      <p>公开资料检索至 2026-06-12。优先采用蔚来官方、IR/财报、官方竞品页面和近期行业媒体；车主口碑类来源只作为定性线索，不等同于全量用户调研。</p>
+      <div class="table-wrap"><table class="compact"><thead><tr><th>来源</th><th>等级</th><th>类型</th><th>标题</th><th>链接</th><th>日期</th></tr></thead><tbody><tr><td>S1</td><td>A</td><td>official_product_page</td><td>NIO ES8 官方产品页</td><td>https://www.nio.com/es8</td><td>2026-06-12</td></tr><tr><td>S2</td><td>A</td><td>official_news</td><td>NIO All-New ES8 Pre-order Announcement</td><td>https://www.nio.com/news/20250821001</td><td>2026-06-12</td></tr><tr><td>S3</td><td>A</td><td>official_news</td><td>NIO Day 2025 All-New ES8 Launch</td><td>https://www.nio.com/news/20250920001</td><td>2026-06-12</td></tr><tr><td>S4</td><td>A</td><td>investor_relations</td><td>NIO September and Q3 2025 Delivery Update</td><td>https://ir.nio.com/news-releases/news-release-details/nio-inc-provides-september-and-third-quarter-2025-delivery/</td><td>2026-06-12</td></tr><tr><td>S5</td><td>A</td><td>investor_relations</td><td>NIO April 2026 Delivery Update</td><td>https://ir.nio.com/zh-hant/news-releases/news-release-details/nio-inc-provides-april-2026-delivery-update/</td><td>2026-06-12</td></tr><tr><td>S6</td><td>B</td><td>press_release_mirror</td><td>NIO May 2026 Delivery Update</td><td>https://www.stocktitan.net/news/NIO/nio-inc-provides-may-2026-delivery-o4v1jhbondmw.html</td><td>2026-06-12</td></tr><tr><td>S7</td><td>A</td><td>financial_results</td><td>NIO Q1 2026 Financial Results</td><td>https://www.globenewswire.com/news-release/2026/05/21/3299109/0/en/nio-inc-reports-unaudited-first-quarter-2026-financial-results.html</td><td>2026-06-12</td></tr><tr><td>S8</td><td>B</td><td>industry_media</td><td>NIO new ES8 expected to reach 120000th delivery this month</td><td>https://cnevpost.com/2026/06/05/nio-new-es8-to-reach-120000th-delivery-this-month/</td><td>2026-06-12</td></tr><tr><td>S9</td><td>B</td><td>industry_media</td><td>Nio launches 3rd-gen ES8 SUV</td><td>https://cnevpost.com/2025/09/20/nio-launches-3rd-gen-es8/</td><td>2026-06-12</td></tr><tr><td>S10</td><td>B</td><td>industry_media</td><td>大型三排 SUV 市场结构变化报道</td><td>https://auto.ifeng.com/c/8tGKsZmZf1R</td><td>2026-06-12</td></tr><tr><td>S11</td><td>C</td><td>industry_media</td><td>全新 ES8 110000 台交付报道</td><td>https://auto.news18a.com/news/storys_258835.html</td><td>2026-06-12</td></tr><tr><td>S12</td><td>A</td><td>official_product_page</td><td>NIO Power 官方页面</td><td>https://www.nio.cn/nio-power</td><td>2026-06-12</td></tr><tr><td>S13</td><td>C</td><td>user_feedback_media</td><td>全新蔚来 ES8 真实车主口碑评测</td><td>https://k.sina.com.cn/article_7857141524_1d45277140190321lw.html</td><td>2026-06-12</td></tr><tr><td>S14</td><td>C</td><td>user_feedback_media</td><td>全新蔚来 ES8 用户口碑与痛点分析</td><td>https://chejiahao.autohome.com.cn/info/24743824</td><td>2026-06-12</td></tr><tr><td>S15</td><td>A</td><td>competitor_official</td><td>理想 L9 官方页面</td><td>https://www.lixiang.com/L9</td><td>2026-06-12</td></tr><tr><td>S16</td><td>A</td><td>competitor_official</td><td>问界 M9 官方页面</td><td>https://hima.auto/wenjie/</td><td>2026-06-12</td></tr><tr><td>S17</td><td>B</td><td>industry_media</td><td>特斯拉 Model Y L 上市报道</td><td>https://www.stcn.com/article/detail/3175664.html</td><td>2026-06-12</td></tr><tr><td>S18</td><td>C</td><td>industry_media</td><td>宝马 X5 中国市场价格报道</td><td>https://auto.news18a.com/</td><td>2026-06-12</td></tr></tbody></table></div>
+    </section>
+
+    <section id="users">
+      <h2>目标用户与 JTBD</h2>
+      <div class="table-wrap"><table class=""><thead><tr><th>分群</th><th>场景</th><th>JTBD</th><th>当前替代</th><th>采用阻碍</th></tr></thead><tbody><tr><td>高端多孩家庭</td><td>需要 6-7 人同乘、老人孩子舒适上下车、第三排可长期使用，并兼顾安全和体面。</td><td>买一台可以作为家庭主车的大型 SUV，让全家出行舒服、安全、不焦虑。</td><td>理想 L9；问界 M9；GLS/X7 等燃油豪华 SUV；MPV</td><td>价格和长期成本；真实续航与冬季高速；满载后储物空间；交付等待</td></tr><tr><td>商务兼家庭用户</td><td>平时用于商务接待、客户拜访或公司形象展示，周末承担家庭出行。</td><td>用一台车同时满足体面、舒适、智能和家庭承载，避免商务与家庭两套车辆成本。</td><td>宝马 X5；奔驰 GLE；问界 M9；理想 L9</td><td>传统豪华品牌惯性；纯电长途不确定性；智驾和车机稳定性；残值与品牌财务信任</td></tr><tr><td>蔚来老用户与纯电拥护者</td><td>已经接受换电、服务和社区生态，希望升级到更大的家庭旗舰。</td><td>在不离开蔚来体系的前提下，从中大型 SUV/轿车升级到真正的大三排主车。</td><td>蔚来 ES6/ES7/ES9；特斯拉 Model Y L；继续持有现车</td><td>升级成本；ES9 等内部车型分流；热门配置等待；老车置换残值</td></tr><tr><td>长途重度自驾家庭</td><td>频繁跨城、自驾游、节假日高速出行，对补能可达性和续航稳定要求极高。</td><td>获得大三排舒适体验，同时不牺牲长途路线自由度。</td><td>增程大型 SUV；燃油大型 SUV；混动 MPV</td><td>高速/冬季续航折扣；换电站排队和覆盖；满载能耗；节假日不确定性</td></tr></tbody></table></div>
+    </section>
+
+    <section id="competitors">
+      <h2>竞品与替代方案</h2>
+      <div class="table-wrap"><table class=""><thead><tr><th>名称</th><th>类型</th><th>定位</th><th>优势</th><th>弱点</th><th>来源</th></tr></thead><tbody><tr><td>理想 L9</td><td>direct</td><td>增程式家庭旗舰 SUV，强调家庭空间、舒适和补能无焦虑。</td><td>增程降低里程焦虑；家庭场景心智强；价格与配置清晰</td><td>不是纯电旗舰体验；能源形式和品牌调性与纯电用户偏好不同</td><td>S15</td></tr><tr><td>问界 M9</td><td>direct</td><td>鸿蒙智行高端旗舰 SUV，依靠华为生态、智能座舱和智驾心智竞争。</td><td>华为生态强信任；智能化认知强；增程/纯电路线覆盖不同偏好</td><td>品牌豪华感仍在重塑；与蔚来服务和换电体验不同</td><td>S16</td></tr><tr><td>特斯拉 Model Y L</td><td>direct</td><td>六座纯电 SUV，以品牌效率和更低价格切入家庭纯电需求。</td><td>价格门槛更低；特斯拉品牌和充电网络认知强；交付效率高</td><td>豪华感与大三排舒适不如 ES8；家庭旗舰属性较弱</td><td>S17</td></tr><tr><td>宝马 X5</td><td>substitute</td><td>传统豪华中大型 SUV，承接保守高端用户和燃油豪华品牌偏好。</td><td>豪华品牌心智强；残值和社会认知稳定；燃油补能无学习成本</td><td>三排和智能化不占优；使用成本和新能源体验不如纯电</td><td>S18</td></tr><tr><td>继续持有现车或购买 MPV</td><td>substitute</td><td>用户推迟高价换车，或用 MPV 解决更强家庭承载。</td><td>现金流压力更低；MPV 的乘坐与储物效率高</td><td>缺少 SUV 形象与纯电旗舰体验；不能解决换新和智能化诉求</td><td></td></tr></tbody></table></div>
+    </section>
+
+    <section id="triangle">
+      <h2>需求三角分析</h2>
+      <figure class="diagram-block triangle-figure">
+
+<svg class="triangle-svg" viewBox="0 0 760 430" role="img" aria-label="需求三角模型分析结构">
+  <rect x="0" y="0" width="760" height="430" fill="#ffffff"/>
+  <polygon points="380,82 174,318 586,318" fill="#ffffff" stroke="#1B365D" stroke-width="4" stroke-linejoin="round"/>
+  <line x1="380" y1="82" x2="380" y2="318" stroke="#efeee8" stroke-width="1.5"/>
+  <line x1="174" y1="318" x2="482" y2="199" stroke="#efeee8" stroke-width="1.5"/>
+  <line x1="586" y1="318" x2="278" y2="199" stroke="#efeee8" stroke-width="1.5"/>
+  <text x="380" y="34" text-anchor="middle" class="svg-title">缺乏感</text>
+  <text x="380" y="57" text-anchor="middle" class="svg-small">理想与现实的差距 | 8.3</text>
+  <text x="126" y="358" text-anchor="middle" class="svg-title">目标物</text>
+  <text x="126" y="381" text-anchor="middle" class="svg-small">填补差距的方案 | 8.5</text>
+  <text x="634" y="358" text-anchor="middle" class="svg-title">消费者能力</text>
+  <text x="634" y="381" text-anchor="middle" class="svg-small">成本承受力 | 7.4</text>
+  <text x="380" y="224" text-anchor="middle" class="svg-title">需求成立</text>
+  <text x="380" y="252" text-anchor="middle" class="svg-body">动机清晰 + 成本可承受 + 场景触发</text>
+  <text x="380" y="287" text-anchor="middle" class="svg-score">总分 7.4</text>
+  <text x="380" y="418" text-anchor="middle" class="svg-caption">任一维度明显缺失，需求成立概率都会下降。</text>
+</svg>
+
+        <figcaption class="figure-caption">图 2：需求三角模型。缺乏感、目标物和消费者能力共同决定需求成立概率。</figcaption>
+      </figure>
+      <div class="dimension-grid">
+            <article class="dimension-card">
+              <div class="dimension-head"><h3>缺乏感</h3><span>8.3</span></div>
+              <p>高端家庭用户对大空间、舒适、安全和低补能焦虑的缺乏感很强；官方交付里程碑与近期销量势能进一步说明这不是小众兴趣。但它的紧迫性低于日常刚需工具，仍受换车周期和竞品发布节奏影响。</p>
+              <h4>支持证据</h4>
+              <ul><li>官方与行业资料显示，全新 ES8 定位高端大型三排纯电 SUV，并把空间、舒适、安全和补能作为核心问题来回应 [S1][S2]。</li><li>2026 年 4 月官方 IR 披露 ES8 在 215 天达成 100000 台交付里程碑，说明高价区间存在真实购买而非单纯关注 [S5]。</li><li>近期行业报道显示大型三排纯电 SUV 市场正在扩大，ES8 连续月销过万并向 120000 台交付推进 [S8][S10]。</li></ul>
+              <h4>反证或缺口</h4>
+              <ul><li>换车属于高金额、低频决策，很多用户会等待竞品、价格政策和长期口碑。</li><li>大型三排纯电的高速、冬季和满载体验还需要更长周期验证。</li><li>销量高峰可能受到换代、价格重置和早期订单集中交付影响。</li></ul>
+              <div class="note"><strong>改进路径</strong><br>把缺乏感从“大车豪华”具体化为多代同乘、满载长途、商务兼家庭和冬季高速等强场景，并持续披露真实用车证据。</div>
+            </article>
+
+            <article class="dimension-card">
+              <div class="dimension-head"><h3>目标物</h3><span>8.5</span></div>
+              <p>ES8 的产品定义清楚，目标物不是单一参数，而是大三排、纯电、换电、BaaS 与服务的组合方案。这个组合足以形成差异化，也已经被交付数据验证。短板在于长期体验必须持续符合 40 万元级旗舰预期。</p>
+              <h4>支持证据</h4>
+              <ul><li>官方产品页披露全新 ES8 的大空间、座舱舒适、智能系统和安全配置，直接匹配家庭旗舰 SUV 任务 [S1]。</li><li>官方上市与预售信息显示，ES8 用 BaaS 降低入门门槛，并把换电和充电网络作为纯电大型车的重要支撑 [S2][S3][S12]。</li><li>100000 台级别交付、连续月销过万和高端市场排名线索构成了较强目标物验证 [S5][S8]。</li></ul>
+              <h4>反证或缺口</h4>
+              <ul><li>理想 L9、问界 M9 和 Model Y L 分别从无焦虑、智能生态和低价效率上削弱 ES8 的独占性。</li><li>BaaS、换电、购车价格和长期成本组合复杂，需要销售端解释。</li><li>长期价值是否稳定还依赖续航、质量、软件和服务体验持续达标。</li></ul>
+              <div class="note"><strong>改进路径</strong><br>保持“大三排纯电旗舰 + 换电体系”的主叙事，用真实车主和竞品对比证明它不是配置堆叠，而是完整高端家庭主车方案。</div>
+            </article>
+
+            <article class="dimension-card">
+              <div class="dimension-head"><h3>消费者能力</h3><span>7.4</span></div>
+              <p>目标用户具备支付能力，且蔚来品牌、服务和换电网络降低了信任成本；但购买行动成本和长期风险成本仍是相对短板。用户不是不知道 ES8 好，而是要确认自己能否放心买、放心用、长期不后悔。</p>
+              <h4>支持证据</h4>
+              <ul><li>官方和媒体披露的 BaaS 起点降低了一次性购车门槛，但仍需要用户理解电池租用与长期总成本 [S3][S9]。</li><li>公开口碑样本普遍认可空间、舒适、换电和服务，但也反复提到真实续航、冬季高速、满载储物、车机/辅助驾驶和品控细节 [S13][S14]。</li><li>蔚来财报和交付规模增强了品牌信任，但高端家庭车购买仍需要家庭共识、试驾、等待交付和竞品比较 [S7]。</li></ul>
+              <h4>反证或缺口</h4>
+              <ul><li>部分地区换电站覆盖和排队体验可能与一线城市不同。</li><li>高价家庭车的购买链条长，家庭成员意见不一致会拉低转化。</li><li>竞品降价或新车型发布会提高用户等待与比较成本。</li></ul>
+              <div class="note"><strong>改进路径</strong><br>优先降低能力成本：用冬季/高速实测、满载场景、BaaS 总成本计算器、交付透明度和质量闭环来减少犹豫。</div>
+            </article>
+            </div>
+    </section>
+
+    <section id="scores">
+      <h2>评分与解释</h2>
+      <div class="table-wrap"><table class="compact"><thead><tr><th>维度</th><th>分数</th></tr></thead><tbody><tr><td>缺乏感</td><td>8.3</td></tr><tr><td>目标物</td><td>8.5</td></tr><tr><td>消费者能力</td><td>7.4</td></tr><tr><td>证据信心</td><td>0.88</td></tr><tr><td>总分</td><td>7.4</td></tr></tbody></table></div>
+    </section>
+
+    <section id="recommendations">
+      <h2>建议与实验</h2>
+      <div class="table-wrap"><table class=""><thead><tr><th>优先级</th><th>领域</th><th>建议</th><th>理由</th><th>预期影响</th><th>成本</th></tr></thead><tbody><tr><td>P0</td><td>真实场景证据</td><td>建立冬季高速、满员长途、节假日换电、家庭露营和商务接待等高不确定场景的真实案例库。</td><td>这些场景正是用户从喜欢到放心之间的关键障碍。</td><td>降低续航和补能异议，提高试驾后锁单率。</td><td>medium</td></tr><tr><td>P0</td><td>BaaS 与长期成本</td><td>上线买断、BaaS、换电、保险、保值和换车周期的一页式成本计算器。</td><td>ES8 的价格方案降低门槛，但解释成本高。</td><td>减少家庭决策摩擦和价格异议。</td><td>medium</td></tr><tr><td>P1</td><td>家庭满载体验</td><td>把 6-7 人同乘、儿童座椅、老人上下车、后备厢和前备厢收纳做成标准化演示。</td><td>高端家庭用户买的是真实家庭主车，不是单人试驾体验。</td><td>提升家庭用户二次到店和推荐率。</td><td>medium</td></tr><tr><td>P1</td><td>竞品对比</td><td>按补能、空间、长期成本、智能化、服务和品牌风险建立透明竞品对比工具。</td><td>用户一定会比较理想、问界、特斯拉和传统豪华。</td><td>降低竞品流失，提高销售端异议处理一致性。</td><td>low</td></tr><tr><td>P2</td><td>长期口碑</td><td>建立 3/6/12 个月车主追踪报告，持续公开质量、能耗、补能、服务和推荐意愿。</td><td>爆款转稳定旗舰需要长期证据，而不只是上市热度。</td><td>提高老带新和长期信任。</td><td>high</td></tr></tbody></table></div>
+      <h3>验证实验</h3>
+      <div class="table-wrap"><table class=""><thead><tr><th>假设</th><th>分群</th><th>方法</th><th>指标</th><th>阈值</th><th>决策规则</th></tr></thead><tbody><tr><td>如果潜客看到同配置、同载重、同路线的冬季/高速真实续航和换电案例，续航相关犹豫会显著下降。</td><td>长途重度自驾家庭</td><td>北方冬季高速、南方湿冷、高速满载三类路线做车主共创实测内容，并在销售流程中随机展示。</td><td>试驾后锁单率、续航相关异议数量、订单取消率</td><td>锁单率提升 10% 以上，续航相关异议下降 20% 以上。</td><td>达标则纳入门店标准销售材料；不达标则重做补能承诺和路线建议。</td></tr><tr><td>把 BaaS 与买断方案做成家庭决策表，可以减少价格疑虑和销售解释成本。</td><td>高端多孩家庭</td><td>门店和线上询价页提供 3/5/8 年总成本对比，加入保值、换电、换车周期假设。</td><td>价格异议处理时长、BaaS 选择率、下订率</td><td>价格异议处理时长下降 25%，下订率提升 8%。</td><td>达标则固化为所有销售渠道的第一层解释工具。</td></tr><tr><td>全家共同体验第三排、储物、上下车和长途舒适，会比单人试驾更能推动决策。</td><td>高端多孩家庭与商务兼家庭用户</td><td>设计 45 分钟家庭试驾路线，覆盖老人上下车、儿童座椅、后备厢装载和第二/三排切换。</td><td>家庭试驾后的二次到店率、锁单率、推荐意愿</td><td>二次到店率提升 15%，锁单率提升 10%。</td><td>达标则将家庭试驾作为 ES8 核心转化流程。</td></tr></tbody></table></div>
+    </section>
+
+    <section id="forecast">
+      <h2>预测情景</h2>
+      <p>如果连续两个季度 ES8 月销低于预期、订单取消率显著上升、冬季/高速口碑负面集中，或问界/理想/特斯拉出现强降价，需要重新计算消费者能力分。</p>
+      <div class="table-wrap"><table class=""><thead><tr><th>情景</th><th>预测分数</th><th>采用可能性</th><th>关键假设</th></tr></thead><tbody><tr><td>保守</td><td>6.7</td><td>medium</td><td>竞品降价或新车型分流；真实续航口碑分化；月销回落到高位但不再破圈</td></tr><tr><td>基准</td><td>7.5</td><td>medium-high</td><td>交付稳定；换电网络继续扩张；ES8 稳住高端纯电大三排第一梯队</td></tr><tr><td>乐观</td><td>8.2</td><td>high</td><td>冬季/高速体验被证实；服务口碑扩散；持续压制增程竞品心智</td></tr></tbody></table></div>
+    </section>
+
+    <section id="risks">
+      <h2>风险与伦理</h2>
+      <div class="table-wrap"><table class=""><thead><tr><th>严重度</th><th>类型</th><th>风险</th><th>缓释</th><th>来源</th></tr></thead><tbody><tr><td>high</td><td>产品体验</td><td>真实续航与冬季高速口碑不稳定，会削弱纯电大三排主车信心。</td><td>用官方、媒体和车主共同实测形成透明边界，并提供路线补能建议。</td><td>S13 S14</td></tr><tr><td>high</td><td>竞争</td><td>问界、理想、特斯拉或传统豪华降价和新车型发布，抬高用户比较成本。</td><td>建立动态竞品对比和价格价值锚，不把优势只押在新车热度。</td><td>S15 S16 S17 S18</td></tr><tr><td>medium</td><td>交付</td><td>热门配置交付等待影响用户情绪和订单确定性。</td><td>对热门配置做清晰等待预期和补偿机制，销售端避免过度承诺。</td><td>S5 S8</td></tr><tr><td>medium</td><td>软件与质量</td><td>车机、辅助驾驶和品控细节损害旗舰感。</td><td>建立高频问题闭环、OTA 透明节奏和重点车主回访机制。</td><td>S13 S14</td></tr><tr><td>medium</td><td>成本认知</td><td>BaaS 总成本理解偏差导致后期不满或决策拖延。</td><td>把总拥有成本和不同使用年限适用人群讲清楚。</td><td>S3 S9</td></tr></tbody></table></div>
+    </section>
+
+    <section id="final">
+      <h2>最终方案</h2>
+      <p class="lede">ES8 不是需求不成立，而是强需求进入长期验证期。当前应判定为“修短板后放大”：继续承接高端大三排纯电窗口，但增长动作必须围绕降低能力成本展开。</p>
+      <div class="note"><strong>总体策略</strong><br>用“真实场景证据链 + BaaS 成本透明 + 家庭满载体验 + 动态竞品对比”把用户从喜欢推进到放心，从短期爆款推进到稳定旗舰。</div>
+      <div class="three-phase">
+        <div class="table-wrap"><table class=""><thead><tr><th>阶段</th><th>动作</th></tr></thead><tbody><tr><td>未来 30 天</td><td>汇总并发布冬季/高速/满载/换电真实案例的第一版证据库。；把 BaaS 与买断总成本做成门店统一解释工具。；设计家庭满载试驾流程，覆盖老人、孩子、第三排和储物。</td></tr><tr><td>未来 60 天</td><td>上线动态竞品对比工具，覆盖理想 L9、问界 M9、Model Y L、宝马 X5。；跟踪试驾后锁单率、订单取消率、交付等待投诉和续航异议。；建立 3 个月车主回访样本，输出第一份长期体验摘要。</td></tr><tr><td>未来 90 天</td><td>按地区复盘换电覆盖、交付周期和订单转化差异。；用真实转化数据重算需求三角分数，重点观察消费者能力是否超过 8.0。；如果能力分改善，再扩大渠道投放；如果没有改善，优先修复续航/交付/质量短板。</td></tr><tr><td>决策规则</td><td>如果消费者能力分持续低于 7.5，不建议把增长预算主要投向泛流量获客。；如果冬季/高速相关异议下降 20% 以上，可以扩大长途家庭用户投放。；如果竞品分流导致订单取消率上升，需要调整价格价值锚和销售话术。；如果 6-12 个月老带新比例提升，说明 ES8 从换代热度进入稳定口碑阶段。</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="method">
+      <h2>方法与模型</h2>
+      <figure class="diagram-block">
+        <svg class="process-svg" viewBox="0 0 1030 230" role="img" aria-label="需求评估分析流程图"><rect x="0" y="0" width="1030" height="230" fill="#ffffff"/><rect x="26" y="32" width="130" height="132" rx="6" fill="#ffffff" stroke="#141413" stroke-width="2"/><text x="91.0" y="62" text-anchor="middle" class="svg-title">输入</text><text x="91.0" y="90" text-anchor="middle" class="svg-body">链接</text><text x="91.0" y="108" text-anchor="middle" class="svg-body">介绍</text><text x="91.0" y="126" text-anchor="middle" class="svg-body">文档</text><line x1="166" y1="98" x2="182" y2="98" stroke="#141413" stroke-width="2"/><path d="M 182 98 l -8 -5 v 10 z" fill="#141413"/><rect x="192" y="32" width="130" height="132" rx="6" fill="#ffffff" stroke="#141413" stroke-width="2"/><text x="257.0" y="62" text-anchor="middle" class="svg-title">解析</text><text x="257.0" y="90" text-anchor="middle" class="svg-body">产品画布</text><text x="257.0" y="108" text-anchor="middle" class="svg-body">用户假设</text><text x="257.0" y="126" text-anchor="middle" class="svg-body">价值主张</text><line x1="332" y1="98" x2="348" y2="98" stroke="#141413" stroke-width="2"/><path d="M 348 98 l -8 -5 v 10 z" fill="#141413"/><rect x="358" y="32" width="130" height="132" rx="6" fill="#ffffff" stroke="#141413" stroke-width="2"/><text x="423.0" y="62" text-anchor="middle" class="svg-title">检索</text><text x="423.0" y="90" text-anchor="middle" class="svg-body">权威资料</text><text x="423.0" y="108" text-anchor="middle" class="svg-body">竞品</text><text x="423.0" y="126" text-anchor="middle" class="svg-body">评价</text><text x="423.0" y="144" text-anchor="middle" class="svg-body">价格</text><line x1="498" y1="98" x2="514" y2="98" stroke="#141413" stroke-width="2"/><path d="M 514 98 l -8 -5 v 10 z" fill="#141413"/><rect x="524" y="32" width="130" height="132" rx="6" fill="#ffffff" stroke="#141413" stroke-width="2"/><text x="589.0" y="62" text-anchor="middle" class="svg-title">分析</text><text x="589.0" y="90" text-anchor="middle" class="svg-body">缺乏感</text><text x="589.0" y="108" text-anchor="middle" class="svg-body">目标物</text><text x="589.0" y="126" text-anchor="middle" class="svg-body">能力成本</text><line x1="664" y1="98" x2="680" y2="98" stroke="#141413" stroke-width="2"/><path d="M 680 98 l -8 -5 v 10 z" fill="#141413"/><rect x="690" y="32" width="130" height="132" rx="6" fill="#ffffff" stroke="#141413" stroke-width="2"/><text x="755.0" y="62" text-anchor="middle" class="svg-title">评分</text><text x="755.0" y="90" text-anchor="middle" class="svg-body">三维得分</text><text x="755.0" y="108" text-anchor="middle" class="svg-body">信心系数</text><text x="755.0" y="126" text-anchor="middle" class="svg-body">红旗项</text><line x1="830" y1="98" x2="846" y2="98" stroke="#141413" stroke-width="2"/><path d="M 846 98 l -8 -5 v 10 z" fill="#141413"/><rect x="856" y="32" width="130" height="132" rx="6" fill="#ffffff" stroke="#141413" stroke-width="2"/><text x="921.0" y="62" text-anchor="middle" class="svg-title">输出</text><text x="921.0" y="90" text-anchor="middle" class="svg-body">Markdown</text><text x="921.0" y="108" text-anchor="middle" class="svg-body">HTML</text><text x="921.0" y="126" text-anchor="middle" class="svg-body">Word</text><text x="921.0" y="144" text-anchor="middle" class="svg-body">PDF</text><text x="515" y="206" text-anchor="middle" class="svg-caption">核心原则：先把产品放进用户真实场景，再用证据校准三角各边。</text></svg>
+        <figcaption class="figure-caption">图：需求评估分析流程。检索只接受可追溯来源，不确定信息进入假设区。</figcaption>
+      </figure>
+      <p>评分采用需求三角的几何短板逻辑：缺乏感、目标物和消费者能力必须同时成立，单一高分不能完全补偿另一条边塌陷。</p>
+    </section>
+
+    <section id="appendix">
+      <h2>附录</h2>
+      <h3>未解问题</h3>
+      <ul><li>全新 ES8 的订单取消率、不同地区交付周期和配置选择结构未完全公开。</li><li>车主真实能耗、冬季高速和长期质量样本仍需要更系统的数据。</li><li>ES9、Model Y L 等新车型对 ES8 的实际分流比例需要后续销量验证。</li><li>BaaS 用户长期满意度与买断用户之间的差异尚缺少公开大样本。</li></ul>
+    </section>
+  </main>
+</body>
+</html>
