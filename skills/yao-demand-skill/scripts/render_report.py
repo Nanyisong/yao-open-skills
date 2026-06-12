@@ -85,11 +85,12 @@ def md_table(headers: Sequence[str], rows: Sequence[Sequence[Any]]) -> str:
     return "\n".join([header, divider] + body) + "\n"
 
 
-def html_list(items: Sequence[Any]) -> str:
+def html_list(items: Sequence[Any], class_name: str = "") -> str:
     values = [h(item) for item in items if text(item).strip()]
     if not values:
         return "<p class=\"muted\">未提供</p>"
-    return "<ul>" + "".join(f"<li>{item}</li>" for item in values) + "</ul>"
+    class_attr = f' class="{h(class_name)}"' if class_name else ""
+    return f"<ul{class_attr}>" + "".join(f"<li>{item}</li>" for item in values) + "</ul>"
 
 
 def html_table(headers: Sequence[str], rows: Sequence[Sequence[Any]], compact: bool = False) -> str:
@@ -1167,14 +1168,55 @@ def render_html(report: Dict[str, Any]) -> str:
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 18px;
     }}
+    .product-summary-grid {{
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 22px;
+      align-items: stretch;
+    }}
+    .product-overview .fact-box {{
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-width: 0;
+      padding: 18px 18px 20px;
+    }}
+    .product-overview .fact-box h3 {{
+      margin-bottom: 12px;
+    }}
+    .product-overview .fact-box p {{
+      margin: 0;
+    }}
+    .product-overview .fact-box ul {{
+      margin-top: 0;
+    }}
+    .product-overview .fact-box li {{
+      margin: 0 0 7px;
+    }}
+    .product-overview .fact-box li:last-child {{
+      margin-bottom: 0;
+    }}
     .product-detail-grid {{
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 18px;
       margin-top: 22px;
-      align-items: start;
+      align-items: stretch;
     }}
-    .product-detail-grid h3 {{
+    .product-detail-card {{
+      min-height: 230px;
+    }}
+    .product-detail-grid .feature-list {{
+      column-count: 2;
+      column-gap: 30px;
+    }}
+    .product-detail-grid .feature-list li {{
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin-bottom: 8px;
+    }}
+    .product-detail-grid .pricing-list li {{
       margin-bottom: 10px;
     }}
     .chart-grid {{
@@ -1242,6 +1284,11 @@ def render_html(report: Dict[str, Any]) -> str:
       margin-top: auto;
     }}
     a {{ color: var(--brand); overflow-wrap: anywhere; }}
+    @media (max-width: 1100px) and (min-width: 821px) {{
+      .product-summary-grid {{
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }}
+    }}
     @page {{
       size: A4;
       margin: 18mm 20mm 20mm 20mm;
@@ -1256,7 +1303,7 @@ def render_html(report: Dict[str, Any]) -> str:
       h2 {{ font-size: 16pt; }}
       h3 {{ font-size: 12pt; }}
       .lede {{ max-width: none; font-size: 11pt; line-height: 1.58; }}
-      .dimension-grid, .meta-grid, .score-grid, .fact-grid, .two-col, .product-detail-grid {{
+      .dimension-grid, .meta-grid, .score-grid, .fact-grid, .two-col, .product-summary-grid, .product-detail-grid {{
         display: block;
       }}
       .chart-grid {{
@@ -1290,7 +1337,7 @@ def render_html(report: Dict[str, Any]) -> str:
       .nav-inner {{ padding: 10px 18px; display: block; }}
       .nav-title {{ max-width: none; margin-bottom: 8px; }}
       main {{ padding: 32px 18px 56px; }}
-      .meta-grid, .score-grid, .fact-grid, .dimension-grid, .two-col, .chart-grid, .product-detail-grid {{
+      .meta-grid, .score-grid, .fact-grid, .dimension-grid, .two-col, .chart-grid, .product-summary-grid, .product-detail-grid {{
         grid-template-columns: minmax(0, 1fr);
       }}
       h1 {{ font-size: 34px; }}
@@ -1309,6 +1356,12 @@ def render_html(report: Dict[str, Any]) -> str:
       .chart-svg-wrap svg {{
         max-width: 100%;
         min-width: 0;
+      }}
+      .product-detail-card {{
+        min-height: 0;
+      }}
+      .product-detail-grid .feature-list {{
+        column-count: 1;
       }}
     }}
   </style>
@@ -1356,17 +1409,17 @@ def render_html(report: Dict[str, Any]) -> str:
       </div>
     </section>
 
-    <section id="product">
+    <section id="product" class="product-overview">
       <h2>产品概览</h2>
-      <div class="fact-grid">
-        <div class="fact-box"><h3>产品定义</h3><p>{h(canvas.get('definition'))}</p></div>
-        <div class="fact-box"><h3>价值主张</h3><p>{h(canvas.get('value_proposition'))}</p></div>
-        <div class="fact-box"><h3>商业模式</h3><p>{h(canvas.get('business_model'))}</p></div>
-        <div class="fact-box"><h3>假设</h3>{html_list(as_list(canvas.get('assumptions')))}</div>
+      <div class="product-summary-grid">
+        <div class="fact-box product-card"><h3>产品定义</h3><p>{h(canvas.get('definition'))}</p></div>
+        <div class="fact-box product-card"><h3>价值主张</h3><p>{h(canvas.get('value_proposition'))}</p></div>
+        <div class="fact-box product-card"><h3>商业模式</h3><p>{h(canvas.get('business_model'))}</p></div>
+        <div class="fact-box product-card"><h3>假设</h3>{html_list(as_list(canvas.get('assumptions')), 'assumption-list')}</div>
       </div>
       <div class="product-detail-grid">
-        <div class="fact-box"><h3>核心功能</h3>{html_list(as_list(canvas.get('features')))}</div>
-        <div class="fact-box"><h3>定价信息</h3>{html_list(as_list(canvas.get('pricing')))}</div>
+        <div class="fact-box product-detail-card"><h3>核心功能</h3>{html_list(as_list(canvas.get('features')), 'feature-list')}</div>
+        <div class="fact-box product-detail-card"><h3>定价信息</h3>{html_list(as_list(canvas.get('pricing')), 'pricing-list')}</div>
       </div>
     </section>
 

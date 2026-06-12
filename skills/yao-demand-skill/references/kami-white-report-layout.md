@@ -80,6 +80,7 @@ Use anchors for:
 - mobile chart modules must show the complete chart inside the card without internal horizontal scroll. If a chart is too dense, switch to a compact grouped layout, numbered markers plus legend, shorter labels, or a taller SVG rather than forcing left-right sliding.
 - major sections separated by whitespace and a quiet top border
 - use cards only for true repeated objects or score blocks, not nested decorative surfaces
+- product overview sections should use a dedicated product grid, not the generic fact grid: summary cards align to equal row height on desktop, detail cards align as a balanced two-column row, dense feature lists may use two columns on desktop and one column on mobile.
 - long tables must sit inside `.table-wrap { overflow-x: auto; }`
 - long URLs and source titles must use `overflow-wrap: anywhere`
 - code and raw evidence blocks must wrap and not overflow
