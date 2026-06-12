@@ -118,6 +118,16 @@ def decision_label(value: str) -> str:
     return labels.get(value, value or "-")
 
 
+def severity_label(value: Any) -> str:
+    labels = {
+        "high": "高风险",
+        "medium": "中风险",
+        "low": "低风险",
+    }
+    raw = text(value).strip()
+    return labels.get(raw.lower(), raw or "-")
+
+
 def score_band(value: Any) -> str:
     try:
         number = float(value)
@@ -707,33 +717,35 @@ def render_markdown(report: Dict[str, Any]) -> str:
     lines: List[str] = []
 
     lines.append(f"# {text(meta.get('title') or meta.get('product_name') or '需求评估报告')}\n")
-    lines.append(f"- 产品：{text(meta.get('product_name'))}")
-    lines.append(f"- 日期：{text(meta.get('generated_at'))}")
-    lines.append(f"- 目标市场：{text(meta.get('target_market', '未指定'))}")
-    lines.append(f"- 分析目标：{text(meta.get('analysis_goal', '需求评估'))}")
-    lines.append(f"- 来源边界：{text(meta.get('source_boundary', '未说明'))}\n")
+    lines.append(f"> {text(summary.get('one_sentence'))}\n")
+    lines.append(md_table(["项目", "结果"], [
+        ["产品", meta.get("product_name", "")],
+        ["日期", meta.get("generated_at", "")],
+        ["目标市场", meta.get("target_market", "未指定")],
+        ["分析目标", meta.get("analysis_goal", "需求评估")],
+        ["建议决策", decision_label(summary.get("decision", ""))],
+    ]))
 
     lines.append("## 执行摘要\n")
-    lines.append(f"{text(summary.get('one_sentence'))}\n")
-    lines.append(md_table(["项目", "结果"], [
-        ["建议决策", decision_label(summary.get("decision", ""))],
+    lines.append(md_table(["指标", "读数"], [
         ["总分", score(summary.get("total_score"))],
         ["缺乏感", score(summary.get("lack_score"))],
         ["目标物", score(summary.get("target_object_score"))],
         ["消费者能力", score(summary.get("consumer_ability_score"))],
         ["证据信心", text(summary.get("evidence_confidence"))],
-        ["最大机会", summary.get("biggest_opportunity", "")],
-        ["最大风险", summary.get("biggest_risk", "")],
     ]))
+    lines.append(f"**最大机会：** {text(summary.get('biggest_opportunity'))}\n")
+    lines.append(f"**最大风险：** {text(summary.get('biggest_risk'))}\n")
+    if final_plan := report.get("final_plan", {}):
+        lines.append(f"**下一步策略：** {text(final_plan.get('strategy'))}\n")
 
     lines.append("## 可视化诊断\n")
-    lines.append("以下图表模块用于快速定位需求强弱、短板、证据质量、采用阻力和下一步优先级。Markdown 版本提供图表等价表格，HTML/PDF 会渲染为静态 SVG 图表。\n")
-    for module in chart_modules(report):
-        lines.append(f"### {text(module.get('title'))}\n")
-        lines.append(f"- 图表类型：`{text(module.get('chart_type'))}`")
-        lines.append(f"- {chart_meta(module)}")
-        lines.append(f"- 解读：{text(module.get('insight'))}")
-        lines.append(f"- 建议：{text(module.get('recommendation'))}\n")
+    lines.append("Markdown 版本保留图表等价数据，但把判断放在数据前面，便于先读结论再看明细。\n")
+    for index, module in enumerate(chart_modules(report), start=1):
+        lines.append(f"### {index:02d}. {text(module.get('title'))}\n")
+        lines.append(f"**类型：** `{text(module.get('chart_type'))}`  \n**{chart_meta(module)}**\n")
+        lines.append(f"**解读：** {text(module.get('insight'))}\n")
+        lines.append(f"**建议：** {text(module.get('recommendation'))}\n")
         lines.append(md_table(["分组", "指标/情景", "数值/X", "Y/说明"], chart_data_rows(module)))
 
     lines.append("## 产品概览\n")
@@ -749,13 +761,44 @@ def render_markdown(report: Dict[str, Any]) -> str:
     lines.append("## 研究方法与来源\n")
     lines.append(text(meta.get("source_boundary", "本报告区分事实、假设、证据和建议。")) + "\n")
     lines.append("```mermaid\nflowchart LR\n  A[输入\\n链接/介绍/文档] --> B[解析\\n产品画布/用户假设/价值主张]\n  B --> C[检索\\n权威资料/竞品/评价/价格]\n  C --> D[分析\\n缺乏感/目标物/能力成本]\n  D --> E[评分\\n三维得分/信心系数/红旗项]\n  E --> F[输出\\nMarkdown/HTML/Word/PDF]\n```\n")
-    lines.append(md_table(["来源", "等级", "类型", "标题", "链接", "日期"], evidence_rows(report)))
+    for item in as_list(report.get("evidence")):
+        if not isinstance(item, dict):
+            continue
+        source_id = text(item.get("id"))
+        title_text = text(item.get("title"))
+        url = text(item.get("url"))
+        title_md = f"[{title_text}]({url})" if url else title_text
+        lines.append(
+            f"- **{source_id}** {title_md} · {text(item.get('quality'))} · "
+            f"{text(item.get('source_type'))} · {text(item.get('retrieved_at') or item.get('published_at'))}"
+        )
+        claims = [text(claim).strip() for claim in as_list(item.get("claims")) if text(claim).strip()]
+        if claims:
+            lines.append("  - " + "；".join(claims))
+    lines.append("")
 
     lines.append("## 目标用户与 JTBD\n")
-    lines.append(md_table(["分群", "场景", "JTBD", "当前替代", "采用阻碍"], segment_rows(report)))
+    for item in as_list(report.get("segments")):
+        if not isinstance(item, dict):
+            continue
+        lines.append(f"### {text(item.get('name'))}\n")
+        lines.append(f"- **场景：** {text(item.get('scenario'))}")
+        lines.append(f"- **JTBD：** {text(item.get('job_to_be_done'))}")
+        lines.append(f"- **当前替代：** {'；'.join(text(x) for x in as_list(item.get('current_alternatives')))}")
+        lines.append(f"- **采用阻碍：** {'；'.join(text(x) for x in as_list(item.get('adoption_blockers')))}\n")
 
     lines.append("## 竞品与替代方案\n")
-    lines.append(md_table(["名称", "类型", "定位", "优势", "弱点", "来源"], competitor_rows(report)))
+    for item in as_list(report.get("competitors")):
+        if not isinstance(item, dict):
+            continue
+        lines.append(f"### {text(item.get('name'))} · `{text(item.get('type'))}`\n")
+        lines.append(f"- **定位：** {text(item.get('positioning'))}")
+        lines.append(f"- **优势：** {'；'.join(text(x) for x in as_list(item.get('strengths')))}")
+        lines.append(f"- **弱点：** {'；'.join(text(x) for x in as_list(item.get('weaknesses')))}")
+        source_ids = " ".join(text(x) for x in as_list(item.get("source_ids")) if text(x).strip())
+        if source_ids:
+            lines.append(f"- **来源：** {source_ids}")
+        lines.append("")
 
     lines.append("## 需求三角分析\n")
     lines.append("```mermaid\nflowchart TB\n  L[缺乏感\\n理想与现实的差距] --> M[需求成立\\n动机清晰 + 成本可承受 + 场景触发]\n  T[目标物\\n填补差距的具体方案] --> M\n  A[消费者能力\\n行动所需成本承受力] --> M\n```\n")
@@ -773,22 +816,35 @@ def render_markdown(report: Dict[str, Any]) -> str:
     lines.append(md_table(["维度", "分数"], score_rows(report)))
 
     lines.append("## 建议与实验\n")
-    rec_rows = [
-        [
-            item.get("priority", ""),
-            item.get("area", ""),
-            item.get("recommendation", ""),
-            item.get("rationale", ""),
-            item.get("expected_impact", ""),
-            item.get("effort", ""),
-        ]
-        for item in as_list(report.get("recommendations"))
-    ]
-    lines.append(md_table(["优先级", "领域", "建议", "理由", "预期影响", "成本"], rec_rows))
-    lines.append(md_table(["假设", "分群", "方法", "指标", "阈值", "决策规则"], experiment_rows(report)))
+    for item in as_list(report.get("recommendations")):
+        if not isinstance(item, dict):
+            continue
+        lines.append(f"### {text(item.get('priority'))} · {text(item.get('area'))}\n")
+        lines.append(f"**建议：** {text(item.get('recommendation'))}\n")
+        lines.append(f"- **理由：** {text(item.get('rationale'))}")
+        lines.append(f"- **预期影响：** {text(item.get('expected_impact'))}")
+        lines.append(f"- **执行成本：** {text(item.get('effort'))}\n")
+    lines.append("### 验证实验\n")
+    for index, item in enumerate(as_list(report.get("experiments")), start=1):
+        if not isinstance(item, dict):
+            continue
+        lines.append(f"**实验 {index}：{text(item.get('hypothesis'))}**\n")
+        lines.append(f"- **分群：** {text(item.get('segment'))}")
+        lines.append(f"- **方法：** {text(item.get('method'))}")
+        lines.append(f"- **指标：** {text(item.get('metric'))}")
+        lines.append(f"- **阈值：** {text(item.get('threshold'))}")
+        lines.append(f"- **决策规则：** {text(item.get('decision_rule'))}\n")
 
     lines.append("## 风险与伦理\n")
-    lines.append(md_table(["严重度", "类型", "风险", "缓释", "来源"], risk_rows(report)))
+    for item in as_list(report.get("risks")):
+        if not isinstance(item, dict):
+            continue
+        lines.append(f"### {severity_label(item.get('severity'))} · {text(item.get('type'))}\n")
+        lines.append(f"**风险：** {text(item.get('risk'))}\n")
+        lines.append(f"**缓释：** {text(item.get('mitigation'))}\n")
+        source_ids = " ".join(text(x) for x in as_list(item.get("source_ids")) if text(x).strip())
+        if source_ids:
+            lines.append(f"**来源：** {source_ids}\n")
 
     forecast = report.get("forecast", {})
     lines.append("## 预测情景\n")
@@ -1293,44 +1349,174 @@ def render_html(report: Dict[str, Any]) -> str:
       size: A4;
       margin: 18mm 20mm 20mm 20mm;
       background: #ffffff;
+      @bottom-center {{
+        content: "{h(meta.get('product_name') or title)} · " counter(page);
+        font-family: var(--serif);
+        font-size: 8pt;
+        color: #6b6a64;
+      }}
+    }}
+    @page:first {{
+      @bottom-center {{ content: ""; }}
     }}
     @media print {{
-      body {{ padding-top: 0; font-size: 10pt; line-height: 1.52; }}
+      html {{ overflow: visible; }}
+      body {{ padding-top: 0; font-size: 9.8pt; line-height: 1.5; overflow: visible; }}
       .top-nav {{ display: none; }}
       main {{ max-width: none; padding: 0; }}
-      section, .score-card, .fact-box, .risk-item {{ break-inside: avoid; }}
-      h1 {{ font-size: 28pt; line-height: 1.12; }}
-      h2 {{ font-size: 16pt; }}
-      h3 {{ font-size: 12pt; }}
-      .lede {{ max-width: none; font-size: 11pt; line-height: 1.58; }}
-      .dimension-grid, .meta-grid, .score-grid, .fact-grid, .two-col, .product-summary-grid, .product-detail-grid {{
+      header.report-header {{
+        padding-bottom: 14pt;
+        margin-bottom: 12pt;
+        break-after: avoid;
+      }}
+      section {{
+        padding: 22pt 0;
+        border-top: 0.5pt solid var(--border-soft);
+        break-inside: auto;
+      }}
+      h1 {{ font-size: 25pt; line-height: 1.12; margin-bottom: 8pt; }}
+      h2 {{
+        font-size: 15pt;
+        line-height: 1.2;
+        margin: 0 0 10pt;
+        break-after: avoid;
+      }}
+      h3 {{ font-size: 11.5pt; line-height: 1.25; break-after: avoid; }}
+      h4 {{ font-size: 9.5pt; margin: 9pt 0 4pt; }}
+      p {{ margin-top: 0; }}
+      .eyebrow {{ font-size: 8.5pt; margin-bottom: 6pt; }}
+      .lede {{ max-width: none; font-size: 10.4pt; line-height: 1.52; }}
+      .meta-grid {{
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7pt;
+        margin-top: 12pt;
+        align-items: stretch;
+      }}
+      .score-grid {{
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 7pt;
+        margin-top: 9pt;
+        align-items: stretch;
+      }}
+      .two-col, .product-detail-grid {{
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9pt;
+      }}
+      .product-summary-grid {{
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9pt;
+      }}
+      .dimension-grid, .fact-grid {{
         display: block;
+      }}
+      .meta-item, .score-card, .fact-box, .dimension-card, .note {{
+        padding: 8pt 9pt;
+        border-width: 0.5pt;
+        margin-bottom: 0;
+        break-inside: avoid-page;
+        page-break-inside: avoid;
+      }}
+      .meta-item span, .score-card span {{
+        font-size: 8.4pt;
+        margin-bottom: 3pt;
+      }}
+      .score-card strong {{
+        font-size: 18pt;
+      }}
+      .decision {{
+        font-size: 8.8pt;
+        padding: 1pt 5pt;
       }}
       .chart-grid {{
         display: block;
       }}
       .chart-module {{
-        margin-bottom: 13pt;
-        padding: 12pt;
+        display: block;
+        height: auto;
+        margin-bottom: 12pt;
+        padding: 10pt;
         border-color: #d8d5c9;
+        break-inside: avoid-page;
+        page-break-inside: avoid;
       }}
       .chart-module-head {{
         display: block;
+        padding-bottom: 7pt;
+        margin-bottom: 8pt;
+      }}
+      .chart-kicker {{
+        font-size: 8pt;
+        margin-bottom: 4pt;
+      }}
+      .chart-module h3 {{
+        font-size: 11.2pt;
+        margin-bottom: 4pt;
       }}
       .chart-confidence {{
         max-width: none;
         text-align: left;
+        font-size: 8.2pt;
       }}
       .chart-svg-wrap {{
         overflow: visible;
+        margin: 5pt 0 8pt;
       }}
       .chart-svg-wrap svg {{
         min-width: 0;
+        width: 76%;
+        max-width: 430pt;
+        margin: 0 auto;
+      }}
+      .chart-score_gauge .chart-svg-wrap svg {{
+        width: 88%;
+        max-width: 500pt;
+      }}
+      .chart-radar .chart-svg-wrap svg {{
+        width: 64%;
+        max-width: 360pt;
+      }}
+      .chart-matrix .chart-svg-wrap svg,
+      .chart-forecast .chart-svg-wrap svg {{
+        width: 82%;
+        max-width: 450pt;
+      }}
+      .chart-heatmap .chart-svg-wrap svg,
+      .chart-funnel .chart-svg-wrap svg,
+      .chart-stacked_bar .chart-svg-wrap svg {{
+        width: 72%;
+        max-width: 400pt;
+      }}
+      .chart-insight, .chart-recommendation {{
+        font-size: 9pt;
+        line-height: 1.45;
+        margin-top: 5pt;
       }}
       .dimension-card, .score-card, .meta-item, .fact-box {{
-        margin-bottom: 10pt;
+        margin-bottom: 8pt;
       }}
-      table {{ min-width: 0; font-size: 8.5pt; }}
+      .product-detail-card {{ min-height: 0; }}
+      .product-detail-grid .feature-list {{
+        column-count: 1;
+      }}
+      .diagram-block {{
+        margin: 8pt 0 12pt;
+        overflow: visible;
+      }}
+      .diagram-block svg {{
+        min-width: 0;
+      }}
+      table {{
+        min-width: 0;
+        table-layout: fixed;
+        font-size: 8.1pt;
+        line-height: 1.35;
+      }}
+      th {{ padding: 5pt 6pt; }}
+      td {{ padding: 4pt 6pt; }}
       .table-wrap {{ overflow: visible; border: 0; }}
     }}
     @media (max-width: 820px) {{
@@ -1598,48 +1784,202 @@ def xml_text(value: Any) -> str:
     return html.escape(text(value), quote=False)
 
 
-def ooxml_paragraph(value: Any, style: str | None = None) -> str:
+def ooxml_run(value: Any, bold: bool = False, color: str | None = None, size: int | None = None) -> str:
+    rpr_parts = [
+        '<w:rFonts w:ascii="Georgia" w:hAnsi="Georgia" w:eastAsia="Songti SC" w:cs="Georgia"/>'
+    ]
+    if bold:
+        rpr_parts.append("<w:b/>")
+    if color:
+        rpr_parts.append(f'<w:color w:val="{color}"/>')
+    if size:
+        rpr_parts.append(f'<w:sz w:val="{size}"/>')
+    value_lines = text(value).splitlines() or [""]
+    parts = [f"<w:r><w:rPr>{''.join(rpr_parts)}</w:rPr>"]
+    for index, line in enumerate(value_lines):
+        if index:
+            parts.append("<w:br/>")
+        parts.append(f'<w:t xml:space="preserve">{xml_text(line)}</w:t>')
+    parts.append("</w:r>")
+    return "".join(parts)
+
+
+def ooxml_paragraph(
+    value: Any,
+    style: str | None = None,
+    *,
+    before: int = 0,
+    after: int = 120,
+    line: int = 330,
+    keep_next: bool = False,
+    page_break_before: bool = False,
+    indent: bool = False,
+    bold: bool = False,
+    color: str | None = None,
+    size: int | None = None,
+) -> str:
     ppr_parts = []
     if style:
         ppr_parts.append(f'<w:pStyle w:val="{style}"/>')
-    ppr_parts.append('<w:spacing w:after="120" w:line="330" w:lineRule="auto"/>')
+    if keep_next:
+        ppr_parts.append("<w:keepNext/>")
+    if page_break_before:
+        ppr_parts.append("<w:pageBreakBefore/>")
+    if indent:
+        ppr_parts.append('<w:ind w:left="360" w:hanging="220"/>')
+    ppr_parts.append(f'<w:spacing w:before="{before}" w:after="{after}" w:line="{line}" w:lineRule="auto"/>')
     style_xml = f"<w:pPr>{''.join(ppr_parts)}</w:pPr>"
-    return f"<w:p>{style_xml}<w:r><w:t>{xml_text(value)}</w:t></w:r></w:p>"
+    return f"<w:p>{style_xml}{ooxml_run(value, bold=bold, color=color, size=size)}</w:p>"
+
+
+def ooxml_page_break() -> str:
+    return '<w:p><w:pPr><w:pageBreakBefore/><w:spacing w:after="0"/></w:pPr></w:p>'
 
 
 def ooxml_bullets(items: Sequence[Any]) -> str:
     values = [text(item).strip() for item in items if text(item).strip()]
     if not values:
         return ooxml_paragraph("未提供")
-    return "".join(ooxml_paragraph(f"- {item}") for item in values)
+    return "".join(
+        ooxml_paragraph(f"• {item}", style="ListParagraph", after=70, line=300, indent=True)
+        for item in values
+    )
 
 
-def ooxml_table(headers: Sequence[str], rows: Sequence[Sequence[Any]]) -> str:
+def ooxml_labeled_paragraph(label: str, value: Any, *, after: int = 95, line: int = 310) -> str:
+    ppr = f'<w:pPr><w:spacing w:after="{after}" w:line="{line}" w:lineRule="auto"/></w:pPr>'
+    return (
+        f"<w:p>{ppr}"
+        f"{ooxml_run(f'{label}：', bold=True, color='1B365D')}"
+        f"{ooxml_run(value)}"
+        "</w:p>"
+    )
+
+
+def ooxml_key_values(rows: Sequence[Sequence[Any]]) -> str:
+    parts = []
+    for row in rows:
+        if len(row) < 2:
+            continue
+        if not text(row[1]).strip():
+            continue
+        parts.append(ooxml_labeled_paragraph(text(row[0]), row[1]))
+    return "".join(parts) if parts else ooxml_paragraph("未提供")
+
+
+def ooxml_widths(column_count: int, widths: Sequence[int] | None = None, total_width: int = 9360) -> List[int]:
+    if widths and len(widths) == column_count:
+        width_values = [max(1, int(width)) for width in widths]
+        if sum(width_values) != total_width:
+            total = sum(width_values)
+            width_values = [max(480, int(total_width * width / total)) for width in width_values]
+            width_values[-1] += total_width - sum(width_values)
+        return width_values
+    width = int(total_width / max(1, column_count))
+    values = [width] * column_count
+    values[-1] += total_width - sum(values)
+    return values
+
+
+def ooxml_table(
+    headers: Sequence[str],
+    rows: Sequence[Sequence[Any]],
+    *,
+    widths: Sequence[int] | None = None,
+    compact: bool = False,
+    total_width: int = 9360,
+) -> str:
     if not rows:
         return ooxml_paragraph("未提供")
     table_rows = []
     all_rows = [headers] + [list(row) for row in rows]
-    col_width = max(1200, int(9500 / max(1, len(headers))))
+    col_widths = ooxml_widths(len(headers), widths, total_width)
     for row_index, row in enumerate(all_rows):
         cells = []
-        for cell in row:
+        for cell_index, cell in enumerate(row):
+            width = col_widths[cell_index] if cell_index < len(col_widths) else col_widths[-1]
             shading = '<w:shd w:fill="F7F7F4"/>' if row_index == 0 else ""
+            paragraph_style = "TableHeader" if row_index == 0 else "TableText"
+            paragraph = ooxml_paragraph(
+                cell,
+                paragraph_style,
+                after=20 if compact else 45,
+                line=250 if compact else 280,
+                bold=row_index == 0,
+                color="3D3D3A" if row_index == 0 else "141413",
+                size=17 if compact else 18,
+            )
             cells.append(
-                f"<w:tc><w:tcPr><w:tcW w:w=\"{col_width}\" w:type=\"dxa\"/>"
+                f"<w:tc><w:tcPr><w:tcW w:w=\"{width}\" w:type=\"dxa\"/>"
                 f"{shading}<w:tcMar><w:top w:w=\"80\" w:type=\"dxa\"/>"
                 "<w:left w:w=\"90\" w:type=\"dxa\"/><w:bottom w:w=\"80\" w:type=\"dxa\"/>"
                 "<w:right w:w=\"90\" w:type=\"dxa\"/></w:tcMar></w:tcPr>"
-                f"{ooxml_paragraph(cell)}</w:tc>"
+                f"{paragraph}</w:tc>"
             )
         table_rows.append(f"<w:tr>{''.join(cells)}</w:tr>")
+    grid = "".join(f'<w:gridCol w:w="{width}"/>' for width in col_widths)
     return (
         "<w:tbl><w:tblPr><w:tblStyle w:val=\"TableGrid\"/>"
-        "<w:tblW w:w=\"9500\" w:type=\"dxa\"/><w:tblCellMar>"
+        f"<w:tblW w:w=\"{total_width}\" w:type=\"dxa\"/><w:tblLayout w:type=\"fixed\"/><w:tblCellMar>"
         "<w:top w:w=\"80\" w:type=\"dxa\"/><w:left w:w=\"90\" w:type=\"dxa\"/>"
         "<w:bottom w:w=\"80\" w:type=\"dxa\"/><w:right w:w=\"90\" w:type=\"dxa\"/>"
         "</w:tblCellMar></w:tblPr>"
+        f"<w:tblGrid>{grid}</w:tblGrid>"
         f"{''.join(table_rows)}</w:tbl>"
     )
+
+
+def ooxml_callout(label: str, value: Any) -> str:
+    return ooxml_labeled_paragraph(label, value, after=110, line=315)
+
+
+def ooxml_field_table(rows: Sequence[Sequence[Any]]) -> str:
+    return ooxml_table(["项目", "内容"], rows, widths=[1500, 7860], compact=True)
+
+
+def ooxml_chart_module(module: Dict[str, Any], index: int) -> str:
+    parts = [
+        ooxml_paragraph(
+            f"图表 {index:02d}｜{text(module.get('title'))}",
+            "Heading2",
+            before=180,
+            after=80,
+            keep_next=True,
+        ),
+        ooxml_paragraph(
+            f"{text(module.get('chart_type')).upper()} · {chart_meta(module)}",
+            "Caption",
+            after=70,
+            color="6B6A64",
+            size=17,
+        ),
+        ooxml_table(
+            ["分组", "指标/情景", "数值/X", "Y/说明"],
+            chart_data_rows(module),
+            widths=[1200, 4300, 1500, 2360],
+            compact=True,
+        ),
+        ooxml_callout("解读", module.get("insight")),
+        ooxml_callout("建议", module.get("recommendation")),
+    ]
+    return "".join(parts)
+
+
+def compact_evidence_rows(report: Dict[str, Any]) -> List[List[Any]]:
+    rows = []
+    for item in as_list(report.get("evidence")):
+        if not isinstance(item, dict):
+            continue
+        rows.append(
+            [
+                item.get("id", ""),
+                item.get("quality", ""),
+                item.get("source_type", ""),
+                item.get("title", ""),
+                item.get("retrieved_at") or item.get("published_at", ""),
+            ]
+        )
+    return rows
 
 
 def fallback_docx_parts(body_xml: str) -> Dict[str, str]:
@@ -1650,17 +1990,23 @@ def fallback_docx_parts(body_xml: str) -> Dict[str, str]:
     {body_xml}
     <w:sectPr>
       <w:pgSz w:w="11906" w:h="16838"/>
-      <w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="720" w:footer="720" w:gutter="0"/>
+      <w:pgMar w:top="1134" w:right="1247" w:bottom="1247" w:left="1247" w:header="720" w:footer="720" w:gutter="0"/>
     </w:sectPr>
   </w:body>
 </w:document>"""
     styles_xml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-  <w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:pPr><w:spacing w:after="120" w:line="330" w:lineRule="auto"/></w:pPr><w:rPr><w:sz w:val="21"/><w:rFonts w:ascii="Times New Roman" w:eastAsia="Songti SC" w:hAnsi="Times New Roman"/></w:rPr></w:style>
-  <w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="260"/></w:pPr><w:rPr><w:b/><w:color w:val="141413"/><w:sz w:val="44"/></w:rPr></w:style>
-  <w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:before="300" w:after="160"/></w:pPr><w:rPr><w:b/><w:color w:val="1B365D"/><w:sz w:val="30"/></w:rPr></w:style>
-  <w:style w:type="paragraph" w:styleId="Heading2"><w:name w:val="heading 2"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:before="180" w:after="120"/></w:pPr><w:rPr><w:b/><w:color w:val="141413"/><w:sz w:val="26"/></w:rPr></w:style>
-  <w:style w:type="paragraph" w:styleId="Heading3"><w:name w:val="heading 3"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:before="120" w:after="80"/></w:pPr><w:rPr><w:b/><w:color w:val="3D3D3A"/><w:sz w:val="23"/></w:rPr></w:style>
+  <w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Georgia" w:hAnsi="Georgia" w:eastAsia="Songti SC" w:cs="Georgia"/><w:sz w:val="21"/><w:color w:val="141413"/></w:rPr></w:rPrDefault></w:docDefaults>
+  <w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:pPr><w:spacing w:after="120" w:line="320" w:lineRule="auto"/></w:pPr><w:rPr><w:sz w:val="21"/><w:rFonts w:ascii="Georgia" w:eastAsia="Songti SC" w:hAnsi="Georgia"/></w:rPr></w:style>
+  <w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="220"/></w:pPr><w:rPr><w:b/><w:color w:val="141413"/><w:sz w:val="42"/></w:rPr></w:style>
+  <w:style w:type="paragraph" w:styleId="Subtitle"><w:name w:val="Subtitle"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="180" w:line="330" w:lineRule="auto"/></w:pPr><w:rPr><w:color w:val="3D3D3A"/><w:sz w:val="22"/></w:rPr></w:style>
+  <w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:before="320" w:after="150"/><w:keepNext/></w:pPr><w:rPr><w:b/><w:color w:val="1B365D"/><w:sz w:val="30"/></w:rPr></w:style>
+  <w:style w:type="paragraph" w:styleId="Heading2"><w:name w:val="heading 2"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:before="180" w:after="100"/><w:keepNext/></w:pPr><w:rPr><w:b/><w:color w:val="141413"/><w:sz w:val="25"/></w:rPr></w:style>
+  <w:style w:type="paragraph" w:styleId="Heading3"><w:name w:val="heading 3"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:before="100" w:after="70"/><w:keepNext/></w:pPr><w:rPr><w:b/><w:color w:val="3D3D3A"/><w:sz w:val="22"/></w:rPr></w:style>
+  <w:style w:type="paragraph" w:styleId="Caption"><w:name w:val="Caption"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="80" w:line="280" w:lineRule="auto"/></w:pPr><w:rPr><w:color w:val="6B6A64"/><w:sz w:val="18"/></w:rPr></w:style>
+  <w:style w:type="paragraph" w:styleId="ListParagraph"><w:name w:val="List Paragraph"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="70" w:line="300" w:lineRule="auto"/></w:pPr><w:rPr><w:sz w:val="20"/></w:rPr></w:style>
+  <w:style w:type="paragraph" w:styleId="TableText"><w:name w:val="Table Text"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="30" w:line="270" w:lineRule="auto"/></w:pPr><w:rPr><w:sz w:val="18"/></w:rPr></w:style>
+  <w:style w:type="paragraph" w:styleId="TableHeader"><w:name w:val="Table Header"/><w:basedOn w:val="TableText"/><w:rPr><w:b/><w:color w:val="3D3D3A"/><w:sz w:val="18"/></w:rPr></w:style>
   <w:style w:type="table" w:styleId="TableGrid"><w:name w:val="Table Grid"/><w:tblPr><w:tblBorders><w:top w:val="single" w:sz="6" w:color="E8E6DC"/><w:left w:val="single" w:sz="6" w:color="E8E6DC"/><w:bottom w:val="single" w:sz="6" w:color="E8E6DC"/><w:right w:val="single" w:sz="6" w:color="E8E6DC"/><w:insideH w:val="single" w:sz="4" w:color="EFEEE8"/><w:insideV w:val="single" w:sz="4" w:color="EFEEE8"/></w:tblBorders></w:tblPr></w:style>
 </w:styles>"""
     return {
@@ -1670,15 +2016,20 @@ def fallback_docx_parts(body_xml: str) -> Dict[str, str]:
   <Default Extension="xml" ContentType="application/xml"/>
   <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
   <Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>
+  <Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/>
 </Types>""",
         "_rels/.rels": """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
   <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
 </Relationships>""",
         "word/_rels/document.xml.rels": """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"/>""",
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/>
+</Relationships>""",
         "word/document.xml": document_xml,
         "word/styles.xml": styles_xml,
+        "word/settings.xml": """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:defaultTabStop w:val="420"/></w:settings>""",
     }
 
 
@@ -1692,31 +2043,34 @@ def render_docx_fallback(report: Dict[str, Any], output_path: Path) -> None:
     body: List[str] = []
 
     body.append(ooxml_paragraph(meta.get("title") or meta.get("product_name") or "需求评估报告", "Title"))
-    body.append(ooxml_paragraph(summary.get("one_sentence")))
-    body.append(ooxml_table(["项目", "结果"], [
+    body.append(ooxml_paragraph(summary.get("one_sentence"), "Subtitle"))
+    body.append(ooxml_field_table([
         ["产品", meta.get("product_name", "")],
         ["日期", meta.get("generated_at", "")],
         ["目标市场", meta.get("target_market", "")],
+        ["分析目标", meta.get("analysis_goal", "需求评估")],
         ["建议决策", decision_label(summary.get("decision", ""))],
+    ]))
+    body.append(ooxml_table(["指标", "读数"], [
         ["总分", score(summary.get("total_score"))],
         ["缺乏感", score(summary.get("lack_score"))],
         ["目标物", score(summary.get("target_object_score"))],
         ["消费者能力", score(summary.get("consumer_ability_score"))],
         ["证据信心", summary.get("evidence_confidence", "")],
+    ], widths=[2300, 7060], compact=True))
+    body.append(ooxml_callout("最大机会", summary.get("biggest_opportunity", "")))
+    body.append(ooxml_callout("最大风险", summary.get("biggest_risk", "")))
+    body.append(ooxml_callout("下一步策略", final_plan.get("strategy") or summary.get("biggest_risk", "")))
+    body.append(ooxml_paragraph("可视化诊断", "Heading1", page_break_before=True))
+    body.append(ooxml_paragraph("Word 版本使用图表等价数据卡片，HTML/PDF 版本渲染为静态 SVG 图表。每个模块先给判断，再给数据。", "Caption"))
+    for index, module in enumerate(chart_modules(report), start=1):
+        body.append(ooxml_chart_module(module, index))
+    body.append(ooxml_paragraph("产品概览", "Heading1", page_break_before=True))
+    body.append(ooxml_key_values([
+        ["产品定义", canvas.get("definition", "")],
+        ["价值主张", canvas.get("value_proposition", "")],
+        ["商业模式", canvas.get("business_model", "")],
     ]))
-
-    body.append(ooxml_paragraph("可视化诊断", "Heading1"))
-    for module in chart_modules(report):
-        body.append(ooxml_paragraph(module.get("title"), "Heading2"))
-        body.append(ooxml_table(["分组", "指标/情景", "数值/X", "Y/说明"], chart_data_rows(module)))
-        body.append(ooxml_paragraph(f"解读：{text(module.get('insight'))}"))
-        body.append(ooxml_paragraph(f"建议：{text(module.get('recommendation'))}"))
-        body.append(ooxml_paragraph(chart_meta(module)))
-
-    body.append(ooxml_paragraph("产品概览", "Heading1"))
-    body.append(ooxml_paragraph(f"产品定义：{text(canvas.get('definition'))}"))
-    body.append(ooxml_paragraph(f"价值主张：{text(canvas.get('value_proposition'))}"))
-    body.append(ooxml_paragraph(f"商业模式：{text(canvas.get('business_model'))}"))
     body.append(ooxml_paragraph("核心功能", "Heading2"))
     body.append(ooxml_bullets(as_list(canvas.get("features"))))
     body.append(ooxml_paragraph("定价信息", "Heading2"))
@@ -1727,15 +2081,36 @@ def render_docx_fallback(report: Dict[str, Any], output_path: Path) -> None:
     body.append(ooxml_paragraph("研究方法与来源", "Heading1"))
     body.append(ooxml_paragraph(meta.get("source_boundary", "本报告区分事实、假设、证据和建议。")))
     body.append(ooxml_paragraph("图 1：输入 -> 解析 -> 检索 -> 分析 -> 评分 -> 输出。"))
-    body.append(ooxml_table(["来源", "等级", "类型", "标题", "链接", "日期"], evidence_rows(report)))
-
-    body.append(ooxml_paragraph("目标用户与 JTBD", "Heading1"))
-    body.append(ooxml_table(["分群", "场景", "JTBD", "当前替代", "采用阻碍"], segment_rows(report)))
+    body.append(ooxml_table(
+        ["来源", "等级", "类型", "标题", "日期"],
+        compact_evidence_rows(report),
+        widths=[720, 620, 1800, 5000, 1220],
+        compact=True,
+    ))
+    body.append(ooxml_paragraph("目标用户与 JTBD", "Heading1", page_break_before=True))
+    for item in as_list(report.get("segments")):
+        if not isinstance(item, dict):
+            continue
+        body.append(ooxml_paragraph(item.get("name"), "Heading2"))
+        body.append(ooxml_key_values([
+            ["场景", item.get("scenario", "")],
+            ["JTBD", item.get("job_to_be_done", "")],
+            ["当前替代", "；".join(as_list(item.get("current_alternatives")))],
+            ["采用阻碍", "；".join(as_list(item.get("adoption_blockers")))],
+        ]))
 
     body.append(ooxml_paragraph("竞品与替代方案", "Heading1"))
-    body.append(ooxml_table(["名称", "类型", "定位", "优势", "弱点", "来源"], competitor_rows(report)))
-
-    body.append(ooxml_paragraph("需求三角分析", "Heading1"))
+    for item in as_list(report.get("competitors")):
+        if not isinstance(item, dict):
+            continue
+        body.append(ooxml_paragraph(f"{text(item.get('name'))}｜{text(item.get('type'))}", "Heading2"))
+        body.append(ooxml_key_values([
+            ["定位", item.get("positioning", "")],
+            ["优势", "；".join(as_list(item.get("strengths")))],
+            ["弱点", "；".join(as_list(item.get("weaknesses")))],
+            ["来源", " ".join(as_list(item.get("source_ids")))],
+        ]))
+    body.append(ooxml_paragraph("需求三角分析", "Heading1", page_break_before=True))
     body.append(ooxml_paragraph("图 2：缺乏感、目标物和消费者能力共同决定需求成立概率；任一维度明显缺失，总分都会下降。"))
     for key, label in [("lack", "缺乏感"), ("target_object", "目标物"), ("consumer_ability", "消费者能力")]:
         dim = triangle.get(key, {})
@@ -1748,28 +2123,42 @@ def render_docx_fallback(report: Dict[str, Any], output_path: Path) -> None:
         body.append(ooxml_paragraph(f"改进路径：{text(dim.get('improvement_path'))}"))
 
     body.append(ooxml_paragraph("评分与解释", "Heading1"))
-    body.append(ooxml_table(["维度", "分数"], score_rows(report)))
-
-    body.append(ooxml_paragraph("建议与实验", "Heading1"))
-    rec_rows = [
-        [
-            item.get("priority", ""),
-            item.get("area", ""),
-            item.get("recommendation", ""),
-            item.get("rationale", ""),
-            item.get("expected_impact", ""),
-            item.get("effort", ""),
-        ]
-        for item in as_list(report.get("recommendations"))
-    ]
-    body.append(ooxml_table(["优先级", "领域", "建议", "理由", "预期影响", "成本"], rec_rows))
+    body.append(ooxml_table(["维度", "分数"], score_rows(report), widths=[2500, 6860], compact=True))
+    body.append(ooxml_paragraph("建议与实验", "Heading1", page_break_before=True))
+    for item in as_list(report.get("recommendations")):
+        if not isinstance(item, dict):
+            continue
+        body.append(ooxml_paragraph(f"{text(item.get('priority'))}｜{text(item.get('area'))}", "Heading2"))
+        body.append(ooxml_key_values([
+            ["建议", item.get("recommendation", "")],
+            ["理由", item.get("rationale", "")],
+            ["预期影响", item.get("expected_impact", "")],
+            ["成本", item.get("effort", "")],
+        ]))
     body.append(ooxml_paragraph("验证实验", "Heading2"))
-    body.append(ooxml_table(["假设", "分群", "方法", "指标", "阈值", "决策规则"], experiment_rows(report)))
+    for index, item in enumerate(as_list(report.get("experiments")), start=1):
+        if not isinstance(item, dict):
+            continue
+        body.append(ooxml_paragraph(f"实验 {index}｜{text(item.get('segment'))}", "Heading3"))
+        body.append(ooxml_key_values([
+            ["假设", item.get("hypothesis", "")],
+            ["方法", item.get("method", "")],
+            ["指标", item.get("metric", "")],
+            ["阈值", item.get("threshold", "")],
+            ["决策规则", item.get("decision_rule", "")],
+        ]))
 
     body.append(ooxml_paragraph("风险与伦理", "Heading1"))
-    body.append(ooxml_table(["严重度", "类型", "风险", "缓释", "来源"], risk_rows(report)))
-
-    body.append(ooxml_paragraph("预测情景", "Heading1"))
+    for item in as_list(report.get("risks")):
+        if not isinstance(item, dict):
+            continue
+        body.append(ooxml_paragraph(f"{severity_label(item.get('severity'))}｜{text(item.get('type'))}", "Heading2"))
+        body.append(ooxml_key_values([
+            ["风险", item.get("risk", "")],
+            ["缓释", item.get("mitigation", "")],
+            ["来源", " ".join(as_list(item.get("source_ids")))],
+        ]))
+    body.append(ooxml_paragraph("预测情景", "Heading1", page_break_before=True))
     body.append(ooxml_paragraph(f"预测窗口：{text(forecast.get('horizon'))}；置信度：{text(forecast.get('confidence'))}"))
     body.append(ooxml_paragraph(f"复盘触发：{text(forecast.get('recheck_trigger'))}"))
     body.append(ooxml_table(
@@ -1784,6 +2173,8 @@ def render_docx_fallback(report: Dict[str, Any], output_path: Path) -> None:
             for item in as_list(forecast.get("scenarios"))
             if isinstance(item, dict)
         ],
+        widths=[1700, 1100, 1500, 5060],
+        compact=True,
     ))
 
     body.append(ooxml_paragraph("最终方案", "Heading1"))
@@ -1794,7 +2185,7 @@ def render_docx_fallback(report: Dict[str, Any], output_path: Path) -> None:
         ["未来 60 天", "；".join(as_list(final_plan.get("next_60_days")))],
         ["未来 90 天", "；".join(as_list(final_plan.get("next_90_days")))],
         ["决策规则", "；".join(as_list(final_plan.get("decision_rules")))],
-    ]))
+    ], widths=[1600, 7760], compact=True))
 
     body.append(ooxml_paragraph("附录", "Heading1"))
     body.append(ooxml_paragraph("未解问题", "Heading2"))
