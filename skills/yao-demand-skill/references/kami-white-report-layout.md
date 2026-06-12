@@ -76,6 +76,8 @@ Use anchors for:
 - chart modules use a two-column editorial grid on desktop and one-column stack on mobile
 - desktop chart modules must stretch to equal height within the same grid row, so row starts and card bottoms align even when chart explanations differ in length
 - chart modules should feel editorial and calm: use more width, clear headers, readable chart captions, and avoid cramped labels even if that means using a larger SVG viewBox or internal horizontal scroll on mobile
+- desktop and PDF chart modules must show the full chart inside the card. Do not require horizontal scroll on desktop for essential labels, score bands, legends, axis labels, markers, or recommendations.
+- mobile chart modules may use internal horizontal scroll, but the first viewport should still show the chart's main signal and must not cut off critical final labels such as the rightmost score band.
 - major sections separated by whitespace and a quiet top border
 - use cards only for true repeated objects or score blocks, not nested decorative surfaces
 - long tables must sit inside `.table-wrap { overflow-x: auto; }`
@@ -117,6 +119,8 @@ Chart rules:
 - ink-blue for main signal, muted green/amber/red only for status
 - text labels must not be clipped in A4 print
 - long labels should wrap or truncate with accompanying table text
+- score gauge charts must reserve internal right padding for the last band label and marker. The full scale from weakest to strongest must be visible at desktop report width without scrolling.
+- score gauge charts must also fit mobile card width without internal horizontal scrolling; use a compact dedicated viewBox rather than hiding the right side of the scale.
 - matrix/scatter charts must include label collision handling: use numbered markers plus a compact two-column legend when points cluster; point-side labels may be used only when they do not overlap or disappear at report scale
 - clustered points should remain visible as a cluster instead of becoming unreadable text. Reduce marker size, increase plot area, and separate labels from markers before removing data.
 - every chart must remain readable at `375px` mobile width through responsive scaling or horizontal scroll
@@ -193,6 +197,8 @@ Word output is the editable review copy:
 - all four outputs have the same title, date, scores, recommendations, and evidence list
 - HTML/PDF contain at least 10 `.chart-module` blocks for formal reports
 - desktop chart modules align by row height; mobile chart modules stack without forcing page-level horizontal overflow
+- desktop `.chart-svg-wrap` elements do not horizontally overflow for essential chart modules, especially score gauges
+- mobile score gauge modules show the full scale and rightmost band label in the first viewport
 - matrix/scatter chart labels do not overlap in the rendered HTML screenshot
 - demand triangle uses a lightweight center label and does not visually fight with a large circle
 - Word output is checked for non-empty document XML, styled headings, and readable tables whether it uses `python-docx` or fallback OOXML

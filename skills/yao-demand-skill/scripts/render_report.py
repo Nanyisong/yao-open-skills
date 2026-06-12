@@ -253,7 +253,9 @@ def render_score_gauge_svg(module: Dict[str, Any]) -> str:
     score_value = clamp(data.get("score", 0))
     decision = h(data.get("decision", ""))
     label = h(data.get("label", "总分"))
-    marker_x = 70 + (score_value / 10) * 680
+    left = 42
+    gauge_width = 556
+    marker_x = left + (score_value / 10) * gauge_width
     bands = [
         ("弱", 0, 3.9, "#f4e5e2"),
         ("脆弱", 4.0, 5.4, "#f2ead9"),
@@ -262,20 +264,20 @@ def render_score_gauge_svg(module: Dict[str, Any]) -> str:
         ("强", 8.2, 10, "#dfece5"),
     ]
     parts = [
-        '<svg viewBox="0 0 840 270" role="img" aria-label="总分诊断图表">',
-        '<rect x="0" y="0" width="840" height="270" fill="#ffffff"/>',
-        f'<text x="70" y="54" font-size="24" fill="#141413" font-family="serif">{label}</text>',
-        f'<text x="770" y="54" text-anchor="end" font-size="34" fill="#1B365D" font-family="serif">{score_value:.1f}</text>',
+        '<svg viewBox="0 0 640 260" role="img" aria-label="总分诊断图表">',
+        '<rect x="0" y="0" width="640" height="260" fill="#ffffff"/>',
+        f'<text x="{left}" y="52" font-size="24" fill="#141413" font-family="serif">{label}</text>',
+        f'<text x="598" y="52" text-anchor="end" font-size="32" fill="#1B365D" font-family="serif">{score_value:.1f}</text>',
     ]
     for band_label, start, end, color in bands:
-        x = 70 + (start / 10) * 680
-        width = ((end - start) / 10) * 680
-        parts.append(f'<rect x="{x:.1f}" y="104" width="{width:.1f}" height="42" fill="{color}" stroke="#ffffff"/>')
-        parts.append(f'<text x="{x + width / 2:.1f}" y="172" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">{band_label}</text>')
-    parts.append('<line x1="70" y1="146" x2="750" y2="146" stroke="#141413" stroke-width="1"/>')
-    parts.append(f'<line x1="{marker_x:.1f}" y1="82" x2="{marker_x:.1f}" y2="158" stroke="#141413" stroke-width="3"/>')
-    parts.append(f'<circle cx="{marker_x:.1f}" cy="82" r="7" fill="#1B365D"/>')
-    parts.append(f'<text x="70" y="222" font-size="18" fill="#141413" font-family="serif">建议动作：{decision}</text>')
+        x = left + (start / 10) * gauge_width
+        width = ((end - start) / 10) * gauge_width
+        parts.append(f'<rect x="{x:.1f}" y="98" width="{width:.1f}" height="40" fill="{color}" stroke="#ffffff"/>')
+        parts.append(f'<text x="{x + width / 2:.1f}" y="164" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">{band_label}</text>')
+    parts.append(f'<line x1="{left}" y1="138" x2="{left + gauge_width}" y2="138" stroke="#141413" stroke-width="1"/>')
+    parts.append(f'<line x1="{marker_x:.1f}" y1="78" x2="{marker_x:.1f}" y2="150" stroke="#141413" stroke-width="3"/>')
+    parts.append(f'<circle cx="{marker_x:.1f}" cy="78" r="7" fill="#1B365D"/>')
+    parts.append(f'<text x="{left}" y="214" font-size="18" fill="#141413" font-family="serif">建议动作：{decision}</text>')
     parts.append("</svg>")
     return "".join(parts)
 
@@ -561,8 +563,9 @@ def chart_data_rows(module: Dict[str, Any]) -> List[List[Any]]:
 
 
 def render_chart_module_html(module: Dict[str, Any]) -> str:
+    chart_class = f"chart-{h(module.get('chart_type'))}"
     return f"""
-    <article class="chart-module" id="chart-{h(module.get('id'))}">
+    <article class="chart-module {chart_class}" id="chart-{h(module.get('id'))}">
       <div class="chart-module-head">
         <div>
           <span class="chart-kicker">{h(module.get('chart_type'))}</span>
@@ -1189,13 +1192,13 @@ def render_html(report: Dict[str, Any]) -> str:
     }}
     .chart-svg-wrap {{
       width: 100%;
-      overflow-x: auto;
+      overflow: visible;
       margin: 10px 0 16px;
     }}
     .chart-svg-wrap svg {{
       display: block;
       width: 100%;
-      min-width: 620px;
+      min-width: 0;
       height: auto;
       background: #ffffff;
     }}
@@ -1270,6 +1273,19 @@ def render_html(report: Dict[str, Any]) -> str:
         max-width: none;
         text-align: left;
         margin-top: 4px;
+      }}
+      .chart-svg-wrap {{
+        overflow-x: auto;
+        overflow-y: hidden;
+      }}
+      .chart-svg-wrap svg {{
+        min-width: 620px;
+      }}
+      .chart-score_gauge .chart-svg-wrap svg {{
+        min-width: 0;
+      }}
+      .chart-score_gauge .chart-svg-wrap {{
+        overflow: visible;
       }}
     }}
   </style>
