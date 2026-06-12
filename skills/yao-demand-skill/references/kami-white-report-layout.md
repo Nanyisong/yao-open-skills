@@ -75,9 +75,9 @@ Use anchors for:
 - visual diagnostics section appears before dense analysis
 - chart modules use a two-column editorial grid on desktop and one-column stack on mobile
 - desktop chart modules must stretch to equal height within the same grid row, so row starts and card bottoms align even when chart explanations differ in length
-- chart modules should feel editorial and calm: use more width, clear headers, readable chart captions, and avoid cramped labels even if that means using a larger SVG viewBox or internal horizontal scroll on mobile
+- chart modules should feel editorial and calm: use clear headers, readable chart captions, compact SVG viewBoxes, and balanced label density. Do not rely on internal horizontal scroll to hide overflow.
 - desktop and PDF chart modules must show the full chart inside the card. Do not require horizontal scroll on desktop for essential labels, score bands, legends, axis labels, markers, or recommendations.
-- mobile chart modules may use internal horizontal scroll, but the first viewport should still show the chart's main signal and must not cut off critical final labels such as the rightmost score band.
+- mobile chart modules must show the complete chart inside the card without internal horizontal scroll. If a chart is too dense, switch to a compact grouped layout, numbered markers plus legend, shorter labels, or a taller SVG rather than forcing left-right sliding.
 - major sections separated by whitespace and a quiet top border
 - use cards only for true repeated objects or score blocks, not nested decorative surfaces
 - long tables must sit inside `.table-wrap { overflow-x: auto; }`
@@ -122,6 +122,9 @@ Chart rules:
 - score gauge charts must reserve internal right padding for the last band label and marker. The full scale from weakest to strongest must be visible at desktop report width without scrolling.
 - score gauge charts must also fit mobile card width without internal horizontal scrolling; use a compact dedicated viewBox rather than hiding the right side of the scale.
 - bar charts must fit the card width on desktop, PDF, and mobile without an internal horizontal scrollbar. Use a compact dedicated viewBox, shorter left label column, and right padding for values.
+- radar, heatmap, funnel, stacked bar, matrix, and forecast charts must also fit the card width on desktop, PDF, and mobile without internal horizontal scroll. Prefer report-card-first viewBoxes around 520-640 units wide over large dashboard canvases.
+- heatmaps with many columns should convert to grouped compact columns or stacked chips so every score is visible in the card.
+- funnels, stacked bars, and forecasts must reserve right padding for values and scenario labels; labels may be shortened, but their plotted marks and values must remain visible.
 - matrix/scatter charts must fit the card width on desktop, PDF, and mobile without an internal horizontal scrollbar for normal datasets. Use a compact dedicated viewBox, generous inside padding for quadrant labels, and a separate legend zone below the plot so axis labels, quadrant labels, markers, and legends are all visible.
 - matrix/scatter charts must include label collision handling: use numbered markers plus a compact two-column legend when points cluster; point-side labels may be used only when they do not overlap or disappear at report scale
 - clustered points should remain visible as a cluster instead of becoming unreadable text. Reduce marker size, increase plot area, and separate labels from markers before removing data.
@@ -199,9 +202,11 @@ Word output is the editable review copy:
 - all four outputs have the same title, date, scores, recommendations, and evidence list
 - HTML/PDF contain at least 10 `.chart-module` blocks for formal reports
 - desktop chart modules align by row height; mobile chart modules stack without forcing page-level horizontal overflow
-- desktop `.chart-svg-wrap` elements do not horizontally overflow for essential chart modules, especially score gauges
-- mobile score gauge modules show the full scale and rightmost band label in the first viewport
-- mobile bar modules show all bars, labels, and right-side values in the first viewport
+- desktop and mobile `.chart-svg-wrap` elements do not horizontally overflow for any chart module
+- mobile chart modules show complete charts in the first viewport without internal left-right sliding
+- mobile score gauge modules show the full scale and rightmost band label
+- mobile bar, funnel, stacked bar, and forecast modules show all bars, plotted marks, labels, and right-side values
+- mobile radar and heatmap modules show all axis labels, group labels, cells, and scores
 - mobile matrix modules show the full plot area, quadrant labels, axis labels, numbered markers, and legend in the first viewport
 - matrix/scatter chart labels and markers do not overlap in the rendered HTML screenshot
 - demand triangle uses a lightweight center label and does not visually fight with a large circle

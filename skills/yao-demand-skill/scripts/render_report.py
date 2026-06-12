@@ -286,7 +286,7 @@ def render_radar_svg(module: Dict[str, Any]) -> str:
     items = chart_items(module)
     if len(items) < 3:
         return render_bar_svg(module)
-    cx, cy, radius = 420, 235, 142
+    cx, cy, radius = 260, 178, 86
     max_value = 10.0
     points = []
     axis_parts = []
@@ -299,16 +299,16 @@ def render_radar_svg(module: Dict[str, Any]) -> str:
         point_x = cx + math.cos(angle) * radius * value
         point_y = cy + math.sin(angle) * radius * value
         points.append(f"{point_x:.1f},{point_y:.1f}")
-        label_x = cx + math.cos(angle) * (radius + 56)
-        label_y = cy + math.sin(angle) * (radius + 42)
+        label_x = cx + math.cos(angle) * (radius + 46)
+        label_y = cy + math.sin(angle) * (radius + 36)
         anchor = "middle"
         if label_x < cx - 20:
             anchor = "end"
         elif label_x > cx + 20:
             anchor = "start"
         axis_parts.append(f'<line x1="{cx}" y1="{cy}" x2="{outer_x:.1f}" y2="{outer_y:.1f}" stroke="#e8e6dc" stroke-width="1"/>')
-        axis_parts.append(f'<text x="{label_x:.1f}" y="{label_y:.1f}" text-anchor="{anchor}" font-size="15" fill="#3d3d3a" font-family="serif">{h(label_short(item.get("label"), 9))}</text>')
-        axis_parts.append(f'<text x="{label_x:.1f}" y="{label_y + 18:.1f}" text-anchor="{anchor}" font-size="13" fill="#1B365D" font-family="serif">{score(item.get("value"))}</text>')
+        axis_parts.append(f'<text x="{label_x:.1f}" y="{label_y:.1f}" text-anchor="{anchor}" font-size="14" fill="#3d3d3a" font-family="serif">{h(label_short(item.get("label"), 8))}</text>')
+        axis_parts.append(f'<text x="{label_x:.1f}" y="{label_y + 17:.1f}" text-anchor="{anchor}" font-size="12" fill="#1B365D" font-family="serif">{score(item.get("value"))}</text>')
     rings = []
     for factor in [0.25, 0.5, 0.75, 1.0]:
         ring_points = []
@@ -317,8 +317,8 @@ def render_radar_svg(module: Dict[str, Any]) -> str:
             ring_points.append(f"{cx + math.cos(angle) * radius * factor:.1f},{cy + math.sin(angle) * radius * factor:.1f}")
         rings.append(f'<polygon points="{" ".join(ring_points)}" fill="none" stroke="#efeee8" stroke-width="1"/>')
     return (
-        '<svg viewBox="0 0 840 470" role="img" aria-label="雷达图">'
-        '<rect x="0" y="0" width="840" height="470" fill="#ffffff"/>'
+        '<svg viewBox="0 0 520 350" role="img" aria-label="雷达图">'
+        '<rect x="0" y="0" width="520" height="350" fill="#ffffff"/>'
         + "".join(rings)
         + "".join(axis_parts)
         + f'<polygon points="{" ".join(points)}" fill="#EEF2F7" fill-opacity="0.82" stroke="#1B365D" stroke-width="3"/>'
@@ -357,25 +357,26 @@ def render_heatmap_svg(module: Dict[str, Any]) -> str:
     groups: Dict[str, List[Dict[str, Any]]] = {}
     for item in items:
         groups.setdefault(text(item.get("group", "其他")), []).append(item)
-    cell_w, cell_h = 96, 56
-    left, top = 132, 42
-    max_cols = max((len(values) for values in groups.values()), default=1)
-    height = top + len(groups) * (cell_h + 26) + 30
-    width = max(840, left + max_cols * cell_w + 50)
+    cell_w, cell_h = 138, 30
+    gap_x, gap_y = 18, 10
+    left, top = 28, 42
+    max_rows = max((len(values) for values in groups.values()), default=1)
+    width = 520
+    height = top + 28 + max_rows * (cell_h + gap_y) + 18
     parts = [
         f'<svg viewBox="0 0 {width} {height}" role="img" aria-label="热力图">',
         f'<rect x="0" y="0" width="{width}" height="{height}" fill="#ffffff"/>',
     ]
-    for row_index, (group, values) in enumerate(groups.items()):
-        y = top + row_index * (cell_h + 26)
-        parts.append(f'<text x="36" y="{y + 32}" font-size="16" fill="#141413" font-family="serif">{h(group)}</text>')
-        for col_index, item in enumerate(values):
-            x = left + col_index * cell_w
+    for group_index, (group, values) in enumerate(groups.items()):
+        x = left + group_index * (cell_w + gap_x)
+        parts.append(f'<text x="{x}" y="{top}" font-size="14" fill="#141413" font-family="serif">{h(label_short(group, 7))}</text>')
+        for row_index, item in enumerate(values):
+            y = top + 18 + row_index * (cell_h + gap_y)
             value = clamp(item.get("value"))
             fill = "#e7f0ea" if value >= 7 else "#f2ead9" if value >= 5 else "#f4e5e2"
-            parts.append(f'<rect x="{x}" y="{y}" width="{cell_w - 8}" height="{cell_h}" rx="5" fill="{fill}" stroke="#e8e6dc"/>')
-            parts.append(f'<text x="{x + (cell_w - 8) / 2}" y="{y + 22}" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">{h(label_short(item.get("label"), 6))}</text>')
-            parts.append(f'<text x="{x + (cell_w - 8) / 2}" y="{y + 44}" text-anchor="middle" font-size="18" fill="{value_color(value)}" font-family="serif">{value:.0f}</text>')
+            parts.append(f'<rect x="{x}" y="{y}" width="{cell_w}" height="{cell_h}" rx="4" fill="{fill}" stroke="#e8e6dc"/>')
+            parts.append(f'<text x="{x + 10}" y="{y + 20}" font-size="12" fill="#3d3d3a" font-family="serif">{h(label_short(item.get("label"), 7))}</text>')
+            parts.append(f'<text x="{x + cell_w - 10}" y="{y + 20}" text-anchor="end" font-size="14" fill="{value_color(value)}" font-family="serif">{value:.0f}</text>')
     parts.append("</svg>")
     return "".join(parts)
 
@@ -385,7 +386,7 @@ def render_matrix_svg(module: Dict[str, Any]) -> str:
     items = chart_items(module)
     x_axis = h(data.get("x_axis", "横轴"))
     y_axis = h(data.get("y_axis", "纵轴"))
-    left, top, width, height = 74, 44, 500, 250
+    left, top, width, height = 58, 38, 404, 218
     points = []
     for index, item in enumerate(items):
         x = left + (clamp(item.get("x")) / 10) * width
@@ -424,19 +425,19 @@ def render_matrix_svg(module: Dict[str, Any]) -> str:
                     r = point["r"] + 1
                     point["x"] = max(left + r, min(left + width - r, point["x"]))
                     point["y"] = max(top + r, min(top + height - r, point["y"]))
-    legend_top = 356
-    legend_row_h = 28
+    legend_top = 314
+    legend_row_h = 27
     legend_cols = 2
     legend_height = max(1, math.ceil(len(points) / legend_cols)) * legend_row_h + 24
-    svg_height = max(470, legend_top + legend_height)
+    svg_height = max(410, legend_top + legend_height)
     parts = [
-        f'<svg viewBox="0 0 640 {svg_height}" role="img" aria-label="矩阵图">',
-        f'<rect x="0" y="0" width="640" height="{svg_height}" fill="#ffffff"/>',
+        f'<svg viewBox="0 0 520 {svg_height}" role="img" aria-label="矩阵图">',
+        f'<rect x="0" y="0" width="520" height="{svg_height}" fill="#ffffff"/>',
         f'<rect x="{left}" y="{top}" width="{width}" height="{height}" fill="#ffffff" stroke="#141413" stroke-width="1.5"/>',
         f'<line x1="{left + width / 2}" y1="{top}" x2="{left + width / 2}" y2="{top + height}" stroke="#efeee8" stroke-width="2"/>',
         f'<line x1="{left}" y1="{top + height / 2}" x2="{left + width}" y2="{top + height / 2}" stroke="#efeee8" stroke-width="2"/>',
-        f'<text x="{left + width / 2}" y="328" text-anchor="middle" font-size="15" fill="#3d3d3a" font-family="serif">{x_axis}</text>',
-        f'<text x="22" y="{top + height / 2}" transform="rotate(-90 22 {top + height / 2})" text-anchor="middle" font-size="15" fill="#3d3d3a" font-family="serif">{y_axis}</text>',
+        f'<text x="{left + width / 2}" y="286" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">{x_axis}</text>',
+        f'<text x="20" y="{top + height / 2}" transform="rotate(-90 20 {top + height / 2})" text-anchor="middle" font-size="14" fill="#3d3d3a" font-family="serif">{y_axis}</text>',
         f'<text x="{left + 8}" y="{top + 20}" font-size="12" fill="#8a641f" font-family="serif">低确定性</text>',
         f'<text x="{left + width - 8}" y="{top + 20}" text-anchor="end" font-size="12" fill="#2f6f4e" font-family="serif">高确定性</text>',
         f'<line x1="{left}" y1="{legend_top - 18}" x2="{left + width}" y2="{legend_top - 18}" stroke="#efeee8" stroke-width="1"/>',
@@ -448,7 +449,7 @@ def render_matrix_svg(module: Dict[str, Any]) -> str:
         marker = point["index"]
         parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}" fill="#ffffff" stroke="#1B365D" stroke-width="2"/>')
         parts.append(
-            f'<text x="{x:.1f}" y="{y + 3.6:.1f}" text-anchor="middle" font-size="10" '
+            f'<text x="{x:.1f}" y="{y + 3.8:.1f}" text-anchor="middle" font-size="11" '
             f'fill="#1B365D" font-family="serif">{marker}</text>'
         )
     for point in points:
@@ -456,17 +457,17 @@ def render_matrix_svg(module: Dict[str, Any]) -> str:
         index = point["index"]
         col = (index - 1) % legend_cols
         row = (index - 1) // legend_cols
-        legend_x = left + col * 270
+        legend_x = left + col * 214
         legend_y = legend_top + row * legend_row_h
         parts.append(f'<circle cx="{legend_x}" cy="{legend_y - 4}" r="8" fill="#ffffff" stroke="#1B365D" stroke-width="1.5"/>')
         parts.append(
-            f'<text x="{legend_x}" y="{legend_y}" text-anchor="middle" font-size="9" fill="#1B365D" font-family="serif">{index}</text>'
+            f'<text x="{legend_x}" y="{legend_y}" text-anchor="middle" font-size="10.5" fill="#1B365D" font-family="serif">{index}</text>'
         )
         parts.append(
-            f'<text x="{legend_x + 16}" y="{legend_y}" font-size="12" fill="#141413" font-family="serif">{h(label_short(item.get("label"), 12))}</text>'
+            f'<text x="{legend_x + 16}" y="{legend_y}" font-size="12" fill="#141413" font-family="serif">{h(label_short(item.get("label"), 10))}</text>'
         )
         parts.append(
-            f'<text x="{legend_x + 172}" y="{legend_y}" font-size="10.5" fill="#6b6a64" font-family="serif">{score(item.get("x"))} / {score(item.get("y"))}</text>'
+            f'<text x="{legend_x + 142}" y="{legend_y}" font-size="11.5" fill="#6b6a64" font-family="serif">{score(item.get("x"))} / {score(item.get("y"))}</text>'
         )
     parts.append("</svg>")
     return "".join(parts)
@@ -475,19 +476,19 @@ def render_matrix_svg(module: Dict[str, Any]) -> str:
 def render_funnel_svg(module: Dict[str, Any]) -> str:
     items = chart_items(module)
     max_value = max([clamp(item.get("value"), 0, 100) for item in items] or [100])
-    height = max(250, 54 + len(items) * 48)
+    height = max(230, 44 + len(items) * 40)
     parts = [
-        f'<svg viewBox="0 0 840 {height}" role="img" aria-label="漏斗图">',
-        f'<rect x="0" y="0" width="840" height="{height}" fill="#ffffff"/>',
+        f'<svg viewBox="0 0 520 {height}" role="img" aria-label="漏斗图">',
+        f'<rect x="0" y="0" width="520" height="{height}" fill="#ffffff"/>',
     ]
     for index, item in enumerate(items):
         value = clamp(item.get("value"), 0, max_value)
-        bar_w = 560 * (value / max_value)
-        x = 250 + (560 - bar_w) / 2
-        y = 34 + index * 46
-        parts.append(f'<text x="42" y="{y + 25}" font-size="15" fill="#141413" font-family="serif">{h(label_short(item.get("label"), 14))}</text>')
-        parts.append(f'<rect x="{x:.1f}" y="{y}" width="{bar_w:.1f}" height="28" rx="4" fill="#1B365D" fill-opacity="{0.95 - index * 0.055:.2f}"/>')
-        parts.append(f'<text x="770" y="{y + 21}" text-anchor="end" font-size="15" fill="#3d3d3a" font-family="serif">{value:.0f}</text>')
+        bar_w = 270 * (value / max_value)
+        x = 190 + (270 - bar_w) / 2
+        y = 28 + index * 38
+        parts.append(f'<text x="28" y="{y + 21}" font-size="14" fill="#141413" font-family="serif">{h(label_short(item.get("label"), 10))}</text>')
+        parts.append(f'<rect x="{x:.1f}" y="{y}" width="{bar_w:.1f}" height="24" rx="4" fill="#1B365D" fill-opacity="{0.95 - index * 0.055:.2f}"/>')
+        parts.append(f'<text x="494" y="{y + 18}" text-anchor="end" font-size="14" fill="#3d3d3a" font-family="serif">{value:.0f}</text>')
     parts.append("</svg>")
     return "".join(parts)
 
@@ -497,25 +498,25 @@ def render_stacked_bar_svg(module: Dict[str, Any]) -> str:
     segments = [item for item in as_list(data.get("segments")) if isinstance(item, dict)]
     total = sum(max(0, float(item.get("value", 0) or 0)) for item in segments) or 1
     colors = ["#1B365D", "#7A8CA5", "#C7D0DB", "#e8e6dc", "#8a641f"]
-    x = 70
+    x = 34
+    track_width = 452
     parts = [
-        '<svg viewBox="0 0 840 260" role="img" aria-label="堆叠条形图">',
-        '<rect x="0" y="0" width="840" height="260" fill="#ffffff"/>',
-        '<rect x="70" y="84" width="700" height="44" fill="#f7f7f4" stroke="#efeee8"/>',
+        '<svg viewBox="0 0 520 240" role="img" aria-label="堆叠条形图">',
+        '<rect x="0" y="0" width="520" height="240" fill="#ffffff"/>',
+        f'<rect x="{x}" y="72" width="{track_width}" height="38" fill="#f7f7f4" stroke="#efeee8"/>',
     ]
     for index, item in enumerate(segments):
         value = max(0, float(item.get("value", 0) or 0))
-        width = 700 * value / total
-        parts.append(f'<rect x="{x:.1f}" y="84" width="{width:.1f}" height="44" fill="{colors[index % len(colors)]}"/>')
-        if width > 70:
-            parts.append(f'<text x="{x + width / 2:.1f}" y="112" text-anchor="middle" font-size="14" fill="#ffffff" font-family="serif">{h(label_short(item.get("label"), 8))}</text>')
+        width = track_width * value / total
+        parts.append(f'<rect x="{x:.1f}" y="72" width="{width:.1f}" height="38" fill="{colors[index % len(colors)]}"/>')
+        if width > 58:
+            parts.append(f'<text x="{x + width / 2:.1f}" y="96" text-anchor="middle" font-size="12" fill="#ffffff" font-family="serif">{h(label_short(item.get("label"), 6))}</text>')
         x += width
-    legend_x = 70
     for index, item in enumerate(segments):
-        y = 164 + (index // 3) * 32
-        lx = legend_x + (index % 3) * 230
+        y = 148 + (index // 2) * 30
+        lx = 36 + (index % 2) * 236
         parts.append(f'<rect x="{lx}" y="{y}" width="12" height="12" fill="{colors[index % len(colors)]}"/>')
-        parts.append(f'<text x="{lx + 18}" y="{y + 12}" font-size="14" fill="#141413" font-family="serif">{h(label_short(item.get("label"), 12))} {text(item.get("value"))}</text>')
+        parts.append(f'<text x="{lx + 18}" y="{y + 12}" font-size="13" fill="#141413" font-family="serif">{h(label_short(item.get("label"), 10))} {text(item.get("value"))}</text>')
     parts.append("</svg>")
     return "".join(parts)
 
@@ -525,10 +526,10 @@ def render_forecast_svg(module: Dict[str, Any]) -> str:
     scenarios = [item for item in as_list(data.get("scenarios")) if isinstance(item, dict)]
     if not scenarios:
         scenarios = chart_items(module)
-    left, top, width, height = 90, 48, 650, 280
+    left, top, width, height = 52, 42, 414, 210
     parts = [
-        '<svg viewBox="0 0 840 430" role="img" aria-label="预测情景图">',
-        '<rect x="0" y="0" width="840" height="430" fill="#ffffff"/>',
+        '<svg viewBox="0 0 520 330" role="img" aria-label="预测情景图">',
+        '<rect x="0" y="0" width="520" height="330" fill="#ffffff"/>',
         f'<line x1="{left}" y1="{top + height}" x2="{left + width}" y2="{top + height}" stroke="#141413" stroke-width="1.5"/>',
         f'<line x1="{left}" y1="{top}" x2="{left}" y2="{top + height}" stroke="#141413" stroke-width="1.5"/>',
     ]
@@ -538,14 +539,14 @@ def render_forecast_svg(module: Dict[str, Any]) -> str:
         x = left + (index / count) * width if count else left
         y = top + height - (clamp(scenario.get("score_after")) / 10) * height
         points.append(f"{x:.1f},{y:.1f}")
-        parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="8" fill="#1B365D"/>')
-        parts.append(f'<text x="{x:.1f}" y="{y - 14:.1f}" text-anchor="middle" font-size="15" fill="#141413" font-family="serif">{score(scenario.get("score_after"))}</text>')
-        parts.append(f'<text x="{x:.1f}" y="370" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">{h(label_short(scenario.get("name"), 10))}</text>')
-        parts.append(f'<text x="{x:.1f}" y="390" text-anchor="middle" font-size="12" fill="#6b6a64" font-family="serif">{h(scenario.get("adoption_likelihood", ""))}</text>')
+        parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="7" fill="#1B365D"/>')
+        parts.append(f'<text x="{x:.1f}" y="{y - 12:.1f}" text-anchor="middle" font-size="14" fill="#141413" font-family="serif">{score(scenario.get("score_after"))}</text>')
+        parts.append(f'<text x="{x:.1f}" y="286" text-anchor="middle" font-size="13" fill="#3d3d3a" font-family="serif">{h(label_short(scenario.get("name"), 8))}</text>')
+        parts.append(f'<text x="{x:.1f}" y="306" text-anchor="middle" font-size="11.5" fill="#6b6a64" font-family="serif">{h(label_short(scenario.get("adoption_likelihood", ""), 10))}</text>')
     if len(points) > 1:
         parts.append(f'<polyline points="{" ".join(points)}" fill="none" stroke="#1B365D" stroke-width="3"/>')
-    parts.append('<text x="40" y="52" font-size="13" fill="#6b6a64" font-family="serif">10</text>')
-    parts.append('<text x="48" y="330" font-size="13" fill="#6b6a64" font-family="serif">0</text>')
+    parts.append('<text x="22" y="46" font-size="12" fill="#6b6a64" font-family="serif">10</text>')
+    parts.append('<text x="30" y="254" font-size="12" fill="#6b6a64" font-family="serif">0</text>')
     parts.append("</svg>")
     return "".join(parts)
 
@@ -1303,29 +1304,11 @@ def render_html(report: Dict[str, Any]) -> str:
         margin-top: 4px;
       }}
       .chart-svg-wrap {{
-        overflow-x: auto;
-        overflow-y: hidden;
+        overflow: visible;
       }}
       .chart-svg-wrap svg {{
-        min-width: 620px;
-      }}
-      .chart-score_gauge .chart-svg-wrap svg {{
+        max-width: 100%;
         min-width: 0;
-      }}
-      .chart-score_gauge .chart-svg-wrap {{
-        overflow: visible;
-      }}
-      .chart-bar .chart-svg-wrap svg {{
-        min-width: 0;
-      }}
-      .chart-bar .chart-svg-wrap {{
-        overflow: visible;
-      }}
-      .chart-matrix .chart-svg-wrap svg {{
-        min-width: 0;
-      }}
-      .chart-matrix .chart-svg-wrap {{
-        overflow: visible;
       }}
     }}
   </style>
