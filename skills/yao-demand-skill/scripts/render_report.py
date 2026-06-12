@@ -332,18 +332,22 @@ def render_bar_svg(module: Dict[str, Any]) -> str:
     data = module.get("data", {}) if isinstance(module.get("data"), dict) else {}
     max_value = max(1.0, float(data.get("max", 10) or 10))
     height = max(230, 68 + len(items) * 42)
+    left_label_x = 36
+    bar_x = 200
+    track_width = 346
+    value_x = 598
     parts = [
-        f'<svg viewBox="0 0 840 {height}" role="img" aria-label="条形图">',
-        f'<rect x="0" y="0" width="840" height="{height}" fill="#ffffff"/>',
+        f'<svg viewBox="0 0 640 {height}" role="img" aria-label="条形图">',
+        f'<rect x="0" y="0" width="640" height="{height}" fill="#ffffff"/>',
     ]
     for index, item in enumerate(items):
         y = 40 + index * 42
         value = clamp(item.get("value"), 0, max_value)
-        width = (value / max_value) * 530
-        parts.append(f'<text x="42" y="{y + 17}" font-size="15" fill="#141413" font-family="serif">{h(label_short(item.get("label"), 15))}</text>')
-        parts.append(f'<rect x="220" y="{y}" width="540" height="20" fill="#f7f7f4" stroke="#efeee8"/>')
-        parts.append(f'<rect x="220" y="{y}" width="{width:.1f}" height="20" fill="#1B365D"/>')
-        parts.append(f'<text x="778" y="{y + 17}" text-anchor="end" font-size="15" fill="{value_color(value)}" font-family="serif">{value:.1f}</text>')
+        width = (value / max_value) * track_width
+        parts.append(f'<text x="{left_label_x}" y="{y + 17}" font-size="15" fill="#141413" font-family="serif">{h(label_short(item.get("label"), 13))}</text>')
+        parts.append(f'<rect x="{bar_x}" y="{y}" width="{track_width}" height="20" fill="#f7f7f4" stroke="#efeee8"/>')
+        parts.append(f'<rect x="{bar_x}" y="{y}" width="{width:.1f}" height="20" fill="#1B365D"/>')
+        parts.append(f'<text x="{value_x}" y="{y + 17}" text-anchor="end" font-size="15" fill="{value_color(value)}" font-family="serif">{value:.1f}</text>')
     parts.append("</svg>")
     return "".join(parts)
 
@@ -1285,6 +1289,12 @@ def render_html(report: Dict[str, Any]) -> str:
         min-width: 0;
       }}
       .chart-score_gauge .chart-svg-wrap {{
+        overflow: visible;
+      }}
+      .chart-bar .chart-svg-wrap svg {{
+        min-width: 0;
+      }}
+      .chart-bar .chart-svg-wrap {{
         overflow: visible;
       }}
     }}

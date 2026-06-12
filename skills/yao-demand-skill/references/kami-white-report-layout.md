@@ -121,6 +121,7 @@ Chart rules:
 - long labels should wrap or truncate with accompanying table text
 - score gauge charts must reserve internal right padding for the last band label and marker. The full scale from weakest to strongest must be visible at desktop report width without scrolling.
 - score gauge charts must also fit mobile card width without internal horizontal scrolling; use a compact dedicated viewBox rather than hiding the right side of the scale.
+- bar charts must fit the card width on desktop, PDF, and mobile without an internal horizontal scrollbar. Use a compact dedicated viewBox, shorter left label column, and right padding for values.
 - matrix/scatter charts must include label collision handling: use numbered markers plus a compact two-column legend when points cluster; point-side labels may be used only when they do not overlap or disappear at report scale
 - clustered points should remain visible as a cluster instead of becoming unreadable text. Reduce marker size, increase plot area, and separate labels from markers before removing data.
 - every chart must remain readable at `375px` mobile width through responsive scaling or horizontal scroll
@@ -199,6 +200,7 @@ Word output is the editable review copy:
 - desktop chart modules align by row height; mobile chart modules stack without forcing page-level horizontal overflow
 - desktop `.chart-svg-wrap` elements do not horizontally overflow for essential chart modules, especially score gauges
 - mobile score gauge modules show the full scale and rightmost band label in the first viewport
+- mobile bar modules show all bars, labels, and right-side values in the first viewport
 - matrix/scatter chart labels do not overlap in the rendered HTML screenshot
 - demand triangle uses a lightweight center label and does not visually fight with a large circle
 - Word output is checked for non-empty document XML, styled headings, and readable tables whether it uses `python-docx` or fallback OOXML
