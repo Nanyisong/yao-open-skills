@@ -185,18 +185,20 @@ def render_triangle_svg(report: Dict[str, Any]) -> str:
     return f"""
 <svg class="triangle-svg" viewBox="0 0 760 430" role="img" aria-label="需求三角模型分析结构">
   <rect x="0" y="0" width="760" height="430" fill="#ffffff"/>
-  <polygon points="380,70 168,324 592,324" fill="#ffffff" stroke="#1B365D" stroke-width="4" stroke-linejoin="round"/>
-  <circle cx="380" cy="262" r="88" fill="#ffffff" stroke="#141413" stroke-width="2"/>
-  <text x="380" y="32" text-anchor="middle" class="svg-title">缺乏感</text>
-  <text x="380" y="54" text-anchor="middle" class="svg-small">理想与现实的差距 | {lack}</text>
-  <text x="116" y="368" text-anchor="middle" class="svg-title">目标物</text>
-  <text x="116" y="390" text-anchor="middle" class="svg-small">填补差距的方案 | {target}</text>
-  <text x="644" y="368" text-anchor="middle" class="svg-title">消费者能力</text>
-  <text x="644" y="390" text-anchor="middle" class="svg-small">成本承受力 | {ability}</text>
-  <text x="380" y="246" text-anchor="middle" class="svg-title">需求成立</text>
-  <text x="380" y="273" text-anchor="middle" class="svg-body">动机清晰 + 成本可承受 + 场景触发</text>
-  <text x="380" y="306" text-anchor="middle" class="svg-score">总分 {total}</text>
-  <text x="380" y="420" text-anchor="middle" class="svg-caption">任一维度明显缺失，需求成立概率都会下降。</text>
+  <polygon points="380,82 174,318 586,318" fill="#ffffff" stroke="#1B365D" stroke-width="4" stroke-linejoin="round"/>
+  <line x1="380" y1="82" x2="380" y2="318" stroke="#efeee8" stroke-width="1.5"/>
+  <line x1="174" y1="318" x2="482" y2="199" stroke="#efeee8" stroke-width="1.5"/>
+  <line x1="586" y1="318" x2="278" y2="199" stroke="#efeee8" stroke-width="1.5"/>
+  <text x="380" y="34" text-anchor="middle" class="svg-title">缺乏感</text>
+  <text x="380" y="57" text-anchor="middle" class="svg-small">理想与现实的差距 | {lack}</text>
+  <text x="126" y="358" text-anchor="middle" class="svg-title">目标物</text>
+  <text x="126" y="381" text-anchor="middle" class="svg-small">填补差距的方案 | {target}</text>
+  <text x="634" y="358" text-anchor="middle" class="svg-title">消费者能力</text>
+  <text x="634" y="381" text-anchor="middle" class="svg-small">成本承受力 | {ability}</text>
+  <text x="380" y="224" text-anchor="middle" class="svg-title">需求成立</text>
+  <text x="380" y="252" text-anchor="middle" class="svg-body">动机清晰 + 成本可承受 + 场景触发</text>
+  <text x="380" y="287" text-anchor="middle" class="svg-score">总分 {total}</text>
+  <text x="380" y="418" text-anchor="middle" class="svg-caption">任一维度明显缺失，需求成立概率都会下降。</text>
 </svg>
 """
 
@@ -377,22 +379,65 @@ def render_matrix_svg(module: Dict[str, Any]) -> str:
     items = chart_items(module)
     x_axis = h(data.get("x_axis", "横轴"))
     y_axis = h(data.get("y_axis", "纵轴"))
-    left, top, width, height = 90, 44, 640, 310
+    left, top, width, height = 104, 54, 690, 300
+    points = []
+    for index, item in enumerate(items):
+        x = left + (clamp(item.get("x")) / 10) * width
+        y = top + height - (clamp(item.get("y")) / 10) * height
+        r = 6.2 + clamp(item.get("size", 5), 0, 10) * 0.45
+        points.append(
+            {
+                "item": item,
+                "x": x,
+                "y": y,
+                "r": r,
+                "index": index + 1,
+            }
+        )
+    legend_top = 402
+    legend_row_h = 30
+    legend_cols = 2
+    legend_height = max(1, math.ceil(len(points) / legend_cols)) * legend_row_h + 24
+    svg_height = max(500, legend_top + legend_height)
     parts = [
-        '<svg viewBox="0 0 840 430" role="img" aria-label="矩阵图">',
-        '<rect x="0" y="0" width="840" height="430" fill="#ffffff"/>',
+        f'<svg viewBox="0 0 920 {svg_height}" role="img" aria-label="矩阵图">',
+        f'<rect x="0" y="0" width="920" height="{svg_height}" fill="#ffffff"/>',
         f'<rect x="{left}" y="{top}" width="{width}" height="{height}" fill="#ffffff" stroke="#141413" stroke-width="1.5"/>',
         f'<line x1="{left + width / 2}" y1="{top}" x2="{left + width / 2}" y2="{top + height}" stroke="#efeee8" stroke-width="2"/>',
         f'<line x1="{left}" y1="{top + height / 2}" x2="{left + width}" y2="{top + height / 2}" stroke="#efeee8" stroke-width="2"/>',
-        f'<text x="{left + width / 2}" y="398" text-anchor="middle" font-size="16" fill="#3d3d3a" font-family="serif">{x_axis}</text>',
-        f'<text x="24" y="{top + height / 2}" transform="rotate(-90 24 {top + height / 2})" text-anchor="middle" font-size="16" fill="#3d3d3a" font-family="serif">{y_axis}</text>',
+        f'<text x="{left + width / 2}" y="386" text-anchor="middle" font-size="16" fill="#3d3d3a" font-family="serif">{x_axis}</text>',
+        f'<text x="28" y="{top + height / 2}" transform="rotate(-90 28 {top + height / 2})" text-anchor="middle" font-size="16" fill="#3d3d3a" font-family="serif">{y_axis}</text>',
+        f'<text x="{left + 8}" y="{top + 20}" font-size="12" fill="#8a641f" font-family="serif">低确定性</text>',
+        f'<text x="{left + width - 8}" y="{top + 20}" text-anchor="end" font-size="12" fill="#2f6f4e" font-family="serif">高确定性</text>',
+        f'<line x1="{left}" y1="{legend_top - 18}" x2="{left + width}" y2="{legend_top - 18}" stroke="#efeee8" stroke-width="1"/>',
     ]
-    for item in items:
-        x = left + (clamp(item.get("x")) / 10) * width
-        y = top + height - (clamp(item.get("y")) / 10) * height
-        r = 6 + clamp(item.get("size", 5), 0, 10) * 1.2
-        parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}" fill="#EEF2F7" stroke="#1B365D" stroke-width="2"/>')
-        parts.append(f'<text x="{x + r + 5:.1f}" y="{y + 4:.1f}" font-size="13" fill="#141413" font-family="serif">{h(label_short(item.get("label"), 13))}</text>')
+    for point in points:
+        x = point["x"]
+        y = point["y"]
+        r = point["r"]
+        marker = point["index"]
+        parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}" fill="#ffffff" stroke="#1B365D" stroke-width="2"/>')
+        parts.append(
+            f'<text x="{x:.1f}" y="{y + 3.6:.1f}" text-anchor="middle" font-size="10" '
+            f'fill="#1B365D" font-family="serif">{marker}</text>'
+        )
+    for point in points:
+        item = point["item"]
+        index = point["index"]
+        col = (index - 1) % legend_cols
+        row = (index - 1) // legend_cols
+        legend_x = left + col * 355
+        legend_y = legend_top + row * legend_row_h
+        parts.append(f'<circle cx="{legend_x}" cy="{legend_y - 4}" r="8" fill="#ffffff" stroke="#1B365D" stroke-width="1.5"/>')
+        parts.append(
+            f'<text x="{legend_x}" y="{legend_y}" text-anchor="middle" font-size="9" fill="#1B365D" font-family="serif">{index}</text>'
+        )
+        parts.append(
+            f'<text x="{legend_x + 16}" y="{legend_y}" font-size="13" fill="#141413" font-family="serif">{h(label_short(item.get("label"), 15))}</text>'
+        )
+        parts.append(
+            f'<text x="{legend_x + 210}" y="{legend_y}" font-size="11" fill="#6b6a64" font-family="serif">{score(item.get("x"))} / {score(item.get("y"))}</text>'
+        )
     parts.append("</svg>")
     return "".join(parts)
 
@@ -820,9 +865,10 @@ def render_html(report: Dict[str, Any]) -> str:
       color: var(--near-black);
       font-family: var(--serif);
       font-size: 16px;
-      line-height: 1.58;
+      line-height: 1.62;
       letter-spacing: 0;
       overflow-x: hidden;
+      text-rendering: optimizeLegibility;
     }}
     .top-nav {{
       position: fixed;
@@ -869,7 +915,7 @@ def render_html(report: Dict[str, Any]) -> str:
     }}
     .nav-links a:hover {{ border-bottom-color: var(--brand); }}
     main {{
-      max-width: 1120px;
+      max-width: 1180px;
       margin: 0 auto;
       padding: 48px 28px 72px;
     }}
@@ -920,15 +966,16 @@ def render_html(report: Dict[str, Any]) -> str:
       margin-top: 8px;
     }}
     .lede {{
-      max-width: 820px;
+      max-width: 980px;
       color: var(--dark-warm);
       font-size: 18px;
-      line-height: 1.62;
+      line-height: 1.72;
+      text-wrap: pretty;
     }}
     .meta-grid, .score-grid, .fact-grid {{
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
+      gap: 14px;
       margin-top: 22px;
       align-items: start;
     }}
@@ -968,7 +1015,7 @@ def render_html(report: Dict[str, Any]) -> str:
     .dimension-grid {{
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
+      gap: 18px;
     }}
     .diagram-block {{
       margin: 18px 0 26px;
@@ -1070,6 +1117,13 @@ def render_html(report: Dict[str, Any]) -> str:
     tr:last-child td {{ border-bottom: 0; }}
     ul {{ margin: 8px 0 0 20px; padding: 0; }}
     li {{ margin: 4px 0; }}
+    p, li {{
+      text-wrap: pretty;
+    }}
+    .fact-box p, .dimension-card p, .note, .chart-insight, .chart-recommendation {{
+      text-align: justify;
+      text-justify: inter-ideograph;
+    }}
     .muted {{ color: var(--stone); }}
     .note {{
       margin-top: 14px;
@@ -1079,12 +1133,12 @@ def render_html(report: Dict[str, Any]) -> str:
     .two-col {{
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: 16px;
+      gap: 18px;
     }}
     .product-detail-grid {{
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: 16px;
+      gap: 18px;
       margin-top: 22px;
       align-items: start;
     }}
@@ -1094,14 +1148,14 @@ def render_html(report: Dict[str, Any]) -> str:
     .chart-grid {{
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
+      gap: 24px;
       align-items: stretch;
     }}
     .chart-module {{
       border: 1px solid var(--border);
       background: var(--paper);
       border-radius: 0;
-      padding: 16px;
+      padding: 20px;
       break-inside: avoid;
       display: flex;
       flex-direction: column;
@@ -1109,13 +1163,12 @@ def render_html(report: Dict[str, Any]) -> str:
       min-width: 0;
     }}
     .chart-module-head {{
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(150px, 220px);
       gap: 14px;
       border-bottom: 1px solid var(--border-soft);
-      padding-bottom: 10px;
-      margin-bottom: 12px;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
     }}
     .chart-kicker {{
       display: inline-block;
@@ -1127,8 +1180,7 @@ def render_html(report: Dict[str, Any]) -> str:
       letter-spacing: 0.04em;
     }}
     .chart-confidence {{
-      flex: 0 0 auto;
-      max-width: 190px;
+      max-width: 220px;
       color: var(--stone);
       font-size: 12px;
       line-height: 1.35;
@@ -1138,12 +1190,12 @@ def render_html(report: Dict[str, Any]) -> str:
     .chart-svg-wrap {{
       width: 100%;
       overflow-x: auto;
-      margin: 8px 0 12px;
+      margin: 10px 0 16px;
     }}
     .chart-svg-wrap svg {{
       display: block;
       width: 100%;
-      min-width: 520px;
+      min-width: 620px;
       height: auto;
       background: #ffffff;
     }}
@@ -1151,7 +1203,7 @@ def render_html(report: Dict[str, Any]) -> str:
       margin: 8px 0 0;
       color: var(--dark-warm);
       font-size: 14px;
-      line-height: 1.52;
+      line-height: 1.62;
       overflow-wrap: anywhere;
     }}
     .chart-insight {{
@@ -1168,6 +1220,10 @@ def render_html(report: Dict[str, Any]) -> str:
       .top-nav {{ display: none; }}
       main {{ max-width: none; padding: 0; }}
       section, .score-card, .fact-box, .risk-item {{ break-inside: avoid; }}
+      h1 {{ font-size: 28pt; line-height: 1.12; }}
+      h2 {{ font-size: 16pt; }}
+      h3 {{ font-size: 12pt; }}
+      .lede {{ max-width: none; font-size: 11pt; line-height: 1.58; }}
       .dimension-grid, .meta-grid, .score-grid, .fact-grid, .two-col, .product-detail-grid {{
         display: block;
       }}
@@ -1175,7 +1231,16 @@ def render_html(report: Dict[str, Any]) -> str:
         display: block;
       }}
       .chart-module {{
-        margin-bottom: 11pt;
+        margin-bottom: 13pt;
+        padding: 12pt;
+        border-color: #d8d5c9;
+      }}
+      .chart-module-head {{
+        display: block;
+      }}
+      .chart-confidence {{
+        max-width: none;
+        text-align: left;
       }}
       .chart-svg-wrap {{
         overflow: visible;
@@ -1198,6 +1263,14 @@ def render_html(report: Dict[str, Any]) -> str:
       }}
       h1 {{ font-size: 34px; }}
       h2 {{ font-size: 23px; }}
+      .chart-module-head {{
+        display: block;
+      }}
+      .chart-confidence {{
+        max-width: none;
+        text-align: left;
+        margin-top: 4px;
+      }}
     }}
   </style>
 </head>
@@ -1344,12 +1417,46 @@ def render_html(report: Dict[str, Any]) -> str:
     return html_doc
 
 
+def set_docx_cell_shading(cell: Any, fill: str) -> None:
+    try:
+        from docx.oxml import OxmlElement
+        from docx.oxml.ns import qn
+
+        tc_pr = cell._tc.get_or_add_tcPr()
+        shading = OxmlElement("w:shd")
+        shading.set(qn("w:fill"), fill)
+        tc_pr.append(shading)
+    except Exception:
+        return
+
+
+def style_docx_table(table: Any) -> None:
+    try:
+        from docx.shared import Pt
+
+        for row_index, row in enumerate(table.rows):
+            for cell in row.cells:
+                if row_index == 0:
+                    set_docx_cell_shading(cell, "F7F7F4")
+                for paragraph in cell.paragraphs:
+                    paragraph.paragraph_format.space_after = Pt(3)
+                    paragraph.paragraph_format.line_spacing = 1.25
+                    for run in paragraph.runs:
+                        run.font.name = "Songti SC"
+                        run.font.size = Pt(8.8 if len(table.columns) >= 5 else 9.5)
+                        if row_index == 0:
+                            run.bold = True
+    except Exception:
+        return
+
+
 def add_docx_table(document: Any, headers: Sequence[str], rows: Sequence[Sequence[Any]]) -> None:
     if not rows:
         document.add_paragraph("未提供")
         return
     table = document.add_table(rows=1, cols=len(headers))
     table.style = "Table Grid"
+    table.autofit = True
     header_cells = table.rows[0].cells
     for index, header in enumerate(headers):
         header_cells[index].text = text(header)
@@ -1357,6 +1464,7 @@ def add_docx_table(document: Any, headers: Sequence[str], rows: Sequence[Sequenc
         cells = table.add_row().cells
         for index, cell in enumerate(row):
             cells[index].text = text(cell)
+    style_docx_table(table)
 
 
 def add_docx_bullets(document: Any, items: Sequence[Any]) -> None:
@@ -1399,7 +1507,11 @@ def xml_text(value: Any) -> str:
 
 
 def ooxml_paragraph(value: Any, style: str | None = None) -> str:
-    style_xml = f'<w:pPr><w:pStyle w:val="{style}"/></w:pPr>' if style else ""
+    ppr_parts = []
+    if style:
+        ppr_parts.append(f'<w:pStyle w:val="{style}"/>')
+    ppr_parts.append('<w:spacing w:after="120" w:line="330" w:lineRule="auto"/>')
+    style_xml = f"<w:pPr>{''.join(ppr_parts)}</w:pPr>"
     return f"<w:p>{style_xml}<w:r><w:t>{xml_text(value)}</w:t></w:r></w:p>"
 
 
@@ -1415,17 +1527,25 @@ def ooxml_table(headers: Sequence[str], rows: Sequence[Sequence[Any]]) -> str:
         return ooxml_paragraph("未提供")
     table_rows = []
     all_rows = [headers] + [list(row) for row in rows]
-    for row in all_rows:
+    col_width = max(1200, int(9500 / max(1, len(headers))))
+    for row_index, row in enumerate(all_rows):
         cells = []
         for cell in row:
+            shading = '<w:shd w:fill="F7F7F4"/>' if row_index == 0 else ""
             cells.append(
-                "<w:tc><w:tcPr><w:tcW w:w=\"2400\" w:type=\"dxa\"/></w:tcPr>"
+                f"<w:tc><w:tcPr><w:tcW w:w=\"{col_width}\" w:type=\"dxa\"/>"
+                f"{shading}<w:tcMar><w:top w:w=\"80\" w:type=\"dxa\"/>"
+                "<w:left w:w=\"90\" w:type=\"dxa\"/><w:bottom w:w=\"80\" w:type=\"dxa\"/>"
+                "<w:right w:w=\"90\" w:type=\"dxa\"/></w:tcMar></w:tcPr>"
                 f"{ooxml_paragraph(cell)}</w:tc>"
             )
         table_rows.append(f"<w:tr>{''.join(cells)}</w:tr>")
     return (
         "<w:tbl><w:tblPr><w:tblStyle w:val=\"TableGrid\"/>"
-        "<w:tblW w:w=\"0\" w:type=\"auto\"/></w:tblPr>"
+        "<w:tblW w:w=\"9500\" w:type=\"dxa\"/><w:tblCellMar>"
+        "<w:top w:w=\"80\" w:type=\"dxa\"/><w:left w:w=\"90\" w:type=\"dxa\"/>"
+        "<w:bottom w:w=\"80\" w:type=\"dxa\"/><w:right w:w=\"90\" w:type=\"dxa\"/>"
+        "</w:tblCellMar></w:tblPr>"
         f"{''.join(table_rows)}</w:tbl>"
     )
 
@@ -1444,12 +1564,12 @@ def fallback_docx_parts(body_xml: str) -> Dict[str, str]:
 </w:document>"""
     styles_xml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-  <w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:rPr><w:sz w:val="21"/><w:rFonts w:ascii="Times New Roman" w:eastAsia="Songti SC" w:hAnsi="Times New Roman"/></w:rPr></w:style>
-  <w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:basedOn w:val="Normal"/><w:rPr><w:b/><w:sz w:val="40"/></w:rPr></w:style>
-  <w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:rPr><w:b/><w:sz w:val="30"/></w:rPr></w:style>
-  <w:style w:type="paragraph" w:styleId="Heading2"><w:name w:val="heading 2"/><w:basedOn w:val="Normal"/><w:rPr><w:b/><w:sz w:val="26"/></w:rPr></w:style>
-  <w:style w:type="paragraph" w:styleId="Heading3"><w:name w:val="heading 3"/><w:basedOn w:val="Normal"/><w:rPr><w:b/><w:sz w:val="23"/></w:rPr></w:style>
-  <w:style w:type="table" w:styleId="TableGrid"><w:name w:val="Table Grid"/><w:tblPr><w:tblBorders><w:top w:val="single" w:sz="4" w:color="E8E6DC"/><w:left w:val="single" w:sz="4" w:color="E8E6DC"/><w:bottom w:val="single" w:sz="4" w:color="E8E6DC"/><w:right w:val="single" w:sz="4" w:color="E8E6DC"/><w:insideH w:val="single" w:sz="4" w:color="E8E6DC"/><w:insideV w:val="single" w:sz="4" w:color="E8E6DC"/></w:tblBorders></w:tblPr></w:style>
+  <w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:pPr><w:spacing w:after="120" w:line="330" w:lineRule="auto"/></w:pPr><w:rPr><w:sz w:val="21"/><w:rFonts w:ascii="Times New Roman" w:eastAsia="Songti SC" w:hAnsi="Times New Roman"/></w:rPr></w:style>
+  <w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="260"/></w:pPr><w:rPr><w:b/><w:color w:val="141413"/><w:sz w:val="44"/></w:rPr></w:style>
+  <w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:before="300" w:after="160"/></w:pPr><w:rPr><w:b/><w:color w:val="1B365D"/><w:sz w:val="30"/></w:rPr></w:style>
+  <w:style w:type="paragraph" w:styleId="Heading2"><w:name w:val="heading 2"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:before="180" w:after="120"/></w:pPr><w:rPr><w:b/><w:color w:val="141413"/><w:sz w:val="26"/></w:rPr></w:style>
+  <w:style w:type="paragraph" w:styleId="Heading3"><w:name w:val="heading 3"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:before="120" w:after="80"/></w:pPr><w:rPr><w:b/><w:color w:val="3D3D3A"/><w:sz w:val="23"/></w:rPr></w:style>
+  <w:style w:type="table" w:styleId="TableGrid"><w:name w:val="Table Grid"/><w:tblPr><w:tblBorders><w:top w:val="single" w:sz="6" w:color="E8E6DC"/><w:left w:val="single" w:sz="6" w:color="E8E6DC"/><w:bottom w:val="single" w:sz="6" w:color="E8E6DC"/><w:right w:val="single" w:sz="6" w:color="E8E6DC"/><w:insideH w:val="single" w:sz="4" w:color="EFEEE8"/><w:insideV w:val="single" w:sz="4" w:color="EFEEE8"/></w:tblBorders></w:tblPr></w:style>
 </w:styles>"""
     return {
         "[Content_Types].xml": """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -1597,7 +1717,9 @@ def render_docx_fallback(report: Dict[str, Any], output_path: Path) -> None:
 def render_docx(report: Dict[str, Any], output_path: Path) -> None:
     try:
         from docx import Document
-        from docx.shared import Pt
+        from docx.shared import Inches, Pt, RGBColor
+        from docx.oxml import OxmlElement
+        from docx.oxml.ns import qn
     except ImportError as exc:
         render_docx_fallback(report, output_path)
         return
@@ -1609,12 +1731,44 @@ def render_docx(report: Dict[str, Any], output_path: Path) -> None:
     forecast = report.get("forecast", {})
     final_plan = report.get("final_plan", {})
     document = Document()
+
+    def set_style_font(style_name: str, size: float | None = None, color: str | None = None, bold: bool | None = None) -> None:
+        style = styles[style_name]
+        style.font.name = "Songti SC"
+        if size is not None:
+            style.font.size = Pt(size)
+        if color is not None:
+            style.font.color.rgb = RGBColor.from_string(color)
+        if bold is not None:
+            style.font.bold = bold
+        r_pr = style._element.get_or_add_rPr()
+        r_fonts = r_pr.rFonts
+        if r_fonts is None:
+            r_fonts = OxmlElement("w:rFonts")
+            r_pr.append(r_fonts)
+        r_fonts.set(qn("w:eastAsia"), "Songti SC")
+
+    for section in document.sections:
+        section.top_margin = Inches(0.72)
+        section.bottom_margin = Inches(0.72)
+        section.left_margin = Inches(0.78)
+        section.right_margin = Inches(0.78)
+
     styles = document.styles
-    styles["Normal"].font.name = "Songti SC"
-    styles["Normal"].font.size = Pt(10.5)
+    set_style_font("Normal", 10.5, "141413", None)
+    set_style_font("Title", 24, "141413", True)
+    set_style_font("Heading 1", 16, "1B365D", True)
+    set_style_font("Heading 2", 13, "141413", True)
+    set_style_font("Heading 3", 11.5, "3D3D3A", True)
+
+    normal = styles["Normal"].paragraph_format
+    normal.line_spacing = 1.35
+    normal.space_after = Pt(6)
 
     document.add_heading(text(meta.get("title") or meta.get("product_name") or "需求评估报告"), 0)
-    document.add_paragraph(text(summary.get("one_sentence")))
+    lede = document.add_paragraph(text(summary.get("one_sentence")))
+    lede.paragraph_format.line_spacing = 1.45
+    lede.paragraph_format.space_after = Pt(12)
     add_docx_table(document, ["项目", "结果"], [
         ["产品", meta.get("product_name", "")],
         ["日期", meta.get("generated_at", "")],

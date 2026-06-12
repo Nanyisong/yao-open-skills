@@ -75,11 +75,13 @@ Use anchors for:
 - visual diagnostics section appears before dense analysis
 - chart modules use a two-column editorial grid on desktop and one-column stack on mobile
 - desktop chart modules must stretch to equal height within the same grid row, so row starts and card bottoms align even when chart explanations differ in length
+- chart modules should feel editorial and calm: use more width, clear headers, readable chart captions, and avoid cramped labels even if that means using a larger SVG viewBox or internal horizontal scroll on mobile
 - major sections separated by whitespace and a quiet top border
 - use cards only for true repeated objects or score blocks, not nested decorative surfaces
 - long tables must sit inside `.table-wrap { overflow-x: auto; }`
 - long URLs and source titles must use `overflow-wrap: anywhere`
 - code and raw evidence blocks must wrap and not overflow
+- prose blocks should use the available reading width. Avoid narrow columns that leave large ragged whitespace on the right; use balanced desktop columns only when each column still gives Chinese paragraphs enough line length.
 
 ## Visual Diagnostic Modules
 
@@ -115,6 +117,8 @@ Chart rules:
 - ink-blue for main signal, muted green/amber/red only for status
 - text labels must not be clipped in A4 print
 - long labels should wrap or truncate with accompanying table text
+- matrix/scatter charts must include label collision handling: use numbered markers plus a compact two-column legend when points cluster; point-side labels may be used only when they do not overlap or disappear at report scale
+- clustered points should remain visible as a cluster instead of becoming unreadable text. Reduce marker size, increase plot area, and separate labels from markers before removing data.
 - every chart must remain readable at `375px` mobile width through responsive scaling or horizontal scroll
 - dense chart data should also be represented in nearby text or tables for accessibility
 
@@ -144,6 +148,7 @@ Diagram rules:
 - labels must remain readable on A4 print and mobile
 - every diagram needs a `figure` title and an insight caption
 - SVG must have a stable `viewBox`, no fixed pixel overflow, and no clipped text
+- demand triangle diagrams must not use a large center circle or decorative arrows that compete with the triangle itself. Put the center judgment in lightweight text, with only subtle helper lines when needed.
 - Markdown should include Mermaid or a text fallback; Word should include a structured table or figure note when image insertion is unavailable
 
 ## PDF Print Rules
@@ -172,6 +177,7 @@ Word output is the editable review copy:
 - include visual diagnostic modules before dense analysis
 - insert chart PNGs when `python-docx` and SVG-to-PNG conversion are available
 - fall back to chart-equivalent tables and insight text when image conversion is unavailable
+- fallback Word output must still look like a report: A4 margins, serif Chinese typography, clear heading hierarchy, light table borders, subtle header shading, compact cell padding, and readable paragraph spacing
 - use heading levels, not manually bolded paragraphs
 - use simple tables for scores, competitors, sources, risks, and experiments
 - keep borders light and avoid dense nested tables
@@ -187,5 +193,8 @@ Word output is the editable review copy:
 - all four outputs have the same title, date, scores, recommendations, and evidence list
 - HTML/PDF contain at least 10 `.chart-module` blocks for formal reports
 - desktop chart modules align by row height; mobile chart modules stack without forcing page-level horizontal overflow
+- matrix/scatter chart labels do not overlap in the rendered HTML screenshot
+- demand triangle uses a lightweight center label and does not visually fight with a large circle
+- Word output is checked for non-empty document XML, styled headings, and readable tables whether it uses `python-docx` or fallback OOXML
 - every chart module has a visible insight and recommendation
 - forecast module states assumptions and confidence
