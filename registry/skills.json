@@ -1,11 +1,11 @@
 {
   "repo_name": "yao-open-skills",
-  "updated_at": "2026-06-12",
+  "updated_at": "2026-06-13",
   "skills": [
     {
       "slug": "learning-builder",
       "title": "Learning Builder",
-      "summary": "Build personalized tutorials from learner profiles and authoritative sources, then export them to docx, pdf, and an optional learning webpage.",
+      "summary": "根据学习者画像和权威资料生成个性化教程，支持 Markdown、DOCX、PDF 和可选学习网页扩展。",
       "source_local_path": "/Users/laoyao/AI Coding/03-Development/Skills/learning-builder",
       "collection_path": "skills/learning-builder",
       "lifecycle": "active",
@@ -22,12 +22,12 @@
         "personalization"
       ],
       "last_synced_at": "2026-04-09",
-      "updated_at": "2026-04-09"
+      "updated_at": "2026-06-13"
     },
     {
       "slug": "yao-bayesian-skill",
       "title": "Yao Bayesian Skill",
-      "summary": "Turn uncertain choices into Bayesian decision reports with prior setup, evidence grading, prior-hygiene checks, posterior updates, action advice, and HTML/Markdown export.",
+      "summary": "把不确定选择转成可复盘的贝叶斯决策报告，覆盖先验设定、证据分级、后验更新、行动阈值和 Markdown/HTML 输出。",
       "source_local_path": "/Users/laoyao/AI Coding/03-Development/Skills/yao-bayesian-skill",
       "collection_path": "skills/yao-bayesian-skill",
       "lifecycle": "active",
@@ -45,12 +45,12 @@
         "workflow"
       ],
       "last_synced_at": "2026-04-26",
-      "updated_at": "2026-04-26"
+      "updated_at": "2026-06-13"
     },
     {
       "slug": "yao-business-skill",
       "title": "Yao Business Skill",
-      "summary": "Design, diagnose, and study business models with market-environment fit, chart-rich reporting, competitor analysis, and AI-era upgrade guidance.",
+      "summary": "围绕商业模式设计、诊断和案例研究，输出市场环境适配、竞品分析、图表报告和 AI 时代升级建议。",
       "source_local_path": "/Users/laoyao/AI Coding/03-Development/Skills/yao-business-skill",
       "collection_path": "skills/yao-business-skill",
       "lifecycle": "active",
@@ -68,12 +68,12 @@
         "ai"
       ],
       "last_synced_at": "2026-04-23",
-      "updated_at": "2026-04-23"
+      "updated_at": "2026-06-13"
     },
     {
       "slug": "yao-copyright-skill",
       "title": "Yao Copyright Skill",
-      "summary": "Add standardized Yao copyright comment headers to skill packages without breaking SKILL.md frontmatter, script shebangs, or comment-unsafe files.",
+      "summary": "为 Skill 包批量添加姚金刚版权注释，并避免破坏 SKILL.md frontmatter、脚本 shebang 和不适合注释的文件。",
       "source_local_path": "/Users/laoyao/.agents/skills/yao-copyright-skill",
       "collection_path": "skills/yao-copyright-skill",
       "lifecycle": "active",
@@ -90,12 +90,12 @@
         "headers"
       ],
       "last_synced_at": "2026-05-26",
-      "updated_at": "2026-05-26"
+      "updated_at": "2026-06-13"
     },
     {
       "slug": "yao-crux-skill",
       "title": "Yao Crux Skill",
-      "summary": "Diagnose complex situations by clarifying the current state, separating principal and secondary contradictions, identifying hidden root variables, recommending focused actions, projecting outcome probabilities, and exporting Markdown/HTML/DOCX/PDF reports.",
+      "summary": "诊断复杂局面的主次矛盾，澄清现状、识别根部变量、给出主攻行动和结果概率，并导出 Markdown、HTML、DOCX、PDF 报告。",
       "source_local_path": "/Users/laoyao/AI Coding/03-Development/Skills/yao-crux-skill",
       "collection_path": "skills/yao-crux-skill",
       "lifecycle": "active",
@@ -115,12 +115,12 @@
         "html"
       ],
       "last_synced_at": "2026-05-27",
-      "updated_at": "2026-05-27"
+      "updated_at": "2026-06-13"
     },
     {
       "slug": "yao-demand-skill",
       "title": "Yao Demand Skill",
-      "summary": "Evaluate product demand with the demand triangle model, evidence grading, short-board scoring, 10+ visual diagnostic chart modules, fixed-follow HTML reports, scenario forecasts, final action plans, and Markdown/HTML/DOCX/PDF exports.",
+      "summary": "用需求三角模型评估产品需求，结合证据分级、短板评分、可视化诊断、情景预测和多格式报告输出。",
       "source_local_path": "/Users/laoyao/AI Coding/03-Development/Skills/yao-demand-skill",
       "collection_path": "skills/yao-demand-skill",
       "lifecycle": "active",
@@ -142,12 +142,12 @@
         "evidence"
       ],
       "last_synced_at": "2026-06-12",
-      "updated_at": "2026-06-12"
+      "updated_at": "2026-06-13"
     },
     {
       "slug": "yao-expert-skill",
       "title": "Yao Expert Skill",
-      "summary": "Turn any domain, industry, technology, market, role, product direction, or fuzzy idea into a source-backed expert learning report and tutorial with keyword teaching cards, representative anchors, Feynman self-tests, and Markdown/DOCX/PDF/HTML exports.",
+      "summary": "把行业、技术、市场、角色或模糊方向整理成专家学习报告和教程，包含关键词教学卡、学习锚点、费曼自测和多格式导出。",
       "source_local_path": "/Users/laoyao/AI Coding/03-Development/Skills/yao-expert-skill",
       "collection_path": "skills/yao-expert-skill",
       "lifecycle": "active",
@@ -167,12 +167,12 @@
         "html"
       ],
       "last_synced_at": "2026-06-04",
-      "updated_at": "2026-06-04"
+      "updated_at": "2026-06-13"
     },
     {
       "slug": "yao-gametheory-skill",
       "title": "Yao Game Theory Skill",
-      "summary": "Turn strategic competition, negotiation, channel, pricing, platform, M&A, financing, competitor-response, and regulator problems into dynamic game-theory strategy reports with framework routing, historical behavior rationality calibration, opponent reactions, credible commitments, strategy readiness, sensitivity checks, and Markdown/HTML/Word/PDF exports.",
+      "summary": "把竞争、谈判、渠道、定价、平台、并购、融资和监管问题转成博弈论战略报告，分析对手反应、可信承诺和策略稳健性。",
       "source_local_path": "/Users/laoyao/AI Coding/03-Development/Skills/yao-gametheory-skill",
       "collection_path": "skills/yao-gametheory-skill",
       "lifecycle": "active",
@@ -192,12 +192,12 @@
         "historical-behavior"
       ],
       "last_synced_at": "2026-05-12",
-      "updated_at": "2026-05-12"
+      "updated_at": "2026-06-13"
     },
     {
       "slug": "yao-kelly-skill",
       "title": "Yao Kelly Skill",
-      "summary": "Turn uncertain investment, betting, and resource-allocation decisions into practical allocation plans with Kelly sizing, fit assessment, action packages, review loops, HTML output, and iteration logs.",
+      "summary": "把投资、下注或资源配置问题转成保守可执行的凯利配置方案，包含适用性判断、行动包、复盘机制和 HTML 输出。",
       "source_local_path": "/Users/laoyao/AI Coding/03-Development/Skills/yao-kelly-skill",
       "collection_path": "skills/yao-kelly-skill",
       "lifecycle": "active",
@@ -215,12 +215,12 @@
         "html"
       ],
       "last_synced_at": "2026-05-04",
-      "updated_at": "2026-05-04"
+      "updated_at": "2026-06-13"
     },
     {
       "slug": "yao-open-skills-sync",
       "title": "Yao Open Skills Sync",
-      "summary": "Manage intake, registration, sync state, and README updates for the yao-open-skills public collection.",
+      "summary": "管理 yao-open-skills 公开合集的收录、登记、同步状态、说明文档和 README 目录更新。",
       "source_local_path": "/Users/laoyao/AI Coding/03-Development/Skills/yao-open-skills/skills/yao-open-skills-sync",
       "collection_path": "skills/yao-open-skills-sync",
       "lifecycle": "active",
@@ -235,12 +235,12 @@
         "publishing"
       ],
       "last_synced_at": "2026-04-06",
-      "updated_at": "2026-04-09"
+      "updated_at": "2026-06-13"
     },
     {
       "slug": "yao-tutorial-skill",
       "title": "Yao Tutorial Skill",
-      "summary": "Turn topics, source packets, papers, GitHub repos, URLs, or drafts into source-backed beginner tutorial packages with adaptive research, chapter visuals, and Markdown/DOCX/PDF/HTML exports.",
+      "summary": "把主题、资料包、论文、GitHub 仓库、URL 或草稿生产成新手教程包，包含研究取证、章节配图和 Markdown、DOCX、PDF、HTML 导出。",
       "source_local_path": "/Users/laoyao/AI Coding/03-Development/Skills/yao-tutorial-skill",
       "collection_path": "skills/yao-tutorial-skill",
       "lifecycle": "active",
@@ -259,12 +259,12 @@
         "html"
       ],
       "last_synced_at": "2026-04-30",
-      "updated_at": "2026-04-30"
+      "updated_at": "2026-06-13"
     },
     {
       "slug": "yao-websecurity-skill",
       "title": "Yao Websecurity Skill",
-      "summary": "Audit authorized websites, SaaS apps, APIs, AI apps, local code paths, GitHub repos, staging targets, or owned runtimes with a 275-item vulnerability ontology, static and dynamic review modes, strict isolation boundaries, and Excel/HTML/Markdown/PDF Chinese-first reports.",
+      "summary": "审查授权网站、SaaS、API、AI 应用、本地代码或 GitHub 仓库，基于 275 项漏洞本体输出中文优先的 Excel、HTML、Markdown、PDF 报告。",
       "source_local_path": "/Users/laoyao/AI Coding/03-Development/Skills/yao-websecurity-skill",
       "collection_path": "skills/yao-websecurity-skill",
       "lifecycle": "active",
@@ -286,7 +286,7 @@
         "ai-security"
       ],
       "last_synced_at": "2026-05-13",
-      "updated_at": "2026-05-13"
+      "updated_at": "2026-06-13"
     },
     {
       "slug": "yao-weread-skill",
@@ -309,7 +309,7 @@
         "notes"
       ],
       "last_synced_at": "2026-05-17",
-      "updated_at": "2026-05-17"
+      "updated_at": "2026-06-13"
     }
   ]
 }

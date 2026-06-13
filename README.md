@@ -1,24 +1,27 @@
 # Yao Open Skills
 
-*A curated collection of production-ready AI skills for research, decision, business, learning, and document generation*
+一个面向研究、决策、商业分析、学习和文档生成的公开 Skill 合集。
 
 `OpenYao` 延续 `YAO = Yielding AI Outcomes` 这条方法线。重点不是继续堆更多 prompt 文本，而是把有效的方法、流程、评估、审美约束和执行边界沉淀成可复用的 AI 资产，并最终产生真实可交付的结果。
 
-Yao Open Skills is a growing collection of AI-native skills designed for real-world work: turning uncertain decisions into reports, turning business questions into structured analysis, and turning topics or reference packets into polished tutorial documents.
+这个仓库收录的是已经整理成公开版本的 AI Skill。它们面向真实工作场景，比如把不确定决策整理成报告，把商业问题拆成结构化分析，把主题、资料包或参考材料生产成教程文档。
 
-这个目录同时承担两件事：
+这个仓库主要承担三件事：
 
-- 作为 GitHub 开源合集的本地工作区。
-- 作为本地同步管理中心，记录哪些 Skill 已纳入合集、当前公开状态如何、说明页是否已更新。
-- 作为后续版本迭代的发布入口，在每次确认更新后同步推送到 GitHub。
+- 对外展示已经整理好的公开 Skill，并提供说明文档和源码入口。
+- 记录每个 Skill 的收录路径、公开状态和同步状态。
+- 作为后续版本迭代的发布入口，在确认更新后同步推送到 GitHub。
 
-## Navigation
+如果只是想找能用的 Skill，先看 [Skill 导航目录](#skill-导航目录)。如果想理解 `OpenYao` 背后的方法论，再看 [推荐入口](#推荐入口) 和 [OpenYao 理念](#openyao-理念)。
+
+## 快速入口
 
 - [OpenYao 理念](#openyao-理念)
 - [推荐入口](#推荐入口)
-- [Published Skill Guides](#published-skill-guides)
-- [Featured Published Skills](#featured-published-skills)
-- [Skill Catalog](#skill-catalog)
+- [Skill 导航目录](#skill-导航目录)
+- [重点 Skill 速览](#重点-skill-速览)
+- [已发布 Skill 说明](#已发布-skill-说明)
+- [规划中的能力线](#规划中的能力线)
 - [发布规则](docs/publishing-rules.md)
 - [命名规范](docs/naming-conventions.md)
 - [仓库设计](docs/repository-design.md)
@@ -34,18 +37,15 @@ Yao Open Skills is a growing collection of AI-native skills designed for real-wo
 
 换句话说，`OpenYao` 是把 `YAO` 的方法论往公开知识库推进一步：让那些值得分享的 Skill，不只存在于本地，而是成为可以被发现、引用、改进和复用的公开能力集合。
 
-## Featured Skill Lines
+## 规划中的能力线
 
 这部分展示的是 `OpenYao` 计划长期建设的能力线，风格上会尽量保持“功能导向 + 动词感”，避免命名体系散掉。
 
-**Skill Doctor**
-Diagnose and fix issues in skills automatically.
+**Skill Doctor**，自动诊断并修复 Skill 中的问题。
 
-**Skill Optimizer**
-Improve performance, structure, and effectiveness.
+**Skill Optimizer**，优化 Skill 的结构、执行效果和可维护性。
 
-**Skill Ranker**
-Evaluate and rank skills based on real impact.
+**Skill Ranker**，基于真实效果评估和排序 Skill。
 
 这些名称代表的是产品方向，不等于它们现在都已经作为独立 Skill 收录进仓库。当前仓库会把“已发布能力”和“规划中的能力线”区分开维护。
 
@@ -98,22 +98,24 @@ yao-open-skills/
 - `scripts/`: 更新登记表和 README 的辅助脚本。
 - `skills/`: 真正收录进公开合集的 Skill 副本。
 
-## Published Skill Guides
+## 已发布 Skill 说明
 
-- [Skill Guides Index](docs/skills/README.md)
+- [说明文档索引](docs/skills/README.md)
+- [Learning Builder](docs/skills/learning-builder.md)
 - [Yao Open Skills Sync](docs/skills/yao-open-skills-sync.md)
 - [Yao Bayesian Skill](docs/skills/yao-bayesian-skill.md)
 - [Yao Business Skill](docs/skills/yao-business-skill.md)
 - [Yao Copyright Skill](docs/skills/yao-copyright-skill.md)
 - [Yao Crux Skill](docs/skills/yao-crux-skill.md)
 - [Yao Demand Skill](docs/skills/yao-demand-skill.md)
+- [Yao Expert Skill](docs/skills/yao-expert-skill.md)
 - [Yao Game Theory Skill](docs/skills/yao-gametheory-skill.md)
 - [Yao Kelly Skill](docs/skills/yao-kelly-skill.md)
 - [Yao Tutorial Skill](docs/skills/yao-tutorial-skill.md)
 - [Yao WeRead Skill](docs/skills/yao-weread-skill.md)
 - [Yao Websecurity Skill](docs/skills/yao-websecurity-skill.md)
 
-## Featured Published Skills
+## 重点 Skill 速览
 
 ### Yao Crux Skill
 
@@ -137,7 +139,7 @@ yao-open-skills/
 
 1. [公开说明文档](docs/skills/yao-crux-skill.md)
 2. [中文目录说明](skills/yao-crux-skill/README.md)
-3. [English README](skills/yao-crux-skill/README.en.md)
+3. [英文 README](skills/yao-crux-skill/README.en.md)
 4. [Skill 入口](skills/yao-crux-skill/SKILL.md)
 5. [追问与现状清晰度](skills/yao-crux-skill/references/intake-and-questioning.md)
 6. [理论锚点与规则](skills/yao-crux-skill/references/theory-anchors.md)
@@ -315,24 +317,26 @@ yao-open-skills/
 - 维护登记表和 README 目录页。
 - 记录这个 Skill 是否已经同步到 GitHub，以及线上对应路径。
 
-## Skill Catalog
+## Skill 导航目录
 
 <!-- catalog:start -->
-| Skill | Guide | Lifecycle | Sync | Collection Path | Source Path | GitHub |
-| --- | --- | --- | --- | --- | --- | --- |
-| [learning-builder](skills/learning-builder/SKILL.md) | [guide](docs/skills/learning-builder.md) | `active` | `published` | [skills/learning-builder](skills/learning-builder) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/learning-builder) |
-| [yao-bayesian-skill](skills/yao-bayesian-skill/SKILL.md) | [guide](docs/skills/yao-bayesian-skill.md) | `active` | `published` | [skills/yao-bayesian-skill](skills/yao-bayesian-skill) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-bayesian-skill) |
-| [yao-business-skill](skills/yao-business-skill/SKILL.md) | [guide](docs/skills/yao-business-skill.md) | `active` | `published` | [skills/yao-business-skill](skills/yao-business-skill) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-business-skill) |
-| [yao-copyright-skill](skills/yao-copyright-skill/SKILL.md) | [guide](docs/skills/yao-copyright-skill.md) | `active` | `published` | [skills/yao-copyright-skill](skills/yao-copyright-skill) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-copyright-skill) |
-| [yao-crux-skill](skills/yao-crux-skill/SKILL.md) | [guide](docs/skills/yao-crux-skill.md) | `active` | `published` | [skills/yao-crux-skill](skills/yao-crux-skill) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-crux-skill) |
-| [yao-demand-skill](skills/yao-demand-skill/SKILL.md) | [guide](docs/skills/yao-demand-skill.md) | `active` | `published` | [skills/yao-demand-skill](skills/yao-demand-skill) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-demand-skill) |
-| [yao-expert-skill](skills/yao-expert-skill/SKILL.md) | [guide](docs/skills/yao-expert-skill.md) | `active` | `published` | [skills/yao-expert-skill](skills/yao-expert-skill) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-expert-skill) |
-| [yao-gametheory-skill](skills/yao-gametheory-skill/SKILL.md) | [guide](docs/skills/yao-gametheory-skill.md) | `active` | `published` | [skills/yao-gametheory-skill](skills/yao-gametheory-skill) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-gametheory-skill) |
-| [yao-kelly-skill](skills/yao-kelly-skill/SKILL.md) | [guide](docs/skills/yao-kelly-skill.md) | `active` | `published` | [skills/yao-kelly-skill](skills/yao-kelly-skill) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-kelly-skill) |
-| [yao-open-skills-sync](skills/yao-open-skills-sync/SKILL.md) | [guide](docs/skills/yao-open-skills-sync.md) | `active` | `published` | [skills/yao-open-skills-sync](skills/yao-open-skills-sync) | [skills/yao-open-skills-sync](skills/yao-open-skills-sync) | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-open-skills-sync) |
-| [yao-tutorial-skill](skills/yao-tutorial-skill/SKILL.md) | [guide](docs/skills/yao-tutorial-skill.md) | `active` | `published` | [skills/yao-tutorial-skill](skills/yao-tutorial-skill) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-tutorial-skill) |
-| [yao-websecurity-skill](skills/yao-websecurity-skill/SKILL.md) | [guide](docs/skills/yao-websecurity-skill.md) | `active` | `published` | [skills/yao-websecurity-skill](skills/yao-websecurity-skill) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-websecurity-skill) |
-| [yao-weread-skill](skills/yao-weread-skill/SKILL.md) | [guide](docs/skills/yao-weread-skill.md) | `active` | `published` | [skills/yao-weread-skill](skills/yao-weread-skill) | `external-local-source` | [link](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-weread-skill) |
+这个目录从 `registry/skills.json` 自动生成，优先帮助读者判断每个 Skill 解决什么问题，以及从哪里开始阅读。
+
+| Skill | 简体中文说明 | 主题标签 | 导航 |
+| --- | --- | --- | --- |
+| [Learning Builder](skills/learning-builder/SKILL.md)<br><sub>`learning-builder`</sub> | 根据学习者画像和权威资料生成个性化教程，支持 Markdown、DOCX、PDF 和可选学习网页扩展。 | `教育`、`教程`、`研究`、`导出` 等 | [说明](docs/skills/learning-builder.md) · [Skill](skills/learning-builder/SKILL.md) · [目录](skills/learning-builder) · [GitHub](https://github.com/yaojingang/yao-open-skills/tree/main/skills/learning-builder) |
+| [Yao Bayesian Skill](skills/yao-bayesian-skill/SKILL.md)<br><sub>`yao-bayesian-skill`</sub> | 把不确定选择转成可复盘的贝叶斯决策报告，覆盖先验设定、证据分级、后验更新、行动阈值和 Markdown/HTML 输出。 | `贝叶斯`、`决策分析`、`先验校验`、`报告` 等 | [说明](docs/skills/yao-bayesian-skill.md) · [Skill](skills/yao-bayesian-skill/SKILL.md) · [目录](skills/yao-bayesian-skill) · [GitHub](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-bayesian-skill) |
+| [Yao Business Skill](skills/yao-business-skill/SKILL.md)<br><sub>`yao-business-skill`</sub> | 围绕商业模式设计、诊断和案例研究，输出市场环境适配、竞品分析、图表报告和 AI 时代升级建议。 | `商业模式`、`战略`、`诊断`、`竞争` 等 | [说明](docs/skills/yao-business-skill.md) · [Skill](skills/yao-business-skill/SKILL.md) · [目录](skills/yao-business-skill) · [GitHub](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-business-skill) |
+| [Yao Copyright Skill](skills/yao-copyright-skill/SKILL.md)<br><sub>`yao-copyright-skill`</sub> | 为 Skill 包批量添加姚金刚版权注释，并避免破坏 SKILL.md frontmatter、脚本 shebang 和不适合注释的文件。 | `版权`、`Skill`、`发布`、`自动化` 等 | [说明](docs/skills/yao-copyright-skill.md) · [Skill](skills/yao-copyright-skill/SKILL.md) · [目录](skills/yao-copyright-skill) · [GitHub](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-copyright-skill) |
+| [Yao Crux Skill](skills/yao-crux-skill/SKILL.md)<br><sub>`yao-crux-skill`</sub> | 诊断复杂局面的主次矛盾，澄清现状、识别根部变量、给出主攻行动和结果概率，并导出 Markdown、HTML、DOCX、PDF 报告。 | `决策分析`、`主要矛盾`、`诊断`、`第一性原理` 等 | [说明](docs/skills/yao-crux-skill.md) · [Skill](skills/yao-crux-skill/SKILL.md) · [目录](skills/yao-crux-skill) · [GitHub](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-crux-skill) |
+| [Yao Demand Skill](skills/yao-demand-skill/SKILL.md)<br><sub>`yao-demand-skill`</sub> | 用需求三角模型评估产品需求，结合证据分级、短板评分、可视化诊断、情景预测和多格式报告输出。 | `需求分析`、`产品`、`验证`、`可视化报告` 等 | [说明](docs/skills/yao-demand-skill.md) · [Skill](skills/yao-demand-skill/SKILL.md) · [目录](skills/yao-demand-skill) · [GitHub](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-demand-skill) |
+| [Yao Expert Skill](skills/yao-expert-skill/SKILL.md)<br><sub>`yao-expert-skill`</sub> | 把行业、技术、市场、角色或模糊方向整理成专家学习报告和教程，包含关键词教学卡、学习锚点、费曼自测和多格式导出。 | `专家学习`、`研究`、`行业分析`、`教程` 等 | [说明](docs/skills/yao-expert-skill.md) · [Skill](skills/yao-expert-skill/SKILL.md) · [目录](skills/yao-expert-skill) · [GitHub](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-expert-skill) |
+| [Yao Game Theory Skill](skills/yao-gametheory-skill/SKILL.md)<br><sub>`yao-gametheory-skill`</sub> | 把竞争、谈判、渠道、定价、平台、并购、融资和监管问题转成博弈论战略报告，分析对手反应、可信承诺和策略稳健性。 | `博弈论`、`战略`、`竞争`、`谈判` 等 | [说明](docs/skills/yao-gametheory-skill.md) · [Skill](skills/yao-gametheory-skill/SKILL.md) · [目录](skills/yao-gametheory-skill) · [GitHub](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-gametheory-skill) |
+| [Yao Kelly Skill](skills/yao-kelly-skill/SKILL.md)<br><sub>`yao-kelly-skill`</sub> | 把投资、下注或资源配置问题转成保守可执行的凯利配置方案，包含适用性判断、行动包、复盘机制和 HTML 输出。 | `凯利公式`、`资源配置`、`决策分析`、`投资` 等 | [说明](docs/skills/yao-kelly-skill.md) · [Skill](skills/yao-kelly-skill/SKILL.md) · [目录](skills/yao-kelly-skill) · [GitHub](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-kelly-skill) |
+| [Yao Open Skills Sync](skills/yao-open-skills-sync/SKILL.md)<br><sub>`yao-open-skills-sync`</sub> | 管理 yao-open-skills 公开合集的收录、登记、同步状态、说明文档和 README 目录更新。 | `目录`、`治理`、`发布` | [说明](docs/skills/yao-open-skills-sync.md) · [Skill](skills/yao-open-skills-sync/SKILL.md) · [目录](skills/yao-open-skills-sync) · [GitHub](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-open-skills-sync) |
+| [Yao Tutorial Skill](skills/yao-tutorial-skill/SKILL.md)<br><sub>`yao-tutorial-skill`</sub> | 把主题、资料包、论文、GitHub 仓库、URL 或草稿生产成新手教程包，包含研究取证、章节配图和 Markdown、DOCX、PDF、HTML 导出。 | `教育`、`教程`、`研究`、`配图` 等 | [说明](docs/skills/yao-tutorial-skill.md) · [Skill](skills/yao-tutorial-skill/SKILL.md) · [目录](skills/yao-tutorial-skill) · [GitHub](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-tutorial-skill) |
+| [Yao Websecurity Skill](skills/yao-websecurity-skill/SKILL.md)<br><sub>`yao-websecurity-skill`</sub> | 审查授权网站、SaaS、API、AI 应用、本地代码或 GitHub 仓库，基于 275 项漏洞本体输出中文优先的 Excel、HTML、Markdown、PDF 报告。 | `安全`、`网站安全`、`审查`、`SAST` 等 | [说明](docs/skills/yao-websecurity-skill.md) · [Skill](skills/yao-websecurity-skill/SKILL.md) · [目录](skills/yao-websecurity-skill) · [GitHub](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-websecurity-skill) |
+| [Yao WeRead Skill](skills/yao-weread-skill/SKILL.md)<br><sub>`yao-weread-skill`</sub> | 生成微信读书个人阅读可视化报告，覆盖阅读节律、书架资产、分类偏好、笔记语义、词云和独立 HTML 输出。 | `微信读书`、`阅读分析`、`可视化`、`HTML` 等 | [说明](docs/skills/yao-weread-skill.md) · [Skill](skills/yao-weread-skill/SKILL.md) · [目录](skills/yao-weread-skill) · [GitHub](https://github.com/yaojingang/yao-open-skills/tree/main/skills/yao-weread-skill) |
 <!-- catalog:end -->
 
 ## 后续约定
